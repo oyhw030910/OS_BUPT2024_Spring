@@ -6,7 +6,7 @@
 #include <string>
 #include <time.h>
 #include <easyx.h>
-
+#include <tchar.h>
 
 /*struct MOUSEMSG
 {
