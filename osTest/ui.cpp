@@ -245,19 +245,19 @@ void pcbDraw()
             if (me.x <= 230 && me.x > 130)
             {
                 clearcircle;
-                setfillcolor(GREEN);
+                setfillcolor(YELLOW);
                 fillcircle(100, 300, 50);
             }
             else if (me.x <= 330 && me.x > 230)
             {
                 clearcircle;
-                setfillcolor(RED);
+                setfillcolor(GREEN);
                 fillcircle(100, 300, 50);
             }
             else if (me.x <= 430 && me.x > 330)
             {
                 clearcircle;
-                setfillcolor(YELLOW);
+                setfillcolor(RED);
                 fillcircle(100, 300, 50);
             }
             else
