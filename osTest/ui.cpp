@@ -204,8 +204,7 @@ void pcbDraw()
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
     TCHAR s[] = _T("进程");
     outtextxy(10, 20, s);
-    TCHAR v[] = _T("按任意键退出");
-    outtextxy(400, 400, v);
+
     int x = 130, y = 120, z = 230,m = 180,T;
     //setlinecolor(GREEN);
     settextcolor(GREEN);
@@ -226,9 +225,49 @@ void pcbDraw()
     fillellipse(x, y, z,m);	// 画圆，圆心(200, 200)，半径 100
     x = 0, y = 400, z = 100, T = 480;
     setlinecolor(BLUE);
- 
 
 
+    TCHAR s4[] = _T("示例进程");
+    outtextxy(75, 220, s4);
+    setfillcolor(WHITE);
+    fillcircle(100, 300, 50);
+
+
+    
+
+    while(true)
+    {
+
+        ExMessage me;//定义一个消息变量
+        me = getmessage(EM_MOUSE);//获取鼠标消息
+        if (me.message == WM_LBUTTONUP)
+        {
+            if (me.x <= 230 && me.x > 130)
+            {
+                clearcircle;
+                setfillcolor(GREEN);
+                fillcircle(100, 300, 50);
+            }
+            else if (me.x <= 330 && me.x > 230)
+            {
+                clearcircle;
+                setfillcolor(RED);
+                fillcircle(100, 300, 50);
+            }
+            else if (me.x <= 430 && me.x > 330)
+            {
+                clearcircle;
+                setfillcolor(YELLOW);
+                fillcircle(100, 300, 50);
+            }
+            else
+                break;
+
+        }
+    }
+
+    TCHAR v[] = _T("按任意键退出");
+    outtextxy(400, 400, v);
 
     _getch();				// 按任意键继续
     cleardevice();			// 关闭绘图窗口
