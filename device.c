@@ -1,20 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
+#include<device.h>
 
-#define deviceNum 3
-
-typedef struct {
-    str[] name;//设备名称
-    int *data;//等待队列
-    int size;//等待队列大小，为0说明设备空闲
-} table;
-
-table Device_Table[deviceNum];//设备表
-char *deviceName[] = { "mouse", "screen",  "keyboard" };
-
-void init(){
+void device_init(){
     for(int i = 0; i < deviceNum; i++){
         Device_Table[i].name=deviceName[i];
         Device_Table[i].data=null;
@@ -22,7 +8,7 @@ void init(){
     }
 }
 
-int findNum(char[] device){//从设备名称获得设备号
+int device_findNum(string device){//从设备名称获得设备号
     for(int i=0;i<deviceNum; i++){
         if(strcmp(device,Device_Table[i].name)==0)
         return i;
@@ -30,7 +16,7 @@ int findNum(char[] device){//从设备名称获得设备号
     return -1;
 }
 
-void showDevice() {
+void device_showDevice() {
     printf("------------------------------------------------------------------------------");
     printf("设备表状态如下：");
     for (int i = 0; i < deviceNum; i++) {
@@ -52,7 +38,7 @@ void showDevice() {
     printf("------------------------------------------------------------------------------");
 }
 
-bool acquire(int pid, int device) {//device：请求设备号
+bool device_acquire(int pid, int device) {//device：请求设备号
     for (int i = 0; i < Device_Table[device].size; i++) {
         if (Device_Table[device].data[i] == pid) {
             return false;//重复请求
@@ -68,7 +54,7 @@ bool acquire(int pid, int device) {//device：请求设备号
     }
 }
 
-bool release(int pid, int device) {//device：释放设备号，-1代表释放进程占用的全部设备
+bool device_release(int pid, int device) {//device：释放设备号，-1代表释放进程占用的全部设备
     if (device == -1) { // 释放该进程申请的全部设备
         for (int device = 0; device < deviceNum; device++) {
             for (int i = 0; i < Device_Table[device].size; i++) {
