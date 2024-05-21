@@ -1,189 +1,178 @@
 #include<stdio.h>
 #include<string.h>
-#include<math.h>
+#include<stdlib.h>
+#include<assert.h>
+#include<stdbool.h>
+#include<bits/stdc++.h> 
+#pragma once
+using namespace std;
 typedef struct FCB
 {
-	char *name;//ÎÄ¼þÃû
-	int type;
-	int node_num;//×Ó½áµã¸öÊý£¬ÆÕÍ¨ÎÄ¼þÎª0
-	FILE file;//ÎÄ¼þÄÚÈÝ
+	char *name;//æ–‡ä»¶å
 	struct FCB *nextFCB;
 	struct FCB *sonFCB;
 }FCB;
 
-FCB init_directory(struct FCB total_directory);//³õÊ¼»¯´æ´¢½á¹¹ 
-void CreateFile(FCB root,char * filename);//ÔÚfatherÄ¿Â¼ÏÂ´´½¨ÎÄ¼þ 
-void DeleteFile(FCB file);//É¾³ý£»
-void Rename(FCB file);//ÐÞ¸ÄÄ¿Â¼Ãû 
-void Dir_ls(FCB file);//ÁÐ³öËùÓÐÄ¿Â¼Ïî 
-int FindFile(FCB *father,char * name);//ÕÒµ½¶ÔÓ¦ÎÄ¼þ 
-int FindFile_c(FCB father,char * name,char * newname);
+typedef struct stack
+{
+	FCB * a;
+	int top;
+	int capacity;
+}ST;
+
+FCB *head ;
+void STInit(ST* pst);//åˆå§‹åŒ–æ ˆ 
+void init_directory();//åˆå§‹åŒ–å­˜å‚¨ç»“æž„ 
+void STPush(ST* pst,FCB x);//å…¥æ ˆ 
+void STPop(ST* pst);//å‡ºæ ˆ 
+bool STEmpty(ST* pst);//æ£€æµ‹æ˜¯å¦ç©ºï¼Œæ ˆä¸ºç©ºè¿”å›žtrue,ä¸ä¸ºç©ºè¿”å›žfalse
+int FindFile(FCB father,char * name,ST *FCBst);//æ‰¾åˆ°å¯¹åº”æ–‡ä»¶ 
 int main()
 {	
-	struct FCB total_directory,temp;//¸ùÄ¿Â¼ 
-	struct FCB * a;
 	int flag=0;
 	char * name;
-	name = "f3";
-	total_directory = init_directory(total_directory);
-	printf("%s",total_directory.sonFCB->sonFCB->nextFCB->nextFCB->name);
-	a = total_directory.sonFCB;
-	printf("\n%s ****\n",a->name);
-	//CreateFile(total_directory,name);
-	flag = FindFile(&total_directory,name);
+	ST *FCBst;
+	STInit(FCBst); 
+	name = "father1";
+	init_directory();
+	flag = FindFile(*head->sonFCB,name,FCBst);
 	printf("%d",flag);
-	return 0; 
+	return 0;
 } 
 
-int FindFile(FCB *father,char * name)
-{
-	
-	int flag = 0;
-
-	if(!strcmp(name,father->name))//µ±Ç°ÎÄ¼þÎªËùÕÒÎÄ¼þ
-	{
-		flag = 1;
-		return flag;
-	}
-	else//²»ÊÇµÄ»°£¬Éî¶ÈÓÅÏÈ 
-	{
-		if(father->sonFCB != NULL)//ÓÐ×Ó 
-		{
-			printf("%s\n",father->name);
-			
-			flag = FindFile(father->sonFCB,name);
-			
-			if(flag == 1)
-				return flag;
-		}
-		
-		if(father->nextFCB != NULL)//ÓÐÐÖµÜ
-		{
-			printf("%s      111\n",father->name);
-			flag = FindFile(father->nextFCB,name);
-			if(flag == 1)
-				return flag;
-		}
-		
-		return flag;
-	}
-	
-	
-}
-
-int FindFile_c(FCB father,char * name,char * newname)
+int FindFile(FCB father,char * name,ST *FCBst)
 {
 	int flag = 0;
-	FCB temp = *father.sonFCB;
-	FCB newfcb;
-	
-	if(strcmp(name,father.name))//µ±Ç°ÎÄ¼þÎªËùÕÒÎÄ¼þ
+//	printf("111");
+	if(strcmp(name,father.name)==0)//å½“å‰æ–‡ä»¶ä¸ºæ‰€æ‰¾æ–‡ä»¶
 	{
-		
+		STPush(FCBst,father);//å…¥æ ˆ 
 		flag = 1;
-		while(temp.nextFCB!=NULL)
-			temp = *temp.nextFCB;
-		newfcb.name = newname;
-		newfcb.sonFCB = NULL;
-		newfcb.nextFCB = NULL;
-		*temp.nextFCB = newfcb;
 		return 1;
 	}
-	else//²»ÊÇµÄ»°£¬Éî¶ÈÓÅÏÈ 
+	else//ä¸æ˜¯çš„è¯ï¼Œæ·±åº¦ä¼˜å…ˆ 
 	{
-		if(father.sonFCB!=NULL)//ÓÐ×Ó 
+		if(father.sonFCB!=NULL)//æœ‰å­ 
 		{
-			flag = FindFile(father.sonFCB,name);
+			flag = FindFile(*father.sonFCB,name,FCBst);
 			if(flag == 1)
+			{
+				//STPush(FCBst,father);
 				return 1;
+			}
 		}
 		if(father.nextFCB!=NULL)
 		{
-			flag = FindFile(father.nextFCB,name);
+			flag = FindFile(*father.nextFCB,name,FCBst);
 			if(flag == 1)
-				return 1;
+			{
+				//STPush(FCBst,father);
+				return 1; 
+			}
 		}
+		
 	}
 	return flag;
 	
 }
-/*void CreateFile(FCB root,char * filename)
+void STInit(ST* pst)
 {
-	int i = 0;
-	char * location;
 	
-	i = FindFile(root,filename);
-	if(i==1)
-	{
-		printf("There has a file with the same name./n");//ÖØÃû 
-		return;
-	}
-	printf("1");
+	pst=(ST*)malloc(sizeof(ST));
+	pst->a=(FCB*)malloc(sizeof(FCB));
+    pst->a = NULL;//æ ˆåº•
 	
-	scanf("input the directory:%s/n",&location);
-	printf("%s",location);
-	i = FindFile_c(root,location,filename);
-	
-	
+    //topä¸æ˜¯æ•°ç»„ä¸‹æ ‡,ä¸èƒ½ç†è§£æˆæ•°ç»„ä¸‹æ ‡,å› ä¸ºæ ˆåªèƒ½æ‹¿åˆ°æ ˆé¡¶çš„å…ƒç´ ï¼Œè€Œæ•°ç»„å¯ä»¥éšæœºè®¿é—®æ‹¿åˆ°ä¸­é—´å…ƒç´ 
+    //pst->top=-1;//æŒ‡å‘æ ˆé¡¶å…ƒç´ 
+    pst->top = 0;//æŒ‡å‘æ ˆé¡¶å…ƒç´ çš„ä¸‹ä¸€ä¸ªä½ç½®
+	pst->capacity = 0;
 }
-*/
-FCB init_directory(struct FCB total_directory)
+ 
+void STPush(ST* pst,FCB x)
 {
-	FCB father1,father2,father3,temp;//Ä¿Â¼ÎÄ¼þ
-	FCB f1,f2,f3,f4,f5; 
-	//³õÊ¼»¯Ä¿Â¼ÎÄ¼þ 
-	total_directory.name = "total";
-	total_directory.type = 1;
-	total_directory.node_num = 2;
 	
-	father1.name="father1";
-	father1.type = 1;
-	father1.node_num = 3;
-	
-	father2.name="father2";
-	father2.type = 1;
-	father2.node_num = 2;
-	
-	father3.name="father3";
-	father3.type = 1;
-	father3.node_num = 1;
-	
-	f1.name = "f1";
-	f1.type = 0;
-	
-	f2.name = "f2";
-	f2.type = 0;
-	
-	f3.name = "f3";
-	f3.type = 0;
-	
-	f4.name = "f4";
-	f4.type = 0;
-	
-	f5.name = "f5";
-	f5.type = 0;
-	
-	total_directory.sonFCB = &father1;	
-	father1.nextFCB = &father2;
-	father1.sonFCB = &f1;
-	f1.nextFCB = &f2;
-	f2.nextFCB = &f3;
-	father2.sonFCB = &f4; 
-	f4.nextFCB = &father3;
-	father3.sonFCB = &f5;
-	
-	total_directory.nextFCB = NULL;
-	f1.sonFCB = NULL;
-	f2.sonFCB = NULL;
-	f3.sonFCB = NULL;
-	f4.sonFCB = NULL;
-	f5.sonFCB = NULL;
-	father2.nextFCB = NULL;
-	father3.nextFCB = NULL;
-	f3.nextFCB = NULL;
-	f5.nextFCB = NULL;
-	temp = *total_directory.sonFCB;
-
-	return total_directory;
+	pst->a[pst->top] = x;//å…ˆæ”¾å€¼
+	pst->top++;//å†++
 }
+void STPop(ST* pst)
+{	
+	FCB* temp = NULL;
+	pst->a[pst->top] = *temp;
+	pst->top--;
+}
+bool STEmpty(ST* pst)//æ ˆä¸ºç©ºè¿”å›žtrue,ä¸ä¸ºç©ºè¿”å›žfalse
+{
+    return pst->top == 0;
+}
+void init_directory()
+{
+	head=(FCB*)malloc(sizeof(FCB));
+    FCB *father1 = (FCB*)malloc(sizeof(FCB));
+    FCB *father2 = (FCB*)malloc(sizeof(FCB));
+	 FCB *father3 = (FCB*)malloc(sizeof(FCB));
+    FCB *f1 = (FCB*)malloc(sizeof(FCB));
+    FCB *f2 = (FCB*)malloc(sizeof(FCB));
+	 FCB *f3 = (FCB*)malloc(sizeof(FCB));
+    FCB *f4 = (FCB*)malloc(sizeof(FCB));
+    FCB *f5 = (FCB*)malloc(sizeof(FCB));
+	//åˆå§‹åŒ–ç›®å½•æ–‡ä»¶ 
+	
+	head->sonFCB=father1;
+	
+	head->name = (char *)malloc(sizeof(char)*20); // åˆ†é…å†…å­˜
+    strcpy(head->name,"head");
 
+    
+    father1->name=(char *)malloc(sizeof(char)*20); // åˆ†é…å†…å­˜
+    strcpy(father1->name,"father1");
+
+    
+    father2->name=(char *)malloc(sizeof(char)*20); // åˆ†é…å†…å­˜
+    strcpy(father2->name,"father2");
+
+    
+    father3->name=(char *)malloc(sizeof(char)*20); // åˆ†é…å†…å­˜
+    strcpy(father3->name,"father3");
+
+    
+    f1->name = (char *)malloc(sizeof(char)*20); // åˆ†é…å†…å­˜
+    strcpy(f1->name, "f1");
+
+    
+    f2->name = (char *)malloc(sizeof(char)*20); // åˆ†é…å†…å­˜
+    strcpy(f2->name, "f2");
+
+    
+    f3->name = (char *)malloc(sizeof(char)*20); // åˆ†é…å†…å­˜
+    strcpy(f3->name, "f3");
+
+    
+    f4->name = (char *)malloc(sizeof(char)*20); // åˆ†é…å†…å­˜
+    strcpy(f4->name, "f4");
+
+    
+    f5->name = (char *)malloc(sizeof(char)*20); // åˆ†é…å†…å­˜
+    strcpy(f5->name, "f5");
+
+	
+
+	father1->nextFCB = father2;
+	father1->sonFCB = f1;
+	f1->nextFCB = f2;
+	f2->nextFCB = f3;
+	father2->sonFCB = f4; 
+	f4->nextFCB = father3;
+	father3->sonFCB = f5;
+	
+	head->nextFCB = NULL;
+	f1->sonFCB = NULL;
+	f2->sonFCB = NULL;
+	f3->sonFCB = NULL;
+	f4->sonFCB = NULL;
+	f5->sonFCB = NULL;
+	father2->nextFCB = NULL;
+	father3->nextFCB = NULL;
+	f3->nextFCB = NULL;
+	f5->nextFCB = NULL;
+
+}
