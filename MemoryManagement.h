@@ -7,40 +7,44 @@
 #include<map>
 #include<list>
 
-# define PAGE_NUMBER 8 //Ò³ÊıÎª8
-# define FRAME_NUMBER 3 //Ö¡ÊıÎª3
-# define PAGE_SIZE 1024 //Ò³´óĞ¡Îª1024
+# define PAGE_NUMBER 8 //é¡µæ•°ä¸º8
+# define FRAME_NUMBER 3 //å¸§æ•°ä¸º3
+# define PAGE_SIZE 1024 //é¡µå¤§å°ä¸º1024
 
 using namespace std;
 
-typedef map<int, int>Table;//<virID,phyID>Ò³Ö¡¶ÔÓ¦±í
-typedef map<int, Table>PageTable;//<PID,TABLE>Ò»¸ö½ø³Ì¶ÔÓ¦Ò»¸öÒ³Ö¡¶ÔÓ¦±í
+typedef map<int, int>Table;//<virID,phyID>é¡µå¸§å¯¹åº”è¡¨
+typedef map<int, Table>PageTable;//<PID,TABLE>ä¸€ä¸ªè¿›ç¨‹å¯¹åº”ä¸€ä¸ªé¡µå¸§å¯¹åº”è¡¨
 typedef struct VirMemoty {
-	int virTable[PAGE_NUMBER][3];//ĞéÄâÄÚ´æ·ÖÅäÇé¿ö£¨PID£¬Ä¬ÈÏ-1£»ÒÑÓÃÄÚ´æ£¬Ä¬ÈÏ0£»ÒÑĞ´ÄÚ´æ£¬Ä¬ÈÏ0£©
-	string virContent[PAGE_NUMBER];//ĞéÄâÄÚ´æ´æ´¢ÄÚÈİ£¨Ä¬ÈÏ"*"£©
+	int virTable[PAGE_NUMBER][3];//è™šæ‹Ÿå†…å­˜åˆ†é…æƒ…å†µï¼ˆPIDï¼Œé»˜è®¤-1ï¼›å·²ç”¨å†…å­˜ï¼Œé»˜è®¤0ï¼›å·²å†™å†…å­˜ï¼Œé»˜è®¤0ï¼‰
+	string virContent[PAGE_NUMBER];//è™šæ‹Ÿå†…å­˜å­˜å‚¨å†…å®¹ï¼ˆé»˜è®¤"*"ï¼‰
 };
 typedef struct PhyMemory {
-	int phyTable[FRAME_NUMBER]; //ÎïÀíÄÚ´æ·ÖÅäÇé¿ö£¨Ò³ºÅ£¬Ä¬ÈÏ-1£©
-	string phyContent[FRAME_NUMBER]; //ÎïÀíÄÚ´æÀï´æ´¢ÄÚÈİ£¨Ä¬ÈÏ"*"£©
+	int phyTable[FRAME_NUMBER]; //ç‰©ç†å†…å­˜åˆ†é…æƒ…å†µï¼ˆé¡µå·ï¼Œé»˜è®¤-1ï¼‰
+	string phyContent[FRAME_NUMBER]; //ç‰©ç†å†…å­˜é‡Œå­˜å‚¨å†…å®¹ï¼ˆé»˜è®¤"*"ï¼‰
 };
 typedef struct FileLocation {
-	string fileName;//ÎÄ¼şÃû
-	int start;//ÆğÊ¼µØÖ·
-	int end;//½áÊøµØÖ·
+	string fileName;//æ–‡ä»¶å
+	int start;//èµ·å§‹åœ°å€
+	int end;//ç»“æŸåœ°å€
 };
-PageTable pageTable;//Ò³±í
-VirMemoty virMemory;//ĞéÄâÄÚ´æÊ¹ÓÃÇé¿ö
-PhyMemory phyMemory;//ÎïÀíÄÚ´æÊ¹ÓÃÇé¿ö
-list<int> scheQueue; //µ÷¶È¶ÓÁĞ
+PageTable pageTable;//é¡µè¡¨
+VirMemoty virMemory;//è™šæ‹Ÿå†…å­˜ä½¿ç”¨æƒ…å†µ
+PhyMemory phyMemory;//ç‰©ç†å†…å­˜ä½¿ç”¨æƒ…å†µ
+list<int> scheQueue; //è°ƒåº¦é˜Ÿåˆ—
+int allocVirMemory = 0; //å·²åˆ†é…è™šæ‹Ÿå†…å­˜
+int usedPhyMemory = 0; //å·²ä½¿ç”¨ç‰©ç†å†…å­˜
+int pageFault = 0; //ç¼ºé¡µæ¬¡æ•°
 
-int FindPhyID(int _virID);//¸ù¾İÒ³ºÅ£¬²éÕÒ¶ÔÓ¦µÄÖ¡ºÅ£¬·µ»ØÖ¡ºÅ»ò-1
-void InsertPage(int _virID,Table _table);//¸ù¾İÒ³ºÅ£¬¸øÒ³Ö¡¶ÔÓ¦±í²åÈëĞÂµÄ¹ØÁª
-void DeletePage(int _virID, Table _table);//¸ù¾İÒ³ºÅ£¬É¾³ıÒ³Ö¡¶ÔÓ¦±íµÄ¹ØÁª
-int TransformPage(int _address,Table _table);//¸ù¾İ½ø³ÌÏà¶ÔµØÖ·£¬×ª»»Îª¸Ã½ø³ÌÏà¶ÔµØÖ·ËùÔÚµÄÒ³ºÅ£¬·µ»ØÒ³ºÅ»ò-1£¨PageTable[pid]£©
-void ModifyPage(int _virID, int _phyID, Table _table, int _flag);//¸ù¾İÒ³ºÅ¡¢Ö¡ºÅ£¬½«Ò³µ÷Èë»òµ÷³öÎïÀíÄÚ´æ£»µ÷Èë_flagÎª1£»µ÷³ö_flagÎª0£¬_phyIDÎª-1
-void InitializeMemory();//³õÊ¼»¯ĞéÄâÄÚ´æºÍÎïÀíÄÚ´æ
-int AllocMemory(int pid, int size);//·ÖÒ³´æ´¢·ÖÅäÄÚ´æ£¬·µ»Ø0»ò-1
-int FreeMemory(int _pid);//¸ù¾İ½ø³Ì£¬ÊÍ·Å½ø³ÌËùÕ¼ÄÚ´æ£¬·µ»Ø0»ò-1
-FileLocation WriteMemory(int _pid, string _context);//¸ù¾İ½ø³ÌºÍĞ´ÈëÎÄ±¾£¬Ğ´ÈëÄÚ´æ
-int CheckFault(int _pid, int _start, int _end);//¼ì²éÊÇ·ñÈ±Ò³ÖĞ¶Ï£¬·µ»Ø0»ò-1
-
+int FindPhyID(int _virID);//æ ¹æ®é¡µå·ï¼ŒæŸ¥æ‰¾å¯¹åº”çš„å¸§å·ï¼Œè¿”å›å¸§å·æˆ–-1
+void InsertPage(int _virID,Table _table);//æ ¹æ®é¡µå·ï¼Œç»™é¡µå¸§å¯¹åº”è¡¨æ’å…¥æ–°çš„å…³è”
+void DeletePage(int _virID, Table _table);//æ ¹æ®é¡µå·ï¼Œåˆ é™¤é¡µå¸§å¯¹åº”è¡¨çš„å…³è”
+int TransformPage(int _address,Table _table);//æ ¹æ®è¿›ç¨‹ç›¸å¯¹åœ°å€ï¼Œè½¬æ¢ä¸ºè¯¥è¿›ç¨‹ç›¸å¯¹åœ°å€æ‰€åœ¨çš„é¡µå·ï¼Œè¿”å›é¡µå·æˆ–-1
+void ModifyPage(int _virID, int _phyID, Table _table, int _flag);//æ ¹æ®é¡µå·ã€å¸§å·ï¼Œå°†é¡µè°ƒå…¥æˆ–è°ƒå‡ºç‰©ç†å†…å­˜ï¼›è°ƒå…¥_flagä¸º1ï¼›è°ƒå‡º_flagä¸º0ï¼Œ_phyIDä¸º-1
+void InitializeMemory();//åˆå§‹åŒ–è™šæ‹Ÿå†…å­˜å’Œç‰©ç†å†…å­˜
+int FreeMemory(int _pid);//æ ¹æ®è¿›ç¨‹ï¼Œé‡Šæ”¾è¿›ç¨‹æ‰€å è™šæ‹Ÿå†…å­˜å’Œç‰©ç†å†…å­˜ï¼Œè¿”å›0æˆ–-1
+int AllocVirMemory(int _pid, int _size);//æ ¹æ®è¿›ç¨‹å¤§å°ï¼Œåˆ†é¡µå­˜å‚¨åˆ†é…è™šæ‹Ÿå†…å­˜ï¼Œè¿”å›0æˆ–-1
+int CheckFault(int _pid, int _start, int _end);//æ ¹æ®èµ·å§‹å’Œç»“æŸåœ°å€ï¼Œæ£€æŸ¥æ˜¯å¦ç¼ºé¡µä¸­æ–­ï¼Œå³æ˜¯å¦æœ‰å¯¹åº”å¸§ï¼Œè¿”å›0æˆ–-1
+FileLocation WriteVirMemory(int _pid, string _context);//æ ¹æ®è¿›ç¨‹å’Œå†™å…¥æ–‡æœ¬ï¼Œå†™å…¥è™šæ‹Ÿå†…å­˜ï¼Œè¿”å›æ–‡ä»¶åœ°å€
+string AccessPhyMemory(int _pid, int _start, int _end);//æ ¹æ®èµ·å§‹å’Œç»“æŸåœ°å€ï¼Œè®¿é—®ç‰©ç†å†…å­˜ï¼Œè¿”å›å†…å®¹æˆ–"-1"
+Table LRU(int _virID, Table _table);//æ ¹æ®é¡µå·ï¼Œæ‰§è¡ŒLRUç®—æ³•ï¼Œè¿”å›ä¿®æ”¹åçš„é¡µå¸§å¯¹åº”è¡¨
