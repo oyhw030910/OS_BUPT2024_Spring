@@ -3,13 +3,9 @@
 using namespace std;
 
 #include"process.h"
-int timer=0;
-int totalP=0;
-extern int createfile(string str);
-extern int deletefile(string str);
-extern int acquiredevice(int pid, int device);
-extern int releasedevice(int pid, int device);
-extern void raiseInterrupt(int PID,int type,int priority);
+#include"MemoryManagement.h"
+
+
 int getrand(int l,int r)
 {
     return rand() /(r-l+1) +l;
@@ -28,26 +24,19 @@ int createP(string path)
     //分配内存
     return 1;
 }
-int createP(int sz,int tm,int cmdnum,CMD cmd)
+int createP(int processsize,int processtime,int ct,int cid,int did,int dt,string fn,string inf)
 {
-    if(totalP==maxprocess)
-    {
+    if(ct >= processtime || totalP >=maxprocess)
         return 0;
-    }
-    if(cmd.time>tm)
-    {
-        return 0;
-    }
-    int id = totalP++;
-    process[id].size=sz;
-    process[id].needtime=process[id].remaintime=tm;
-    process[id].command=cmd;
+    CMD cmd={ct,cid,did,dt,fn,inf};
+    process[totalP]={totalP,0,processsize,timer,0,processtime,0,processtime,cmd};
+    totalP++;
     return 1;
 }
 int finishP(int PID)
 {
     process[PID].state=OVER;
-    releasedevice(PID,-1);
+    //releasedevice(PID,-1);
     Done_Process.push_back(PID);
 }
 int wakeupP(int PID)//由阻塞态变为就绪态
@@ -83,15 +72,18 @@ int runP(int PID)//使进程从就绪态变为运行态
     {
         return 0;
     }
-    
+    if(!AllocMemory(PID,process[PID].size))
+        return 0;
     process[PID].state==RUNNING;
+    return 1;
 }
 int runcmd(int PID, CMD cmd)
 {
+    int s=0;
     switch(cmd.cid)
     {
         case CREATEFILE:
-            int s=createfile(cmd.filename);
+            //int s=createfile(cmd.filename);
             if(!s)
             {
                 //cout << "创建文件失败" << endl;
@@ -102,7 +94,7 @@ int runcmd(int PID, CMD cmd)
             }
             break;
         case DELETEFILE:
-            int s= deletefile(cmd.filename);
+            //int s= deletefile(cmd.filename);
             if(!s)
             {
                 
@@ -114,24 +106,30 @@ int runcmd(int PID, CMD cmd)
                 //cout << "删除文件成功" << endl;
             }
             break;
+        case READFILE:
+            break;
+        case WRITEFILE:
+            break;
         case APPLYDEVICE:
-            int s = acquiredevice(PID,cmd.object);
+            //int s = acquiredevice(PID,cmd.object);
             if(!s)
             {
-                raiseInterrupt(PID,1,0);
+            //    raiseInterrupt(PID,1,0);
+                return 0;
             }
             break;
         case RELEASEDEVICE:
-            int s = releasedevice(PID,cmd.object);
+            //int s = releasedevice(PID,cmd.object);
             break;
 
     }
-
+    return 1;
 }
 int finishP(int PID)
 {
     process[PID].state=OVER;
     Done_Process.push_back(PID);
+    return 1;
 }
 int findnextprocess()
 {
@@ -142,7 +140,9 @@ int FCFS()//使用FCFS算法进行进程调度
 {
     if(Ready_Process.empty())
         return 0;
-    return Ready_Process.front();
+    int res=Ready_Process.front();
+    Ready_Process.pop();
+    return res;
 }
 int blockP(int PID) //进程因为中断等问题阻塞，由运行态变为阻塞态
 {
@@ -195,19 +195,28 @@ void CPU()
                 timer++;
                 continue;
             }
-            runP(runningpid);
+            if(!runP(runningpid))
+            {
+                //
+            }
         }
 
-        if(process[runningpid].cmdtime == process[runningpid].pasttime)
+        if(process[runningpid].command.time == process[runningpid].pasttime)
         {
             if(!runcmd(runningpid,process[runningpid].command))
             {
-                //中断阻塞
+                blockP(runningpid);
                 timer++;
                 continue;
             }
-            
+            if(process[runningpid].command.cid==APPLYDEVICE)
+            {
+                process[runningpid].command.cid=RELEASEDEVICE;
+                process[runningpid].command.time=process[runningpid].command.time+process[runningpid].command.devicetime;
+            }
         }
+        
+            
         process[runningpid].pasttime++;
         process[runningpid].remaintime--;
         if(process[runningpid].pasttime==process[runningpid].needtime)
