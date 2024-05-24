@@ -10,20 +10,7 @@ int getrand(int l,int r)
 {
     return rand() /(r-l+1) +l;
 }
-int createP(string path)
-{
-    if(totalP==maxprocess)
-    {
-        return 0;
-    }
-    int id = totalP++;
-    process[id].pid=id;
-    process[id].size=getrand(1,MAXSPACE);
-    process[id].arrivetime=timer;
-    process[id].needtime=process[id].remaintime=getrand(1,10);
-    //分配内存
-    return 1;
-}
+
 int createP(int processsize,int processtime,int ct,int cid,int did,int dt,string fn,string inf)
 {
     if(ct >= processtime || totalP >=maxprocess)
