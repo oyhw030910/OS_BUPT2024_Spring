@@ -9,6 +9,7 @@ using namespace std;
 typedef struct FCB
 {
 	char *name;//文件名
+	int type;//0普通文件，1目录文件 
 	struct FCB *nextFCB;
 	struct FCB *sonFCB;
 }FCB;
