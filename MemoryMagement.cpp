@@ -11,52 +11,55 @@ int FindPhyID(int _virID)
 	}
 	return -1;
 }
-void InsertPage(int _virID, Table _table)
+Table InsertPage(int _virID, Table _table)
 {
 	_table.insert(pair<int, int>(_virID, -1));
+	return _table;
 }
-void DeletePage(int _virID, Table _table)
+Table DeletePage(int _virID, Table _table)
 {
 	_table.erase(_virID);
+	return _table;
 }
 int TransformPage(int _address, Table _table)
 {
-	int pageNum = _address / PAGE_SIZE; //Í¨¹ıµØÖ· / Ò³´óĞ¡£¬Çó³öµØÖ·ÔÚ½ø³ÌµÄµÚ¼¸Ò³
-	int pageSum = _table.size();//tableµÄ×ÜÒ³Êı
-	//ÈôµØÖ·ËùÔÚÒ³Ğ¡ÓÚ×ÜÒ³Êı£¬¼´ÔÚÒ³±íÖĞ
+	int pageNum = _address / PAGE_SIZE; //é€šè¿‡åœ°å€ / é¡µå¤§å°ï¼Œæ±‚å‡ºåœ°å€åœ¨è¿›ç¨‹çš„ç¬¬å‡ é¡µ
+	int pageSum = _table.size();//tableçš„æ€»é¡µæ•°
+	//è‹¥åœ°å€æ‰€åœ¨é¡µå°äºæ€»é¡µæ•°ï¼Œå³åœ¨é¡µè¡¨ä¸­
 	if (pageNum < pageSum)
 	{
-		int i = 0;//Ñ­»·±äÁ¿
-		int tmpTable[PAGE_NUMBER];//´´½¨ÁÙÊ±±í£¬´æ´¢°´Ë³ĞòÅÅÁĞµÄÒ³ºÅ
-		map < int, int > ::iterator it;//´´½¨Ò»¸öµü´úÆ÷
-		//±éÀútable£¬½«tableÖĞµÄÒ³ºÅ°´Ë³ĞòÌîÈëÁÙÊ±±í
+		int i = 0;//å¾ªç¯å˜é‡
+		int tmpTable[PAGE_NUMBER];//åˆ›å»ºä¸´æ—¶è¡¨ï¼Œå­˜å‚¨æŒ‰é¡ºåºæ’åˆ—çš„é¡µå·
+		map < int, int > ::iterator it;//åˆ›å»ºä¸€ä¸ªè¿­ä»£å™¨
+		//éå†tableï¼Œå°†tableä¸­çš„é¡µå·æŒ‰é¡ºåºå¡«å…¥ä¸´æ—¶è¡¨
 		for (it = _table.begin(); it != _table.end(); ++it) {
 			tmpTable[i] = it->first;
 			i++;
 		}
-		return tmpTable[pageNum]; //·µ»ØµØÖ·ËùÔÚÒ³ºÅ
+		return tmpTable[pageNum]; //è¿”å›åœ°å€æ‰€åœ¨é¡µå·
 	}
-	//ÈôµØÖ·ËùÔÚÒ³²»ÔÚÒ³±íÖĞ£¬·µ»Ø-1
+	//è‹¥åœ°å€æ‰€åœ¨é¡µä¸åœ¨é¡µè¡¨ä¸­ï¼Œè¿”å›-1
 	else
 		return -1;
 }
-void ModifyPage(int _virID, int _phyID, Table _table, int _flag)
+Table ModifyPage(int _virID, int _phyID, Table _table, int _flag)
 {
-	//1Îªµ÷Èë
+	//1ä¸ºè°ƒå…¥
 	if (_flag == 1)
 	{
-		_table[_virID] = _phyID; //½«Ò³Ö¡¶ÔÓ¦±íÖĞµÄÒ³ºÅÓëÖ¡ºÅ¹ØÁª
+		_table[_virID] = _phyID; //å°†é¡µå¸§å¯¹åº”è¡¨ä¸­çš„é¡µå·ä¸å¸§å·å…³è”
 	}
-	//-1Îªµ÷³ö
+	//-1ä¸ºè°ƒå‡º
 	else if(_flag == 0)
 	{
-		_table[_virID] = -1; //½«Ò³Ö¡¶ÔÓ¦±íÖĞÒ³±í¶ÔÓ¦Ö¡ºÅÖÃÎª-1£¬¼´Ã»ÓĞ¹ØÁª
+		_table[_virID] = -1; //å°†é¡µå¸§å¯¹åº”è¡¨ä¸­é¡µè¡¨å¯¹åº”å¸§å·ç½®ä¸º-1ï¼Œå³æ²¡æœ‰å…³è”
 	}
+	return _table;
 }
 void InitializeMemory()
 {
-	int i, j;//Ñ­»·±äÁ¿
-	//³õÊ¼»¯ĞéÄâÄÚ´æ
+	int i, j;//å¾ªç¯å˜é‡
+	//åˆå§‹åŒ–è™šæ‹Ÿå†…å­˜
 	for (i = 0; i < PAGE_NUMBER; i++) 
 	{
 		for (j = 0; j < 3; j++) 
@@ -67,7 +70,7 @@ void InitializeMemory()
 		}
 		virMemory.virContent[i] = "*"; 
 	}
-	//³õÊ¼»¯ÎïÀíÄÚ´æ
+	//åˆå§‹åŒ–ç‰©ç†å†…å­˜
 	for (i = 0; i <FRAME_NUMBER; i++)
 	{
 		phyMemory.phyTable[i] = -1;
@@ -76,167 +79,167 @@ void InitializeMemory()
 }
 int FreeMemory(int _pid)
 {
-	int i, j;//Ñ­»·±äÁ¿
+	int i, j;//å¾ªç¯å˜é‡
 	int flag = 0;
-	for (i = 0; i < PAGE_NUMBER; i++)//±éÀúĞéÄâÄÚ´æ
+	for (i = 0; i < PAGE_NUMBER; i++)//éå†è™šæ‹Ÿå†…å­˜
 	{
-		//ÈôĞéÄâÄÚ´æ±»½ø³ÌÕ¼ÓÃ
+		//è‹¥è™šæ‹Ÿå†…å­˜è¢«è¿›ç¨‹å ç”¨
 		if (virMemory.virTable[i][0] == _pid)
 		{
-			flag = 1;//ÁîflagÖÃÎª1
-			for (j = 0; j < FRAME_NUMBER; j++)//±éÀúÎïÀíÄÚ´æ
+			flag = 1;//ä»¤flagç½®ä¸º1
+			for (j = 0; j < FRAME_NUMBER; j++)//éå†ç‰©ç†å†…å­˜
 			{
-				//ÈôÎïÀíÄÚ´æÓë±»½ø³ÌÕ¼ÓÃµÄĞéÄâÄÚ´æ¶ÔÓ¦
+				//è‹¥ç‰©ç†å†…å­˜ä¸è¢«è¿›ç¨‹å ç”¨çš„è™šæ‹Ÿå†…å­˜å¯¹åº”
 				if (phyMemory.phyTable[j] == i)
 				{
-					DeletePage(i, pageTable[_pid]);//½«½ø³Ì¶ÔÓ¦µÄÒ³±íÉ¾³ı
-					scheQueue.remove(i);// É¾³ıµ÷¶È¶ÓÁĞÖĞµÄ¸ÃÒ³ºÅ
-					//³õÊ¼»¯ÎïÀíÄÚ´æ
+					pageTable[_pid] = DeletePage(i, pageTable[_pid]);//å°†è¿›ç¨‹å¯¹åº”çš„é¡µè¡¨åˆ é™¤
+					scheQueue.remove(i);// åˆ é™¤è°ƒåº¦é˜Ÿåˆ—ä¸­çš„è¯¥é¡µå·
+					//åˆå§‹åŒ–ç‰©ç†å†…å­˜
 					phyMemory.phyTable[j] = -1;
 					phyMemory.phyContent[j] = "*";
 				}
 			}
-			allocVirMemory -= virMemory.virTable[i][0];//ÒÑ·ÖÅäĞéÄâÄÚ´æ¼õÈ¥ÊÍ·ÅÄÚ´æ
-			//³õÊ¼»¯ĞéÄâÄÚ´æ
+			allocVirMemory -= virMemory.virTable[i][1];//å·²åˆ†é…è™šæ‹Ÿå†…å­˜å‡å»é‡Šæ”¾å†…å­˜
+			//åˆå§‹åŒ–è™šæ‹Ÿå†…å­˜
 			virMemory.virTable[i][0] = -1;
 			virMemory.virTable[i][1] = 0;
 			virMemory.virTable[i][2] = 0;
 			virMemory.virContent[i] = "*";
 		}
 	}
-	//Èô±éÀúĞéÄâÄÚ´æºó£¬·¢ÏÖĞéÄâÄÚ´æÎ´±»½ø³ÌÕ¼ÓÃ
+	//è‹¥éå†è™šæ‹Ÿå†…å­˜åï¼Œå‘ç°è™šæ‹Ÿå†…å­˜æœªè¢«è¿›ç¨‹å ç”¨
 	if (flag == 0)
 	{
-		printf("ÊÍ·ÅÄÚ´æÊ§°Ü£¬½ø³ÌÎ´Õ¼ÓÃÄÚ´æ\n");
-		return -1;//ÊÍ·ÅÄÚ´æÊ§°Ü£¬·µ»Ø-1
+		printf("é‡Šæ”¾å†…å­˜å¤±è´¥ï¼Œè¿›ç¨‹æœªå ç”¨å†…å­˜\n");
+		return -1;//é‡Šæ”¾å†…å­˜å¤±è´¥ï¼Œè¿”å›-1
 	}
-	pageTable.erase(_pid); //É¾³ı½ø³ÌµÄÒ³±í
-	printf("ÊÍ·ÅÄÚ´æ³É¹¦ pid:%d\n", _pid);
-	return 0;//ÊÍ·ÅÄÚ´æ³É¹¦£¬·µ»Ø0
+	pageTable.erase(_pid); //åˆ é™¤è¿›ç¨‹çš„é¡µè¡¨
+	printf("é‡Šæ”¾å†…å­˜æˆåŠŸ pid:%d\n", _pid);
+	return 0;//é‡Šæ”¾å†…å­˜æˆåŠŸï¼Œè¿”å›0
 }
 int AllocVirMemory(int _pid, int _size)
 {
-	int i, j;//Ñ­»·±äÁ¿
-	int tmpSize = _size;//½ø³Ì»¹Ğè·ÖÅäµÄÄÚ´æ´óĞ¡
-	Table tmpTable;//ÁÙÊ±Ò³Ö¡¶ÔÓ¦±í
-	for (i = 0; i < PAGE_NUMBER; i++)//±éÀúĞéÄâÄÚ´æ
+	int i, j;//å¾ªç¯å˜é‡
+	int tmpSize = _size;//è¿›ç¨‹è¿˜éœ€åˆ†é…çš„å†…å­˜å¤§å°
+	Table tmpTable;//ä¸´æ—¶é¡µå¸§å¯¹åº”è¡¨
+	for (i = 0; i < PAGE_NUMBER; i++)//éå†è™šæ‹Ÿå†…å­˜
 	{
-		//ÈôÎª¿Õ
+		//è‹¥ä¸ºç©º
 		if (virMemory.virTable[i][0] == -1)
 		{
-			virMemory.virTable[i][0] = _pid;//¸ÄÎª_pid£¬¼´·ÖÅä¸ø¸Ã½ø³Ì
-			//Èô¸Ã½ø³ÌÒÑ¾­ÔÚĞéÄâÄÚ´æÖĞÓĞÒ³±íÁË£¬Ö±½ÓÊ¹ÓÃ¸ÃÒ³±í
+			virMemory.virTable[i][0] = _pid;//æ”¹ä¸º_pidï¼Œå³åˆ†é…ç»™è¯¥è¿›ç¨‹
+			//è‹¥è¯¥è¿›ç¨‹å·²ç»åœ¨è™šæ‹Ÿå†…å­˜ä¸­æœ‰é¡µè¡¨äº†ï¼Œç›´æ¥ä½¿ç”¨è¯¥é¡µè¡¨
 			if (pageTable.count(_pid) > 0) 
 			{
-				tmpTable = pageTable[_pid]; //ÁîÁÙÊ±Ò³Ö¡¶ÔÓ¦±íÎª_pidµÄÒ³Ö¡¶ÔÓ¦±í
+				tmpTable = pageTable[_pid]; //ä»¤ä¸´æ—¶é¡µå¸§å¯¹åº”è¡¨ä¸º_pidçš„é¡µå¸§å¯¹åº”è¡¨
 			}
-			//Èô¸Ã½ø³ÌÔÚĞéÄâÄÚ´æÖĞÎ´ÓĞÒ³±í£¬´´½¨ĞÂµÄÒ³±í
+			//è‹¥è¯¥è¿›ç¨‹åœ¨è™šæ‹Ÿå†…å­˜ä¸­æœªæœ‰é¡µè¡¨ï¼Œåˆ›å»ºæ–°çš„é¡µè¡¨
 			else
 			{
-				pageTable.insert(pair<int, Table>(_pid, tmpTable));//´´½¨ĞÂµÄÒ³±í
+				pageTable.insert(pair<int, Table>(_pid, tmpTable));//åˆ›å»ºæ–°çš„é¡µè¡¨
 			}
-			InsertPage(i, tmpTable);//ÔÚ¸ÃÒ³Ö¡¶ÔÓ¦±í²åÈëĞÂµÄ¹ØÁª
-			pageTable[_pid] = tmpTable;//Áî_pidµÄÒ³Ö¡¶ÔÓ¦±íÎªtmpTable
-			//Èô½ø³ÌËùĞèµÄÄÚ´æ´óĞ¡´óÓÚµÈÓÚÒ³´óĞ¡
+			tmpTable = InsertPage(i, tmpTable);//åœ¨è¯¥é¡µå¸§å¯¹åº”è¡¨æ’å…¥æ–°çš„å…³è”
+			pageTable[_pid] = tmpTable;//ä»¤_pidçš„é¡µå¸§å¯¹åº”è¡¨ä¸ºtmpTable
+			//è‹¥è¿›ç¨‹æ‰€éœ€çš„å†…å­˜å¤§å°å¤§äºç­‰äºé¡µå¤§å°
 			if (tmpSize >= PAGE_SIZE)
 			{
-				virMemory.virTable[i][1] = PAGE_SIZE;//ÁîĞéÄâÄÚ´æ¶ÔÓ¦µÄÒÑÓÃÄÚ´æÎªÒ³´óĞ¡£¬¼´Õ¼Âú
-				tmpSize -= PAGE_SIZE;//½ø³Ì»¹ËùĞèÄÚ´æ¼õÈ¥Ò³´óĞ¡£¬¼´¼õÈ¥ÒÑ·ÖÅäÄÚ´æ
+				virMemory.virTable[i][1] = PAGE_SIZE;//ä»¤è™šæ‹Ÿå†…å­˜å¯¹åº”çš„å·²ç”¨å†…å­˜ä¸ºé¡µå¤§å°ï¼Œå³å æ»¡
+				tmpSize -= PAGE_SIZE;//è¿›ç¨‹è¿˜æ‰€éœ€å†…å­˜å‡å»é¡µå¤§å°ï¼Œå³å‡å»å·²åˆ†é…å†…å­˜
 			}
-			//Èô½ø³ÌËùĞèµÄÄÚ´æ´óĞ¡Ğ¡ÓÚÒ³´óĞ¡
+			//è‹¥è¿›ç¨‹æ‰€éœ€çš„å†…å­˜å¤§å°å°äºé¡µå¤§å°
 			else
 			{
-				virMemory.virTable[i][1] = tmpSize;//ÁîĞéÄâÄÚ´æ¶ÔÓ¦µÄÒÑÓÃÄÚ´æÎªtmpSize
-				tmpSize = 0;//½ø³ÌËùĞèÄÚ´æÎª0£¬¼´·ÖÅäÍê³É
+				virMemory.virTable[i][1] = tmpSize;//ä»¤è™šæ‹Ÿå†…å­˜å¯¹åº”çš„å·²ç”¨å†…å­˜ä¸ºtmpSize
+				tmpSize = 0;//è¿›ç¨‹æ‰€éœ€å†…å­˜ä¸º0ï¼Œå³åˆ†é…å®Œæˆ
 			}
 		}
-		//Èô½ø³ÌËùĞèÄÚ´æÎª0£¬¼´·ÖÅäÍê³É
+		//è‹¥è¿›ç¨‹æ‰€éœ€å†…å­˜ä¸º0ï¼Œå³åˆ†é…å®Œæˆ
 		if (tmpSize == 0)
 		{
-			allocVirMemory += _size;//ĞŞ¸ÄÒÑ·ÖÅäĞéÄâÄÚ´æ
-			return 0;//·ÖÅäÄÚ´æ³É¹¦£¬·µ»Ø0
+			allocVirMemory += _size;//ä¿®æ”¹å·²åˆ†é…è™šæ‹Ÿå†…å­˜
+			return 0;//åˆ†é…å†…å­˜æˆåŠŸï¼Œè¿”å›0
 		}
 	}
-	//Èô±éÀúĞéÄâÄÚ´æºó£¬·ÖÅäÄÚ´æÊ§°Ü
-	FreeMemory(_pid);//ÊÍ·Å½ø³ÌËùÕ¼ÄÚ´æ
-	return -1;//·ÖÅäÄÚ´æÊ§°Ü£¬·µ»Ø-1
+	//è‹¥éå†è™šæ‹Ÿå†…å­˜åï¼Œåˆ†é…å†…å­˜å¤±è´¥
+	FreeMemory(_pid);//é‡Šæ”¾è¿›ç¨‹æ‰€å å†…å­˜
+	return -1;//åˆ†é…å†…å­˜å¤±è´¥ï¼Œè¿”å›-1
 }
 int CheckFault(int _pid, int _start, int _end)
 {
-	Table tmpTable = pageTable[_pid];//ÁÙÊ±Ò³Ö¡¶ÔÓ¦±í
-	int startVirID = TransformPage(_start, tmpTable);//Ïà¶ÔÆğÊ¼µØÖ·µÄÒ³ºÅ
-	int endVirID = TransformPage(_end, tmpTable);//Ïà¶Ô½áÊøµØÖ·µÄÒ³ºÅ
-	//ÈôÏà¶ÔÆğÊ¼ºÍ½áÊøµØÖ·µÄÒ³ºÅ¶¼ÓĞ¶ÔÓ¦µÄÖ¡ºÅ£¬¼´Ã»ÓĞÈ±Ò³ÖĞ¶Ï£¬·µ»Ø0
+	Table tmpTable = pageTable[_pid];//ä¸´æ—¶é¡µå¸§å¯¹åº”è¡¨
+	int startVirID = TransformPage(_start, tmpTable);//ç›¸å¯¹èµ·å§‹åœ°å€çš„é¡µå·
+	int endVirID = TransformPage(_end, tmpTable);//ç›¸å¯¹ç»“æŸåœ°å€çš„é¡µå·
+	//è‹¥ç›¸å¯¹èµ·å§‹å’Œç»“æŸåœ°å€çš„é¡µå·éƒ½æœ‰å¯¹åº”çš„å¸§å·ï¼Œå³æ²¡æœ‰ç¼ºé¡µä¸­æ–­ï¼Œè¿”å›0
 	if (tmpTable[startVirID] != -1 && tmpTable[endVirID] != -1)
 	{
 		return 0;
 	}
-	//Èô²»ÊÇ£¬¼´È±Ò³ÖĞ¶Ï£¬·µ»Ø-1
+	//è‹¥ä¸æ˜¯ï¼Œå³ç¼ºé¡µä¸­æ–­ï¼Œè¿”å›-1
 	return -1;
 }
 FileLocation  WriteVirMemory(int _pid, string _context)
 {
-	int i = 0;//Ñ­»·±äÁ¿
-	int len = _context.length();//ÎÄ±¾³¤¶È
-	FileLocation tmpFileLocation;//ÁÙÊ±ÎÄ¼şµØÖ·
-	Table tmpTable = pageTable[_pid];//ÁÙÊ±Ò³Ö¡¶ÔÓ¦±í
-	list<int> tmpQueue;//ÁÙÊ±¶ÓÁĞ
-	map < int, int > ::iterator it;//µü´úÆ÷
-	//±éÀúÒ³Ö¡¶ÔÓ¦±í£¬½«Ò³Ö¡¶ÔÓ¦±íÖĞµÄÒ³ºÅ°´Ë³ĞòÌîÈë¶ÓÁĞ
+	int i = 0;//å¾ªç¯å˜é‡
+	int len = _context.length();//æ–‡æœ¬é•¿åº¦
+	FileLocation tmpFileLocation;//ä¸´æ—¶æ–‡ä»¶åœ°å€
+	Table tmpTable = pageTable[_pid];//ä¸´æ—¶é¡µå¸§å¯¹åº”è¡¨
+	list<int> tmpQueue;//ä¸´æ—¶é˜Ÿåˆ—
+	map < int, int > ::iterator it;//è¿­ä»£å™¨
+	//éå†é¡µå¸§å¯¹åº”è¡¨ï¼Œå°†é¡µå¸§å¯¹åº”è¡¨ä¸­çš„é¡µå·æŒ‰é¡ºåºå¡«å…¥é˜Ÿåˆ—
 	for (it = tmpTable.begin(); it != tmpTable.end(); ++it)
 	{
 		tmpQueue.push_back(it->first);
 		i++;
 	}
-	//Èô¶ÓÁĞÎª¿Õ£¬Ğ´ÈëÊ§°Ü£¬½áÊø
+	//è‹¥é˜Ÿåˆ—ä¸ºç©ºï¼Œå†™å…¥å¤±è´¥ï¼Œç»“æŸ
 	if (tmpQueue.empty()) 
 	{
-		printf("pid [%d] Ğ´ÈëÄÚ´æÊ§°Ü\n", _pid);
-		tmpFileLocation.start = -1;//½«ÎÄ¼şµØÖ·µÄÆğÊ¼µØÖ·ÖÃÎª-1£¬±íÊ¾²»´æÔÚ
-		tmpFileLocation.end = -1;//½«ÎÄ¼şµØÖ·µÄ½áÊøµØÖ·ÖÃÎª-1£¬±íÊ¾²»´æÔÚ
-		return tmpFileLocation;//·µ»ØÎÄ¼şµØÖ·
+		printf("pid [%d] å†™å…¥å†…å­˜å¤±è´¥\n", _pid);
+		tmpFileLocation.start = -1;//å°†æ–‡ä»¶åœ°å€çš„èµ·å§‹åœ°å€ç½®ä¸º-1ï¼Œè¡¨ç¤ºä¸å­˜åœ¨
+		tmpFileLocation.end = -1;//å°†æ–‡ä»¶åœ°å€çš„ç»“æŸåœ°å€ç½®ä¸º-1ï¼Œè¡¨ç¤ºä¸å­˜åœ¨
+		return tmpFileLocation;//è¿”å›æ–‡ä»¶åœ°å€
 	}
-	//Èô¶ÓÁĞ²»Îª¿Õ
-	int flag = 0;//ÊÇ·ñÕÒµ½µÚÒ»Ò³
-	int start = 0;//Ê×
-	int end = 0;//Î²
-	int writenLen;//Ğ´Èë³¤¶È
-	int spareLen;//¿ÕÏĞ³¤¶È
-	//µ±¶ÓÁĞ²»Îª¿ÕÇÒÎÄ±¾³¤¶È´óÓÚ0
+	//è‹¥é˜Ÿåˆ—ä¸ä¸ºç©º
+	int flag = 0;//æ˜¯å¦æ‰¾åˆ°ç¬¬ä¸€é¡µ
+	int start = 0;//é¦–
+	int end = 0;//å°¾
+	int writenLen;//å†™å…¥é•¿åº¦
+	int spareLen;//ç©ºé—²é•¿åº¦
+	//å½“é˜Ÿåˆ—ä¸ä¸ºç©ºä¸”æ–‡æœ¬é•¿åº¦å¤§äº0
 	while (!tmpQueue.empty() && len > 0)
 	{
-		int virID = tmpQueue.front();//ÁîvirIDÎª¶ÓÁĞµÚÒ»¸öÒ³ºÅ
-		spareLen = virMemory.virTable[virID][1] - virMemory.virTable[virID][2];//Ò³µÄ¿ÕÏĞ³¤¶È
-		//Èô»¹ÓĞ¿ÕÓàÄÚ´æ
+		int virID = tmpQueue.front();//ä»¤virIDä¸ºé˜Ÿåˆ—ç¬¬ä¸€ä¸ªé¡µå·
+		spareLen = virMemory.virTable[virID][1] - virMemory.virTable[virID][2];//é¡µçš„ç©ºé—²é•¿åº¦
+		//è‹¥è¿˜æœ‰ç©ºä½™å†…å­˜
 		if (spareLen > 0)
 		{
-			//Èôµ÷¶È¶ÓÁĞ²»Îª¿Õ£¬²éÕÒµ÷¶È¶ÓÁĞÖĞµÄËùĞèÒ³£¬³õÊ¼»¯¶ÔÓ¦Ö¡
+			//è‹¥è°ƒåº¦é˜Ÿåˆ—ä¸ä¸ºç©ºï¼ŒæŸ¥æ‰¾è°ƒåº¦é˜Ÿåˆ—ä¸­çš„æ‰€éœ€é¡µï¼Œåˆå§‹åŒ–å¯¹åº”å¸§
 			if (!scheQueue.empty()) 
 			{
-				list<int>::iterator it = find(scheQueue.begin(), scheQueue.end(), virID); // ²éÕÒµ÷¶È¶ÓÁĞÖĞÊÇ·ñÓĞÒªĞ´ÈëµÄÒ³
-				// Èôµ÷¶È¶ÓÁĞÖĞÓĞÒªĞ´ÈëµÄÒ³£¬½«¸ÃÒ³µ÷ÓÃ
+				list<int>::iterator it = find(scheQueue.begin(), scheQueue.end(), virID); // æŸ¥æ‰¾è°ƒåº¦é˜Ÿåˆ—ä¸­æ˜¯å¦æœ‰è¦å†™å…¥çš„é¡µ
+				// è‹¥è°ƒåº¦é˜Ÿåˆ—ä¸­æœ‰è¦å†™å…¥çš„é¡µï¼Œå°†è¯¥é¡µè°ƒç”¨
 				if (it != scheQueue.end())
 				{
-					int phyID = tmpTable[virID]; //¸ù¾İÒ³Ö¡¶ÔÓ¦±íÕÒµ½Ò³¶ÔÓ¦µÄÖ¡
-					phyMemory.phyTable[phyID] = -1;//½«ÎïÀíÄÚ´æÖĞµÄÖ¡¶ÔÓ¦µÄÒ³ÖÃÎª-1
-					phyMemory.phyContent[phyID] = "*";//½«ÎïÀíÄÚ´æµÄÄÚÈİÖÃÎª"*"
-					tmpTable[virID] = -1;//½«Ò³Ö¡¶ÔÓ¦±íÖĞµÄÖ¡ºÅÖÃÎª-1
-					pageTable[_pid] = tmpTable;//ĞŞ¸Ä½ø³ÌÒ³Ö¡¶ÔÓ¦±í
-					scheQueue.remove(virID);// É¾³ıµ÷¶È¶ÓÁĞÖĞµÄ¸ÃÒ³
+					int phyID = tmpTable[virID]; //æ ¹æ®é¡µå¸§å¯¹åº”è¡¨æ‰¾åˆ°é¡µå¯¹åº”çš„å¸§
+					phyMemory.phyTable[phyID] = -1;//å°†ç‰©ç†å†…å­˜ä¸­çš„å¸§å¯¹åº”çš„é¡µç½®ä¸º-1
+					phyMemory.phyContent[phyID] = "*";//å°†ç‰©ç†å†…å­˜çš„å†…å®¹ç½®ä¸º"*"
+					tmpTable[virID] = -1;//å°†é¡µå¸§å¯¹åº”è¡¨ä¸­çš„å¸§å·ç½®ä¸º-1
+					pageTable[_pid] = tmpTable;//ä¿®æ”¹è¿›ç¨‹é¡µå¸§å¯¹åº”è¡¨
+					scheQueue.remove(virID);// åˆ é™¤è°ƒåº¦é˜Ÿåˆ—ä¸­çš„è¯¥é¡µ
 				}
 			}
-			//ÈôĞéÄâÄÚ´æÄÚÈİÎª¿Õ£¬É¾³ıÄ¬ÈÏÄÚÈİ
+			//è‹¥è™šæ‹Ÿå†…å­˜å†…å®¹ä¸ºç©ºï¼Œåˆ é™¤é»˜è®¤å†…å®¹
 			if (virMemory.virContent[virID] == "*")
 			{
-				virMemory.virContent[virID].erase(0, 1);//É¾³ıÄ¬ÈÏÄÚÈİ£¬¼´"*"
+				virMemory.virContent[virID].erase(0, 1);//åˆ é™¤é»˜è®¤å†…å®¹ï¼Œå³"*"
 			}
-			//ÈôflagÎª0£¬¼´Ê×ÔÚĞ´ÈëÖ®ºó¾Í²»ÔÙ¸Ä±ä
+			//è‹¥flagä¸º0ï¼Œå³é¦–åœ¨å†™å…¥ä¹‹åå°±ä¸å†æ”¹å˜
 			if (flag == 0)
 			{
-				start += virMemory.virTable[virID][2];//Ê×¼ÓÉÏÒÑĞ´ÄÚ´æ
-				flag = 1;//½«flagÖÃÎª1£¬Ê×ÔÚĞ´Èëºó²»ÔÙ¸Ä±ä
+				start += virMemory.virTable[virID][2];//é¦–åŠ ä¸Šå·²å†™å†…å­˜
+				flag = 1;//å°†flagç½®ä¸º1ï¼Œé¦–åœ¨å†™å…¥åä¸å†æ”¹å˜
 			}
-			end += virMemory.virTable[virID][2];//Î²¼ÓÉÏÒÑĞ´ÄÚ´æ
+			end += virMemory.virTable[virID][2];//å°¾åŠ ä¸Šå·²å†™å†…å­˜
 			if (spareLen >= len)
 			{
 				writenLen = len;
@@ -247,102 +250,130 @@ FileLocation  WriteVirMemory(int _pid, string _context)
 				writenLen = spareLen;
 				len -= spareLen;
 			}
-			virMemory.virContent[virID].append(_context, 0, writenLen);//ÔÚĞéÄâÄÚ´æµÄÄÚÈİÖĞĞ´ÈëÎÄ±¾Ç°³¤¶ÈÎªĞ´Èë³¤¶ÈµÄ×Ö·û´®
-			virMemory.virTable[virID][2] += writenLen;//ÒÑĞ´ÄÚ´æ¼ÓÉÏĞ´Èë³¤¶È
-			_context.erase(0, writenLen);//É¾³ıÎÄ±¾ÒÑĞ´ÈëµÄÄÚÈİ
-			end += writenLen;//Î²¼ÓÉÏĞ´Èë³¤¶È
+			virMemory.virContent[virID].append(_context, 0, writenLen);//åœ¨è™šæ‹Ÿå†…å­˜çš„å†…å®¹ä¸­å†™å…¥æ–‡æœ¬å‰é•¿åº¦ä¸ºå†™å…¥é•¿åº¦çš„å­—ç¬¦ä¸²
+			virMemory.virTable[virID][2] += writenLen;//å·²å†™å†…å­˜åŠ ä¸Šå†™å…¥é•¿åº¦
+			_context.erase(0, writenLen);//åˆ é™¤æ–‡æœ¬å·²å†™å…¥çš„å†…å®¹
+			end += writenLen;//å°¾åŠ ä¸Šå†™å…¥é•¿åº¦
 		}
-		tmpQueue.pop_front();//Ğ´ÈëµÄÒ³³ö¶ÓÁĞ
-		writenLen = 0;//Ğ´Èë³¤¶ÈÖÃÎª0
+		tmpQueue.pop_front();//å†™å…¥çš„é¡µå‡ºé˜Ÿåˆ—
+		writenLen = 0;//å†™å…¥é•¿åº¦ç½®ä¸º0
 	}
-	tmpFileLocation.start = start;//ÎÄ¼şµØÖ·µÄÆğÊ¼µØÖ·ÎªÊ×
-	tmpFileLocation.end = end - 1;//ÎÄ¼şµØÖ·µÄ½áÊøµØÖ·ÎªÎ²
-	//Èô¶ÓÁĞÎª¿Õ£¬µ«ÎÄ±¾³¤¶ÈÈÔ´óÓÚ0£¬¼´ÄÚ´æ²»¹»Ğ´ÈëÈ«²¿ÄÚÈİ£¬½áÊø
+	tmpFileLocation.start = start;//æ–‡ä»¶åœ°å€çš„èµ·å§‹åœ°å€ä¸ºé¦–
+	tmpFileLocation.end = end - 1;//æ–‡ä»¶åœ°å€çš„ç»“æŸåœ°å€ä¸ºå°¾
+	//è‹¥é˜Ÿåˆ—ä¸ºç©ºï¼Œä½†æ–‡æœ¬é•¿åº¦ä»å¤§äº0ï¼Œå³å†…å­˜ä¸å¤Ÿå†™å…¥å…¨éƒ¨å†…å®¹ï¼Œç»“æŸ
 	if (len > 0) {
-		printf("ÄÚ´æ²»¹»Ğ´ÈëÈ«²¿ÄÚÈİ\n");
-		return tmpFileLocation;//·µ»ØÎÄ¼şµØÖ·
+		printf("å†…å­˜ä¸å¤Ÿå†™å…¥å…¨éƒ¨å†…å®¹\n");
+		return tmpFileLocation;//è¿”å›æ–‡ä»¶åœ°å€
 	}
-	//Ğ´Èë£¬½áÊø
-	return tmpFileLocation;//·µ»ØÎÄ¼şµØÖ·
+	//å†™å…¥ï¼Œç»“æŸ
+	return tmpFileLocation;//è¿”å›æ–‡ä»¶åœ°å€
 }
 string AccessPhyMemory(int _pid, int _start, int _end)
 {
-	int startInPage = _start % PAGE_SIZE;//Ïà¶ÔÆğÊ¼µØÖ·µÄÒ³ÄÚÎ»ÖÃ
-	int endInPage = _end % PAGE_SIZE;//Ïà¶Ô½áÊøµØÖ·µÄÒ³ÄÚÎ»ÖÃ
-	Table tmpTable = pageTable[_pid];//Ò³Ö¡¶ÔÓ¦±í
-	int startVirID = TransformPage(_start, tmpTable);//Ïà¶ÔÆğÊ¼µØÖ·µÄÒ³ºÅ
-	int endVirID = TransformPage(_end, tmpTable);//Ïà¶Ô½áÊøµØÖ·µÄÒ³ºÅ
-	//ÈôÕÒ²»µ½ÆğÊ¼Ò³»òĞéÄâÄÚ´æÒÑÓÃÄÚ´æĞ¡ÓÚÏà¶ÔÆğÊ¼µØÖ·µÄÒ³ÄÚÎ»ÖÃ£¬¼´·ÃÎÊÄÚ´æÊ§°Ü
+	int startInPage = _start % PAGE_SIZE;//ç›¸å¯¹èµ·å§‹åœ°å€çš„é¡µå†…ä½ç½®
+	int endInPage = _end % PAGE_SIZE;//ç›¸å¯¹ç»“æŸåœ°å€çš„é¡µå†…ä½ç½®
+	Table tmpTable = pageTable[_pid];//é¡µå¸§å¯¹åº”è¡¨
+	int startVirID = TransformPage(_start, tmpTable);//ç›¸å¯¹èµ·å§‹åœ°å€çš„é¡µå·
+	int endVirID = TransformPage(_end, tmpTable);//ç›¸å¯¹ç»“æŸåœ°å€çš„é¡µå·
+	//è‹¥æ‰¾ä¸åˆ°èµ·å§‹é¡µæˆ–è™šæ‹Ÿå†…å­˜å·²ç”¨å†…å­˜å°äºç›¸å¯¹èµ·å§‹åœ°å€çš„é¡µå†…ä½ç½®ï¼Œå³è®¿é—®å†…å­˜å¤±è´¥
 	if (startVirID == -1 || virMemory.virTable[startVirID][1] < startInPage)
 	{
-		printf("±íÊ¾·ÃÎÊÄÚ´æ´íÎó\n");
-		return "-1";//·µ»Ø"-1"
+		printf("è¡¨ç¤ºè®¿é—®å†…å­˜é”™è¯¯\n");
+		return "-1";//è¿”å›"-1"
 	}
-	//ÈôÕÒµ½ÆğÊ¼Ò³ÇÒĞéÄâÄÚ´æÒÑÓÃÄÚ´æ´óÓÚµÈÓÚÏà¶ÔÆğÊ¼µØÖ·µÄÒ³ÄÚÎ»ÖÃ£¬¼´·ÃÎÊÄÚ´æ³É¹¦
+	//è‹¥æ‰¾åˆ°èµ·å§‹é¡µä¸”è™šæ‹Ÿå†…å­˜å·²ç”¨å†…å­˜å¤§äºç­‰äºç›¸å¯¹èµ·å§‹åœ°å€çš„é¡µå†…ä½ç½®ï¼Œå³è®¿é—®å†…å­˜æˆåŠŸ
 	else
 	{
 		tmpTable = LRU(startVirID, tmpTable);//
-		//ÆğÊ¼Ò³ºÍ½áÊøÒ³²»ÏàÍ¬£¬¼´²»ÔÚÍ¬Ò»Ò³
+		//èµ·å§‹é¡µå’Œç»“æŸé¡µä¸ç›¸åŒï¼Œå³ä¸åœ¨åŒä¸€é¡µ
 		if (startVirID != endVirID)
 		{
 			tmpTable = LRU(endVirID, tmpTable);//
 		}
 	}
-	pageTable[_pid] = tmpTable;//ĞŞ¸ÄÒ³±í
-	int startPhyID = FindPhyID(startVirID);//ÆğÊ¼Ò³¶ÔÓ¦µÄÖ¡ºÅ
-	int endPhyID = FindPhyID(endVirID);//½áÊøÒ³¶ÔÓ¦µÄÖ¡ºÅ
-	int tmpPhyD;//ÁÙÊ±Ö¡ºÅ£¬Ñ­»·±äÁ¿
-	string str;//ÓÃÓÚ´æ´¢ÎïÀíÄÚ´æµÄÄÚÈİ
-	//ÈôÆğÊ¼Ò³ºÍ½áÊøÒ³ÎªÍ¬Ò»Ò³
+	pageTable[_pid] = tmpTable;//ä¿®æ”¹é¡µè¡¨
+	int startPhyID = FindPhyID(startVirID);//èµ·å§‹é¡µå¯¹åº”çš„å¸§å·
+	int endPhyID = FindPhyID(endVirID);//ç»“æŸé¡µå¯¹åº”çš„å¸§å·
+	int tmpPhyD;//ä¸´æ—¶å¸§å·ï¼Œå¾ªç¯å˜é‡
+	string str;//ç”¨äºå­˜å‚¨ç‰©ç†å†…å­˜çš„å†…å®¹
+	//è‹¥èµ·å§‹é¡µå’Œç»“æŸé¡µä¸ºåŒä¸€é¡µ
 	if (startVirID == endVirID)
 	{
-		str = phyMemory.phyContent[startPhyID].substr(startInPage,  endInPage - startInPage);//ÎïÀíÄÚ´æµÄÄÚÈİ
+		str = phyMemory.phyContent[startPhyID].substr(startInPage,  endInPage - startInPage);//ç‰©ç†å†…å­˜çš„å†…å®¹
 	}
-	//ÈôÆğÊ¼Ò³ºÍ½áÊøÒ³²»ÎªÍ¬Ò»Ò³
+	//è‹¥èµ·å§‹é¡µå’Œç»“æŸé¡µä¸ä¸ºåŒä¸€é¡µ
 	else 
 	{
-		string strStart = phyMemory.phyContent[startPhyID].substr(startInPage, PAGE_SIZE - startInPage);//ÎïÀíÄÚ´æÖĞÆğÊ¼Ö¡µÄÄÚÈİ
+		string strStart = phyMemory.phyContent[startPhyID].substr(startInPage, PAGE_SIZE - startInPage);//ç‰©ç†å†…å­˜ä¸­èµ·å§‹å¸§çš„å†…å®¹
 		//for(tmpPhyD = startPhyID;)
-		string strEnd = phyMemory.phyContent[endPhyID].substr(0, endInPage);//ÎïÀíÄÚ´æÖĞ½áÊøÖ¡µÄÄÚÈİ
-		str = strStart + strEnd;//½«Á½²¿·ÖÄÚÈİºÏ²¢
+		string strEnd = phyMemory.phyContent[endPhyID].substr(0, endInPage);//ç‰©ç†å†…å­˜ä¸­ç»“æŸå¸§çš„å†…å®¹
+		str = strStart + strEnd;//å°†ä¸¤éƒ¨åˆ†å†…å®¹åˆå¹¶
 	}
-	return str;//·µ»ØÎïÀíÄÚ´æÀïµÄÄÚÈİ
+	return str;//è¿”å›ç‰©ç†å†…å­˜é‡Œçš„å†…å®¹
 }
 Table LRU(int _virID, Table _table)
 {
-	int phyID = FindPhyID(-1); //ÕÒµ½Ò»¸ö¿ÕÏĞÖ¡
-	//ÈôÒ³ÓĞ¶ÔÓ¦µÄÖ¡£¬²»ĞèÒªÖÃ»»
+	int phyID = FindPhyID(-1); //æ‰¾åˆ°ä¸€ä¸ªç©ºé—²å¸§
+	//è‹¥é¡µæœ‰å¯¹åº”çš„å¸§ï¼Œä¸éœ€è¦ç½®æ¢
 	if (_table[_virID] != -1)
 	{
-		scheQueue.remove(_virID);//µ÷¶È¶ÓÁĞÉ¾³ıÒ³
-		scheQueue.push_back(_virID);//µ÷¶È¶ÓÁĞÄ©Î²Ìí¼ÓÒ³
+		scheQueue.remove(_virID);//è°ƒåº¦é˜Ÿåˆ—åˆ é™¤é¡µ
+		scheQueue.push_back(_virID);//è°ƒåº¦é˜Ÿåˆ—æœ«å°¾æ·»åŠ é¡µ
 	}
-	//ÈôÒ³Ã»ÓĞ¶ÔÓ¦µÄÖ¡£¬ÇÒÓĞ¿ÕÏĞÖ¡
+	//è‹¥é¡µæ²¡æœ‰å¯¹åº”çš„å¸§ï¼Œä¸”æœ‰ç©ºé—²å¸§
 	else if (phyID != -1)
 	{
-		phyMemory.phyTable[phyID] = _virID;//ĞŞ¸ÄÎïÀíÄÚ´æÖĞÖ¡¶ÔÓ¦µÄÒ³ºÅ
-		usedPhyMemory += virMemory.virTable[_virID][1];//ĞŞ¸ÄÒÑÊ¹ÓÃÎïÀíÄÚ´æ
-		scheQueue.push_back(_virID);//½«Ò³Ìí¼Óµ½µ÷¶È¶ÓÁĞÄ©Î²
-		ModifyPage(_virID, phyID, _table, 1);//½«Ò³µ÷ÈëÎïÀíÄÚ´æ
-		phyMemory.phyContent[phyID] = virMemory.virContent[_virID];//½«ĞéÄâÄÚ´æÀïµÄÄÚÈİ¸´ÖÆµ½ÎïÀíÄÚ´æ
-		pageFault++;//Ôö¼ÓÈ±Ò³´ÎÊı
+		phyMemory.phyTable[phyID] = _virID;//ä¿®æ”¹ç‰©ç†å†…å­˜ä¸­å¸§å¯¹åº”çš„é¡µå·
+		usedPhyMemory += virMemory.virTable[_virID][1];//ä¿®æ”¹å·²ä½¿ç”¨ç‰©ç†å†…å­˜
+		scheQueue.push_back(_virID);//å°†é¡µæ·»åŠ åˆ°è°ƒåº¦é˜Ÿåˆ—æœ«å°¾
+		_table = ModifyPage(_virID, phyID, _table, 1);//å°†é¡µè°ƒå…¥ç‰©ç†å†…å­˜
+		phyMemory.phyContent[phyID] = virMemory.virContent[_virID];//å°†è™šæ‹Ÿå†…å­˜é‡Œçš„å†…å®¹å¤åˆ¶åˆ°ç‰©ç†å†…å­˜
+		pageFault++;//å¢åŠ ç¼ºé¡µæ¬¡æ•°
 	}
-	//ÈôÒ³Ã»ÓĞ¶ÔÓ¦µÄÖ¡£¬ÇÒÃ»ÓĞ¿ÕÏĞÖ¡
+	//è‹¥é¡µæ²¡æœ‰å¯¹åº”çš„å¸§ï¼Œä¸”æ²¡æœ‰ç©ºé—²å¸§
 	else
 	{
-		int reVirID = scheQueue.front();//ÖÃ»»Ò³
-		int rePhyID = FindPhyID(reVirID); //ÖÃ»»Ö¡
-		int rePid = virMemory.virTable[reVirID][0];//ÖÃ»»Ò³¶ÔÓ¦µÄpid
-		Table tmpTable = pageTable[rePid];//ÖÃ»»½ø³ÌµÄÒ³Ö¡¶ÔÓ¦±í
-		phyMemory.phyTable[rePhyID] = _virID;//ĞŞ¸ÄÎïÀíÄÚ´æÖĞÖÃ»»Ö¡¶ÔÓ¦µÄÒ³ºÅ
-		usedPhyMemory -= virMemory.virTable[reVirID][1];//ÒÑÊ¹ÓÃÎïÀíÄÚ´æ¼õÈ¥ÖÃ»»³öµÄÒ³
-		usedPhyMemory += virMemory.virTable[_virID][1];//ÒÑÊ¹ÓÃÎïÀíÄÚ´æ¼ÓÉÏÖÃ»»½øµÄÒ³
-		pageFault++;//Ôö¼ÓÈ±Ò³´ÎÊı
-		ModifyPage(reVirID, 0, tmpTable, -1);//½«ÖÃ»»³öµÄÒ³µ÷³öÎïÀíÄÚ´æ
-		scheQueue.pop_front();//ÖÃ»»³öµÄÒ³³öµ÷¶È¶ÓÁĞ
-		scheQueue.push_back(_virID);	//½«ÖÃ»»½øµÄÒ³Ìí¼Óµ½µ÷¶È¶ÓÁĞÄ©Î²
-		ModifyPage(_virID, rePhyID, _table, 1);//½«ÖÃ»»³öµÄÒ³µ÷ÈëÎïÀíÄÚ´æ
-		phyMemory.phyContent[rePhyID] = virMemory.virContent[_virID];//½«ĞéÄâÄÚ´æÀïµÄÄÚÈİ¸´ÖÆµ½ÎïÀíÄÚ´æ
+		int reVirID = scheQueue.front();//ç½®æ¢é¡µ
+		int rePhyID = FindPhyID(reVirID); //ç½®æ¢å¸§
+		int rePid = virMemory.virTable[reVirID][0];//ç½®æ¢é¡µå¯¹åº”çš„pid
+		Table tmpTable = pageTable[rePid];//ç½®æ¢è¿›ç¨‹çš„é¡µå¸§å¯¹åº”è¡¨
+		phyMemory.phyTable[rePhyID] = _virID;//ä¿®æ”¹ç‰©ç†å†…å­˜ä¸­ç½®æ¢å¸§å¯¹åº”çš„é¡µå·
+		usedPhyMemory -= virMemory.virTable[reVirID][1];//å·²ä½¿ç”¨ç‰©ç†å†…å­˜å‡å»ç½®æ¢å‡ºçš„é¡µ
+		usedPhyMemory += virMemory.virTable[_virID][1];//å·²ä½¿ç”¨ç‰©ç†å†…å­˜åŠ ä¸Šç½®æ¢è¿›çš„é¡µ
+		pageFault++;//å¢åŠ ç¼ºé¡µæ¬¡æ•°
+		tmpTable = ModifyPage(reVirID, 0, tmpTable, -1);//å°†ç½®æ¢å‡ºçš„é¡µè°ƒå‡ºç‰©ç†å†…å­˜
+		scheQueue.pop_front();//ç½®æ¢å‡ºçš„é¡µå‡ºè°ƒåº¦é˜Ÿåˆ—
+		scheQueue.push_back(_virID);	//å°†ç½®æ¢è¿›çš„é¡µæ·»åŠ åˆ°è°ƒåº¦é˜Ÿåˆ—æœ«å°¾
+		_table = ModifyPage(_virID, rePhyID, _table, 1);//å°†ç½®æ¢å‡ºçš„é¡µè°ƒå…¥ç‰©ç†å†…å­˜
+		phyMemory.phyContent[rePhyID] = virMemory.virContent[_virID];//å°†è™šæ‹Ÿå†…å­˜é‡Œçš„å†…å®¹å¤åˆ¶åˆ°ç‰©ç†å†…å­˜
 	}
 	return _table;
+}
+void PrintMemory()
+{
+	cout << "è™šæ‹Ÿå†…å­˜"<< endl;
+	for (int i = 0; i < PAGE_NUMBER; i++)
+	{
+		cout << "é¡µå·" << i <<" " << "pidï¼š" << virMemory.virTable[i][0]<<" " << "å·²ç”¨å†…å­˜ï¼š" << virMemory.virTable[i][1] << endl;
+	}
+	cout << "ç‰©ç†å†…å­˜" << endl;
+	for (int i = 0; i < FRAME_NUMBER; i++)
+	{
+		cout << "å¸§å·ï¼š" << i << " " << "é¡µå·ï¼š" << phyMemory.phyTable[i] << endl;
+	}
+}
+void PrintTable()
+{
+	cout << "é¡µè¡¨" << endl;
+	map < int, Table > ::iterator it;
+	for (it = pageTable.begin(); it != pageTable.end(); ++it)
+	{
+		cout <<"pid :" << it->first << endl;
+		Table tmpTable = it->second;
+		map < int, int > ::iterator itt;
+		for (itt = tmpTable.begin(); itt != tmpTable.end(); ++itt)
+		{
+			cout << "é¡µå· :" << itt->first << " " << "å¸§å· :" << itt->second << endl;
+		}
+	}
 }
