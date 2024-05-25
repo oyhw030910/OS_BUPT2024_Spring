@@ -1,13 +1,22 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
 #include<graphics.h>//引用图形库头文件
 #include <conio.h>
-#include <string>
+#include <string.h>
 #include <time.h>
 #include <easyx.h>
 #include <tchar.h>
+#include <iostream>
+#include "process.h"
+#include "device.h"
+#pragma once
+#include<bits/stdc++.h>
+using namespace std;
 
+#undef UNICODE
+#undef _UNICODE
 /*struct MOUSEMSG
 {
     UINT uMsg;				 //当前鼠标消息
@@ -19,7 +28,7 @@
         short x;				 //当前鼠标 x 坐标
         short y;				 //当前鼠标 y 坐标
         short wheel;			 //鼠标滚轮滚动值(120 的倍数)
-};*/
+};
 
 //bool MouseHit();			 //检查是否存在鼠标消息
 //MOUSEMSG GetMouseMsg();		 //获取一个鼠标消息。如果没有，就等待
@@ -29,6 +38,9 @@ struct Button
 {
     int a;
 };
+
+
+
 
 typedef struct menu_start
 {
@@ -79,10 +91,10 @@ void draw1()
     drawMenu();
     setbkcolor(BLUE);
     cleardevice();
-    TCHAR s[50] = L"1.读取点云";
-    TCHAR s1[50] = L"2.分割点云";
-    TCHAR s2[50] = L"3.单个树木";
-    TCHAR s3[50] = L"4.树木重建";
+    TCHAR s[50] = L"1";
+    TCHAR s1[50] = L"2";
+    TCHAR s2[50] = L"3";
+    TCHAR s3[50] = L"4";
     button(220, 50, 170, 50, s);
     button(220, 150, 170, 50, s1);
     button(220, 250, 170, 50, s2);
@@ -162,6 +174,7 @@ void mouseFollow()
 
 
 
+*/
 
 
 
@@ -186,13 +199,236 @@ void mouseFollow()
 
 
 
+void changepcb(PCB process[])
+{
+    
+    for (int i = 0; i < maxprocess; i++)
+    {
+        process[i].pid = -1;
+    }
+
+    for (int i = 0; i < 3; i++)
+    {
+        process[i].pid = i;
+        process[i].state = READY;
+        process[i].size = 128;
+    }
+
+    for (int i = 3; i < 6; i++)
+    {
+        process[i].pid = i;
+        process[i].state = 2;
+        process[i].size = 128;
+    }
+
+    for (int i = 6; i < 10; i++)
+    {
+        process[i].pid = i;
+        process[i].state = 3;
+        process[i].size = 128;
+
+        process[i].arrivetime=0; // 进程到达时间
+        process[i].needtime=1; // 进程总共需要运行的时间
+        process[i].remaintime=2; // 进程还需运行的时间
+        process[i].finishtime=3; // 进程运行结束的时间
+    }
+
+    
+}
 
 
 
+void pcbDrawPro(PCB process[])
+{
+    changepcb(process);
+    int truesize = 0;
+    for (size_t i = 0; i < maxprocess; i++)
+    {
+        if (process[i].pid >= 0)
+            if(process[i].state != 4)
+                truesize += 1;
+        if (truesize >= 10)
+            break;
+
+    }
+
+
+    initgraph(1400, 720);
+    settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
+
+
+    
+
+    char s[2000] = "Hello World";
+    string w = (string)s;
+
+    InputBox(s, 10, "请输入半径");
+    
+
+    printf("%s", s);
+    outtextxy(10, 20, s);
+    int x , y , z , m , T=180;
+    COLORREF colorThis;
+    int processptr = 0;
+    strcpy(s, "进程");
+    outtextxy( 20, 150, s);
+
+    strcpy(s, "状态");
+    outtextxy(20, 220, s);
+
+    strcpy(s, "进程所需内存");
+    outtextxy(20, 280, s);
+
+    strcpy(s, "进程到达时间");
+    outtextxy(20, 340, s);
+    
+    strcpy(s, "总计运行时间");
+    outtextxy(20, 400, s);
+
+    strcpy(s, "还需运行时间");
+    outtextxy(20, 460, s);
+    
+    strcpy(s, "进程所需内存");
+    outtextxy(20, 520, s);
+
+    strcpy(s, "进程队列");
+    outtextxy(20, 600, s);
+
+    for (int i = 0; i < Ready_Process.size(); i++)
+    {
+        outtextxy(20, 650+i*40, Ready_Process.front());
+    }
+
+    
+    int arrivetime; // 进程到达时间
+    int needtime; // 进程总共需要运行的时间
+    int remaintime; // 进程还需运行的时间
+    int finishtime; // 进程运行结束的时间
 
 
 
+    for (int i = 0; i < truesize; i++)
+    {
+        while (true)
+        {
+            if(process[processptr].state != 4)
+            {
+                
+                break;
 
+            }
+        }
+
+        switch (process[processptr].state)
+        {
+        case 1:colorThis = YELLOW; break;
+        case 2:colorThis = GREEN; break;
+        case 3:colorThis = RED; break;
+        default:break;
+        }
+
+
+        
+        x = 0 + i * 1200 / truesize, y = 120, z = x + 100 , m = y+60;
+        settextcolor(WHITE);
+        _itoa(process[processptr].pid, s, 10);
+        outtextxy(x + 120, y - 20, s);
+        
+        switch (process[processptr].state)
+        {
+            case 1:strcpy(s, "就绪"); break;
+            case 2:strcpy(s, "运行"); break;
+            case 3:strcpy(s, "阻塞"); break;
+            default:break;
+        }
+        outtextxy(x + 120, m + 40, s);
+
+        _itoa(process[processptr].size, s, 10);
+        outtextxy(x + 120, m + 40 +60, s);
+
+        setfillcolor(colorThis);
+        
+        // 进程到达时间
+        _itoa(process[processptr].arrivetime, s, 10);
+        outtextxy(x + 120, m + 40 + 120, s);
+        // 进程总共需要运行的时间
+        _itoa(process[processptr].needtime, s, 10);
+        outtextxy(x + 120, m + 40 + 180, s);
+        // 进程还需运行的时间
+        _itoa(process[processptr].remaintime, s, 10);
+        outtextxy(x + 120, m + 40 + 240, s);
+        // 进程运行结束的时间
+        _itoa(process[processptr].finishtime, s, 10);
+        outtextxy(x + 120, m + 40 + 300, s);
+
+        
+        fillellipse(x + 120, y, z + 120, m);	// 画圆，圆心(200, 200)，半径 100
+
+
+        processptr++;
+    }
+
+
+
+    while (true)
+    {
+
+        ExMessage me;//定义一个消息变量
+        me = getmessage(EM_MOUSE);//获取鼠标消息
+        if (me.message == WM_LBUTTONUP)
+        {
+            if (me.x <= 230 && me.x > 130)
+            {
+                clearcircle;
+                setfillcolor(YELLOW);
+                fillcircle(100, 300, 50);
+            }
+            else if (me.x <= 330 && me.x > 230)
+            {
+                clearcircle;
+                setfillcolor(GREEN);
+                fillcircle(100, 300, 50);
+            }
+            else if (me.x <= 430 && me.x > 330)
+            {
+                clearcircle;
+                setfillcolor(RED);
+                fillcircle(100, 300, 50);
+            }
+            else
+                break;
+
+        }
+    }
+
+    TCHAR v[] = _T("按任意键退出");
+    outtextxy(400, 400, v);
+
+    _getch();				// 按任意键继续
+    cleardevice();			// 关闭绘图窗口
+    TCHAR q1[] = _T("文件");
+    fillrectangle(x, y, z, T);
+    outtextxy(x, y - 20, q1);
+    x += 100, z += 100;
+    TCHAR q2[] = _T("设备");
+    fillrectangle(x, y, z, T);
+    outtextxy(x, y - 20, q2);
+    x += 100, z += 100;
+    TCHAR q3[] = _T("内存");
+    fillrectangle(x, y, z, T);
+    outtextxy(x, y - 20, q3);
+    x += 100, z += 100;
+    TCHAR q4[] = _T("进程");
+    fillrectangle(x, y, z, T);
+    outtextxy(x, y - 20, q4);
+    x += 100, z = 640;
+    TCHAR q5[] = _T("退出");
+    fillrectangle(x, y, z, T);
+    outtextxy(x, y - 20, q5);
+
+    return;
+
+}
 
 
 
@@ -498,8 +734,120 @@ void fileDraw()
     return;
 }
 
+bool acquire_request(int pid, int device) {//device：请求设备号
+    for (int i = 0; i < Device_Table[device].size; i++) {
+        if (Device_Table[device].data[i] == pid) {
+            return false;//重复请求
+        }
+    }
+    Device_Table[device].data = (int*)realloc(Device_Table[device].data, (Device_Table[device].size + 1) * sizeof(int));
+    Device_Table[device].data[Device_Table[device].size] = pid;
+    Device_Table[device].size++;
+    if (Device_Table[device].size > Device_Table[device].num) {
+        return false; // 进程加入等待队列
+    }
+    else {
+        return true; //进程使用设备
+    }
+}
+
+void init_device() {
+    for (int i = 0; i < DeviceNum; i++) {
+        Device_Table[i].name = deviceName[i];
+        acquire_request(0, i);
+        acquire_request(1, i);
+        Device_Table[i].size = 2;
+        Device_Table[i].num = deviceNum[i];
+    }
+}
+
+
+void changedevice(PCB process[])
+{
+
+    init_device();
+
+
+}
+
 void deviceDraw()
 {
+    init_device();
+
+
+    initgraph(1400, 720);
+    settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
+
+
+
+
+    char s[2000] = "Hello World";
+    string w = (string)s;
+
+    outtextxy(10, 20, s);
+    int x, y, z, m, T = 180;
+    COLORREF colorThis;
+    int processptr = 0;
+    strcpy(s, "设备状态");
+    outtextxy(20, 150, s);
+
+    strcpy(s, "设备名称");
+    outtextxy(20, 220, s);
+
+    strcpy(s, "设备等待队列");
+    outtextxy(20, 280, s);
+
+
+    for (int i = 0; i < DeviceNum; i++)
+    {
+        if(Device_Table[i].size==0)
+            colorThis = GREEN;
+        else if (Device_Table[i].size > 0 && Device_Table[i].size <= Device_Table[i].num)
+            colorThis = YELLOW;
+        else
+            colorThis = RED;
+
+        x = 0 + i * 1200 / DeviceNum, y = 120, z = x + 100, m = y + 60;
+        settextcolor(WHITE);
+
+        strcpy(s, Device_Table[i].name.c_str());
+        //outtextxy(x + 120, y - 20, s);
+
+        setfillcolor(colorThis);
+        fillellipse(x + 120, y, z + 120, m);	// 画圆，圆心(200, 200)，半径 100
+
+        outtextxy(x + 120, m + 40, s);
+
+
+
+        for (int j = 0; j < Device_Table[i].size; j++)
+        {
+            _itoa(Device_Table[i].data[j], s, 10);
+            outtextxy(x + 120, m + 40 + 60, s);
+            m += 40;
+        }
+
+        /*// 进程到达时间
+        _itoa(process[processptr].arrivetime, s, 10);
+        outtextxy(x + 120, m + 40 + 120, s);
+        // 进程总共需要运行的时间
+        _itoa(process[processptr].needtime, s, 10);
+        outtextxy(x + 120, m + 40 + 180, s);
+        // 进程还需运行的时间
+        _itoa(process[processptr].remaintime, s, 10);
+        outtextxy(x + 120, m + 40 + 240, s);
+        // 进程运行结束的时间
+        _itoa(process[processptr].finishtime, s, 10);
+        outtextxy(x + 120, m + 40 + 300, s);
+
+        */
+        
+
+
+        processptr++;
+    }
+
+    /*
     initgraph(640, 480);
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
     setlinecolor(BLUE);
@@ -562,14 +910,12 @@ void deviceDraw()
     fillrectangle(x, y, z, o);
     outtextxy(x, y - 20, q5);
 
-    return;
+    return;*/
 }
 int main()
-
 {
-   
     MOUSEMSG m;		// 定义鼠标消息
-    initgraph(640, 480);
+    initgraph(1280, 800);
     int x = 0, y = 400, z = 100, o = 480;
     setlinecolor(BLUE);
     TCHAR q1[] = _T("文件");
@@ -591,7 +937,8 @@ int main()
     TCHAR q5[] = _T("退出");
     fillrectangle(x, y, z, o);
     outtextxy(x, y - 20, q5);
-    while (true) {
+    while (true) 
+    {
         ExMessage m;//定义一个消息变量
         m = getmessage(EM_MOUSE);//获取鼠标消息
         if(m.message== WM_LBUTTONUP)
@@ -603,7 +950,7 @@ int main()
             else if (m.x <= 300 && m.x > 200)
                 memoryDraw();
             else if (m.x <= 400 && m.x > 300)
-                pcbDraw();
+                pcbDrawPro(process);
             else
                 break;
 
