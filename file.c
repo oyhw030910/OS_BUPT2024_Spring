@@ -13,40 +13,56 @@ typedef struct FCB
 	struct FCB *sonFCB;
 }FCB;
 
-typedef struct stack
-{
-	FCB * a;
-	int top;
-	int capacity;
-}ST;
 
 FCB *head ;
-void STInit(ST* pst);//初始化栈 
+char lastname[80];
 void init_directory();//初始化存储结构 
-void STPush(ST* pst,FCB x);//入栈 
-void STPop(ST* pst);//出栈 
-bool STEmpty(ST* pst);//检测是否空，栈为空返回true,不为空返回false
-int FindFile(FCB father,char * name,ST *FCBst);//找到对应文件 
+int FindFile(FCB father,char * name);//找到对应文件 
+char* get_file_name(string name);
 int main()
 {	
 	int flag=0;
-	char * name;
-	ST *FCBst;
-	STInit(FCBst); 
-	name = "father1";
+	string name;
+	char *s;
+	printf("input the road of file:");
+	cin >> name;
+	//strcpy(lastname,get_file_name(name));
+	get_file_name(name);
+	printf("%s is filename\n",lastname);
 	init_directory();
-	flag = FindFile(*head->sonFCB,name,FCBst);
+	flag = FindFile(*head->sonFCB,lastname);
 	printf("%d",flag);
 	return 0;
 } 
-
-int FindFile(FCB father,char * name,ST *FCBst)
+char* get_file_name(string name)
+{
+	const char * name0 = name.data();
+	char str[80];
+   const char s[2] = "/";  
+   char *token;
+   char *temp;
+   /* 获取第一个子字符串 */
+   strcpy(str,name0);
+   token = strtok(str, s);
+   
+   /* 继续获取其他的子字符串 */
+   while( token != NULL ) {
+   		
+    
+    temp = token;
+    	token = strtok(NULL, s);
+      
+   }
+   strcpy(lastname,temp);
+   
+  	return temp;
+}
+int FindFile(FCB father,char * name)
 {
 	int flag = 0;
 //	printf("111");
 	if(strcmp(name,father.name)==0)//当前文件为所找文件
 	{
-		STPush(FCBst,father);//入栈 
 		flag = 1;
 		return 1;
 	}
@@ -54,7 +70,7 @@ int FindFile(FCB father,char * name,ST *FCBst)
 	{
 		if(father.sonFCB!=NULL)//有子 
 		{
-			flag = FindFile(*father.sonFCB,name,FCBst);
+			flag = FindFile(*father.sonFCB,name);
 			if(flag == 1)
 			{
 				//STPush(FCBst,father);
@@ -63,7 +79,7 @@ int FindFile(FCB father,char * name,ST *FCBst)
 		}
 		if(father.nextFCB!=NULL)
 		{
-			flag = FindFile(*father.nextFCB,name,FCBst);
+			flag = FindFile(*father.nextFCB,name);
 			if(flag == 1)
 			{
 				//STPush(FCBst,father);
@@ -75,35 +91,7 @@ int FindFile(FCB father,char * name,ST *FCBst)
 	return flag;
 	
 }
-void STInit(ST* pst)
-{
-	
-	pst=(ST*)malloc(sizeof(ST));
-	pst->a=(FCB*)malloc(sizeof(FCB));
-    pst->a = NULL;//栈底
-	
-    //top不是数组下标,不能理解成数组下标,因为栈只能拿到栈顶的元素，而数组可以随机访问拿到中间元素
-    //pst->top=-1;//指向栈顶元素
-    pst->top = 0;//指向栈顶元素的下一个位置
-	pst->capacity = 0;
-}
- 
-void STPush(ST* pst,FCB x)
-{
-	
-	pst->a[pst->top] = x;//先放值
-	pst->top++;//再++
-}
-void STPop(ST* pst)
-{	
-	FCB* temp = NULL;
-	pst->a[pst->top] = *temp;
-	pst->top--;
-}
-bool STEmpty(ST* pst)//栈为空返回true,不为空返回false
-{
-    return pst->top == 0;
-}
+
 void init_directory()
 {
 	head=(FCB*)malloc(sizeof(FCB));
