@@ -9,6 +9,7 @@ using namespace std;
 typedef struct FCB
 {
 	char *name;//文件名
+	int type;//0普通文件，1目录文件 
 	struct FCB *nextFCB;
 	struct FCB *sonFCB;
 }FCB;
@@ -89,7 +90,7 @@ int _FindFile(string name)
 	//strcpy(lastname,get_file_name(name));
 	s = get_file_name(name);
 	strcpy(lastname,s);
-	
+	printf("%s is filename\n",lastname);
 	flag = FindFile(*head->sonFCB,lastname);
 	
 	return flag;
@@ -159,42 +160,42 @@ void init_directory()
 	//初始化目录文件 
 	
 	head->sonFCB=father1;
-	
+	head->type = 1; 
 	head->name = (char *)malloc(sizeof(char)*20); // 分配内存
     strcpy(head->name,"head");
 
     
     father1->name=(char *)malloc(sizeof(char)*20); // 分配内存
     strcpy(father1->name,"father1");
-
+	father1->type = 1;
     
     father2->name=(char *)malloc(sizeof(char)*20); // 分配内存
     strcpy(father2->name,"father2");
-
+	father2->type = 1;
     
     father3->name=(char *)malloc(sizeof(char)*20); // 分配内存
     strcpy(father3->name,"father3");
-
+	father3->type = 1;
     
     f1->name = (char *)malloc(sizeof(char)*20); // 分配内存
     strcpy(f1->name, "f1");
-
+	f1->type = 0;
     
     f2->name = (char *)malloc(sizeof(char)*20); // 分配内存
     strcpy(f2->name, "f2");
-
+	f2->type = 0;
     
     f3->name = (char *)malloc(sizeof(char)*20); // 分配内存
     strcpy(f3->name, "f3");
-
+	f3->type = 0;
     
     f4->name = (char *)malloc(sizeof(char)*20); // 分配内存
     strcpy(f4->name, "f4");
-
+	f4->type = 0;
     
     f5->name = (char *)malloc(sizeof(char)*20); // 分配内存
     strcpy(f5->name, "f5");
-
+	f5->type = 0;
 	
 
 	father1->nextFCB = father2;
