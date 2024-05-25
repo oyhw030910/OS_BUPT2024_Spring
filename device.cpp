@@ -6,6 +6,7 @@ void init_device(){
         Device_Table[i].data=nullptr;
         Device_Table[i].size=0;
         Device_Table[i].num=deviceNum[i];
+        Device_Table[i].isonly =ison[i];
     }
 }
 
@@ -25,22 +26,39 @@ void show_Device() {
         int length = Device_Table[i].size;
         int num =Device_Table[i].num;
         if (length == 0) {
-            printf("设备状态：空闲    剩余数量：%d\n",num);
-        } else if(length <= num){
-            printf("设备状态：正在使用    剩余数量：%d\n", num-length);
+            printf("设备状态：空闲\n");
+        } else if(Device_Table[i].isonly==1){
+            printf("设备状态：正在使用\n");
+            printf("正在使用它的进程为：");
             for(int j =0;j<length;j++){
-                printf("正在使用它的进程为：%d\n", Device_Table[i].data[0]);
+                printf("%d  ", Device_Table[i].data[j]);
             }
+            printf("\n");
         }else{
-            printf("设备状态：正在使用    剩余数量：0\n");
-            for(int j =0;j<num;j++){
-                printf("正在使用它的进程为：%d\n", Device_Table[i].data[0]);
+          if(length <= num){
+            printf("设备状态：正在使用    剩余数量：%d\n", num-length);
+            printf("正在使用它的进程为：");
+            for(int j =0;j<length;j++){
+                printf("%d  ", Device_Table[i].data[j]);
             }
+            printf("\n");
+          }else{
+            printf("设备状态：正在使用    剩余数量：0\n");
+            printf("正在使用它的进程为：");
+            for(int j =0;j<length;j++){
+                printf("%d  ", Device_Table[i].data[j]);
+            }
+            printf("\n");
             printf("设备等待队列:");
             for (int j = num; j < length; j++) {
-                printf(" %d\n", Device_Table[i].data[j]);
+                printf(" %d  ", Device_Table[i].data[j]);
             }
+            printf("\n");
+          }
         }
+        
+        
+         
     }
     printf("------------------------------------------------------------------------------");
 }
@@ -54,7 +72,7 @@ bool acquire_request(int pid, int device) {//device：请求设备号
     Device_Table[device].data = (int *)realloc(Device_Table[device].data, (Device_Table[device].size + 1) * sizeof(int));
     Device_Table[device].data[Device_Table[device].size] = pid;
     Device_Table[device].size++;
-    if (Device_Table[device].size > Device_Table[device].num) {
+    if ((Device_Table[device].isonly==0)&&(Device_Table[device].size > Device_Table[device].num)) {
         return false; // 进程加入等待队列
     } else {
         return true; //进程使用设备
