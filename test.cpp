@@ -15,25 +15,27 @@ using namespace std;
 #define TESTDEVICE2 5
 
 struct Device{
-    string name;//Éè±¸Ãû³Æ
-    int *data;//µÈ´ı¶ÓÁĞ
-    int size;//µÈ´ı¶ÓÁĞ´óĞ¡£¬Îª0ËµÃ÷Éè±¸¿ÕÏĞ
-    int num;//Éè±¸¿ÉÓÃÊıÁ¿
+    string name;//è®¾å¤‡åç§°
+    int *data;//ç­‰å¾…é˜Ÿåˆ—
+    int size;//ç­‰å¾…é˜Ÿåˆ—å¤§å°ï¼Œä¸º0è¯´æ˜è®¾å¤‡ç©ºé—²
+    int num;//è®¾å¤‡å¯ç”¨æ•°é‡
+    bool isonly;//è®¾å¤‡æ˜¯å¦ç‹¬å ï¼Œç‹¬å ä¸º0ï¼Œéç‹¬å ä¸º1
 } ;
 
-Device Device_Table[DeviceNum];//Éè±¸±í
+Device Device_Table[DeviceNum];//è®¾å¤‡è¡¨
 string deviceName[] = { "mouse", "screen",  "keyboard" ,"printer","test1","test2"};
 int deviceNum[] ={1,2,1,2,3,4};
+bool ison[] ={1,0,1,0,0,0} ;
 
 void init_device();
 
-// int device_findNum(string device);//´ÓÉè±¸Ãû³Æ»ñµÃÉè±¸ºÅ
+// int device_findNum(string device);//ä»è®¾å¤‡åç§°è·å¾—è®¾å¤‡å·
 
 void show_Device();
 
-bool acquire_request(int pid, int device);//device£ºÇëÇóÉè±¸ºÅ
+bool acquire_request(int pid, int device);//deviceï¼šè¯·æ±‚è®¾å¤‡å·
 
-bool release_device(int pid, int device);//device£ºÊÍ·ÅÉè±¸ºÅ -1´ú±íÊÍ·Å½ø³ÌÕ¼ÓÃµÄÈ«²¿Éè±¸
+bool release_device(int pid, int device);//deviceï¼šé‡Šæ”¾è®¾å¤‡å· -1ä»£è¡¨é‡Šæ”¾è¿›ç¨‹å ç”¨çš„å…¨éƒ¨è®¾å¤‡
 
 void init_device(){
     for(int i = 0; i < DeviceNum; i++){
@@ -41,10 +43,11 @@ void init_device(){
         Device_Table[i].data=nullptr;
         Device_Table[i].size=0;
         Device_Table[i].num=deviceNum[i];
+        Device_Table[i].isonly =ison[i];
     }
 }
 
-// int device_findNum(string device){//´ÓÉè±¸Ãû³Æ»ñµÃÉè±¸ºÅ
+// int device_findNum(string device){//ä»è®¾å¤‡åç§°è·å¾—è®¾å¤‡å·
 //     for(int i=0;i<DeviceNum; i++){
 //         if(strcmp(device,Device_Table[i].name)==0)
 //         return i;
@@ -54,50 +57,67 @@ void init_device(){
 
 void show_Device() {
     printf("------------------------------------------------------------------------------\n");
-    printf("Éè±¸±í×´Ì¬ÈçÏÂ£º\n");
+    printf("è®¾å¤‡è¡¨çŠ¶æ€å¦‚ä¸‹ï¼š\n");
     for (int i = 0; i < DeviceNum; i++) {
-        printf("Éè±¸Ãû³Æ: %s\n", Device_Table[i].name.c_str());
+        printf("è®¾å¤‡åç§°: %s\n", Device_Table[i].name.c_str());
         int length = Device_Table[i].size;
         int num =Device_Table[i].num;
         if (length == 0) {
-            printf("Éè±¸×´Ì¬£º¿ÕÏĞ    Ê£ÓàÊıÁ¿£º%d\n",num);
-        } else if(length <= num){
-            printf("Éè±¸×´Ì¬£ºÕıÔÚÊ¹ÓÃ    Ê£ÓàÊıÁ¿£º%d\n", num-length);
+            printf("è®¾å¤‡çŠ¶æ€ï¼šç©ºé—²\n");
+        } else if(Device_Table[i].isonly==1){
+            printf("è®¾å¤‡çŠ¶æ€ï¼šæ­£åœ¨ä½¿ç”¨\n");
+            printf("æ­£åœ¨ä½¿ç”¨å®ƒçš„è¿›ç¨‹ä¸ºï¼š");
             for(int j =0;j<length;j++){
-                printf("ÕıÔÚÊ¹ÓÃËüµÄ½ø³ÌÎª£º%d\n", Device_Table[i].data[0]);
+                printf("%d  ", Device_Table[i].data[j]);
             }
+            printf("\n");
         }else{
-            printf("Éè±¸×´Ì¬£ºÕıÔÚÊ¹ÓÃ    Ê£ÓàÊıÁ¿£º0\n");
-            for(int j =0;j<num;j++){
-                printf("ÕıÔÚÊ¹ÓÃËüµÄ½ø³ÌÎª£º%d\n", Device_Table[i].data[0]);
+          if(length <= num){
+            printf("è®¾å¤‡çŠ¶æ€ï¼šæ­£åœ¨ä½¿ç”¨    å‰©ä½™æ•°é‡ï¼š%d\n", num-length);
+            printf("æ­£åœ¨ä½¿ç”¨å®ƒçš„è¿›ç¨‹ä¸ºï¼š");
+            for(int j =0;j<length;j++){
+                printf("%d  ", Device_Table[i].data[j]);
             }
-            printf("Éè±¸µÈ´ı¶ÓÁĞ:");
+            printf("\n");
+          }else{
+            printf("è®¾å¤‡çŠ¶æ€ï¼šæ­£åœ¨ä½¿ç”¨    å‰©ä½™æ•°é‡ï¼š0\n");
+            printf("æ­£åœ¨ä½¿ç”¨å®ƒçš„è¿›ç¨‹ä¸ºï¼š");
+            for(int j =0;j<length;j++){
+                printf("%d  ", Device_Table[i].data[j]);
+            }
+            printf("\n");
+            printf("è®¾å¤‡ç­‰å¾…é˜Ÿåˆ—:");
             for (int j = num; j < length; j++) {
-                printf(" %d\n", Device_Table[i].data[j]);
+                printf(" %d  ", Device_Table[i].data[j]);
             }
+            printf("\n");
+          }
         }
+        
+        
+         
     }
     printf("------------------------------------------------------------------------------");
 }
 
-bool acquire_request(int pid, int device) {//device£ºÇëÇóÉè±¸ºÅ
+bool acquire_request(int pid, int device) {//deviceï¼šè¯·æ±‚è®¾å¤‡å·
     for (int i = 0; i < Device_Table[device].size; i++) {
         if (Device_Table[device].data[i] == pid) {
-            return false;//ÖØ¸´ÇëÇó
+            return false;//é‡å¤è¯·æ±‚
         }
     }
     Device_Table[device].data = (int *)realloc(Device_Table[device].data, (Device_Table[device].size + 1) * sizeof(int));
     Device_Table[device].data[Device_Table[device].size] = pid;
     Device_Table[device].size++;
-    if (Device_Table[device].size > Device_Table[device].num) {
-        return false; // ½ø³Ì¼ÓÈëµÈ´ı¶ÓÁĞ
+    if ((Device_Table[device].isonly==0)&&(Device_Table[device].size > Device_Table[device].num)) {
+        return false; // è¿›ç¨‹åŠ å…¥ç­‰å¾…é˜Ÿåˆ—
     } else {
-        return true; //½ø³ÌÊ¹ÓÃÉè±¸
+        return true; //è¿›ç¨‹ä½¿ç”¨è®¾å¤‡
     }
 }
 
-bool release_device(int pid, int device) {//device£ºÊÍ·ÅÉè±¸ºÅ -1´ú±íÊÍ·Å½ø³ÌÕ¼ÓÃµÄÈ«²¿Éè±¸
-    if (device == -1) { // ÊÍ·Å¸Ã½ø³ÌÉêÇëµÄÈ«²¿Éè±¸
+bool release_device(int pid, int device) {//deviceï¼šé‡Šæ”¾è®¾å¤‡å· -1ä»£è¡¨é‡Šæ”¾è¿›ç¨‹å ç”¨çš„å…¨éƒ¨è®¾å¤‡
+    if (device == -1) { // é‡Šæ”¾è¯¥è¿›ç¨‹ç”³è¯·çš„å…¨éƒ¨è®¾å¤‡
         for (int index = 0; index < DeviceNum; index++) {
             for (int i = 0; i < Device_Table[index].size; i++) {
                 if (Device_Table[index].data[i] == pid) {
@@ -110,7 +130,7 @@ bool release_device(int pid, int device) {//device£ºÊÍ·ÅÉè±¸ºÅ -1´ú±íÊÍ·Å½ø³ÌÕ¼Ó
             }
         }
         return true;
-    } else {//ÊÍ·ÅËùÖ¸¶¨Éè±¸
+    } else {//é‡Šæ”¾æ‰€æŒ‡å®šè®¾å¤‡
         for (int i = 0; i < Device_Table[device].size; i++) {
             if (Device_Table[device].data[i] == pid) {
                 for (int j = i; j < Device_Table[device].size - 1; j++) {
@@ -118,8 +138,8 @@ bool release_device(int pid, int device) {//device£ºÊÍ·ÅÉè±¸ºÅ -1´ú±íÊÍ·Å½ø³ÌÕ¼Ó
                 }
                 Device_Table[device].size--;
                 Device_Table[device].data = (int*)realloc(Device_Table[device].data, Device_Table[device].size * sizeof(int));
-                if (Device_Table[device].size != 0) { // µ÷ÓÃ½ø³Ì¹ÜÀí½Ó¿Ú£¬¼¤»îµÈ´ı¶ÓÁĞÖĞµÄµÚÒ»¸ö½ø³Ì
-                    printf("ÔÚ´Ë´¦µ÷ÓÃ½ø³Ì½Ó¿Ú");
+                if (Device_Table[device].size != 0) { // è°ƒç”¨è¿›ç¨‹ç®¡ç†æ¥å£ï¼Œæ¿€æ´»ç­‰å¾…é˜Ÿåˆ—ä¸­çš„ç¬¬ä¸€ä¸ªè¿›ç¨‹
+                    printf("åœ¨æ­¤å¤„è°ƒç”¨è¿›ç¨‹æ¥å£");
                     // wakeup(Device_Table[device].data[0]);
                 }
                 return true;
