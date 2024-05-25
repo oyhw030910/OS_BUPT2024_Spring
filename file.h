@@ -8,22 +8,16 @@
 using namespace std;
 typedef struct FCB
 {
-	char *name;//ÎÄ¼şÃû
+	char *name;//æ–‡ä»¶å
 	struct FCB *nextFCB;
 	struct FCB *sonFCB;
 }FCB;
 
-typedef struct stack
-{
-	FCB * a;
-	int top;
-	int capacity;
-}ST;
 
 FCB *head ;
-void STInit(ST* pst);//³õÊ¼»¯Õ» 
-void init_directory();//³õÊ¼»¯´æ´¢½á¹¹ 
-void STPush(ST* pst,FCB x);//ÈëÕ» 
-void STPop(ST* pst);//³öÕ» 
-bool STEmpty(ST* pst);//¼ì²âÊÇ·ñ¿Õ£¬Õ»Îª¿Õ·µ»Øtrue,²»Îª¿Õ·µ»Øfalse
-int FindFile(FCB father,char * name,ST *FCBst);//ÕÒµ½¶ÔÓ¦ÎÄ¼ş 
+char lastname[80];
+void init_directory();//åˆå§‹åŒ–å­˜å‚¨ç»“æ„ 
+int FindFile(FCB father,char * name);//æ‰¾åˆ°å¯¹åº”æ–‡ä»¶ 
+int _FindFile(string name);
+void CreateFile(string name); 
+char* get_file_name(string name);
