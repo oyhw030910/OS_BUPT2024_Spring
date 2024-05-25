@@ -33,7 +33,7 @@ void init_device();
 
 void show_Device();
 
-bool acquire_request(int pid, int device);//device：请求设备号
+bool acquire_device(int pid, int device);//device：请求设备号
 
 bool release_device(int pid, int device);//device：释放设备号 -1代表释放进程占用的全部设备
 
@@ -100,7 +100,7 @@ void show_Device() {
     printf("------------------------------------------------------------------------------");
 }
 
-bool acquire_request(int pid, int device) {//device：请求设备号
+bool acquire_device(int pid, int device) {//device：请求设备号
     for (int i = 0; i < Device_Table[device].size; i++) {
         if (Device_Table[device].data[i] == pid) {
             return false;//重复请求
@@ -153,10 +153,10 @@ bool release_device(int pid, int device) {//device：释放设备号 -1代表释
 
 int main(){
     init_device();
-    acquire_request(0,0);
-    acquire_request(1,0);
-    acquire_request(2,1);
-    acquire_request(2,2);
+    acquire_device(0,0);
+    acquire_device(1,0);
+    acquire_device(2,1);
+    acquire_device(2,2);
     show_Device();
     release_device(0,0);
     release_device(2,-1);
