@@ -33,6 +33,6 @@ void init_device();
 
 void show_Device();
 
-bool acquire_request(int pid, int device);//device：请求设备号
+bool acquire_device(int pid, int device);//device：请求设备号
 
 bool release_device(int pid, int device);//device：释放设备号 -1代表释放进程占用的全部设备
