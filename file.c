@@ -89,7 +89,7 @@ int _FindFile(string name)
 	//strcpy(lastname,get_file_name(name));
 	s = get_file_name(name);
 	strcpy(lastname,s);
-	printf("%s is filename\n",lastname);
+	
 	flag = FindFile(*head->sonFCB,lastname);
 	
 	return flag;
