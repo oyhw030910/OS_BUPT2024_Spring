@@ -63,7 +63,7 @@ void show_Device() {
     printf("------------------------------------------------------------------------------");
 }
 
-bool acquire_request(int pid, int device) {//device：请求设备号
+bool acquire_device(int pid, int device) {//device：请求设备号
     for (int i = 0; i < Device_Table[device].size; i++) {
         if (Device_Table[device].data[i] == pid) {
             return false;//重复请求
