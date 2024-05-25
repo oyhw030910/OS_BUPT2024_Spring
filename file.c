@@ -18,19 +18,19 @@ FCB *head ;
 char lastname[80];
 void init_directory();//初始化存储结构 
 int FindFile(FCB father,char * name);//找到对应文件 
+int _FindFile(string name);
+void CreateFile(string name); 
 char* get_file_name(string name);
 int main()
 {	
 	int flag=0;
 	string name;
-	char *s;
+	
+	init_directory();
 	printf("input the road of file:");
 	cin >> name;
-	//strcpy(lastname,get_file_name(name));
-	get_file_name(name);
-	printf("%s is filename\n",lastname);
-	init_directory();
-	flag = FindFile(*head->sonFCB,lastname);
+	
+	flag = _FindFile(name);
 	printf("%d",flag);
 	return 0;
 } 
@@ -46,16 +46,53 @@ char* get_file_name(string name)
    token = strtok(str, s);
    
    /* 继续获取其他的子字符串 */
-   while( token != NULL ) {
-   		
-    
-    temp = token;
+   while( token != NULL ) 
+   {
+		temp = token;
     	token = strtok(NULL, s);
       
    }
-   strcpy(lastname,temp);
+   //strcpy(lastname,temp);
    
   	return temp;
+}
+
+char* get_second_name(string name)
+{
+	const char * name0 = name.data();
+	char str[80];
+   const char s[2] = "/";  
+   char *token;
+   char *temp1;
+   char *temp2;
+   /* 获取第一个子字符串 */
+   strcpy(str,name0);
+   token = strtok(str, s);
+   temp1 = token;
+   /* 继续获取其他的子字符串 */
+   while( token != NULL ) 
+   {
+   		temp2 = temp1;
+		temp1 = token;
+    	token = strtok(NULL, s);
+      
+   }
+   //strcpy(lastname,temp);
+   
+  	return temp2;
+}
+int _FindFile(string name)
+{
+	int flag=0;
+	char *s;
+	
+	//strcpy(lastname,get_file_name(name));
+	s = get_file_name(name);
+	strcpy(lastname,s);
+	printf("%s is filename\n",lastname);
+	flag = FindFile(*head->sonFCB,lastname);
+	
+	return flag;
 }
 int FindFile(FCB father,char * name)
 {
@@ -91,7 +128,23 @@ int FindFile(FCB father,char * name)
 	return flag;
 	
 }
-
+//void CreateFile(string name)
+//{
+//	const char * name0 = name.data();
+//	char str[80];
+//	const char s[2] = "/";  
+//	char *token;
+//	char *temp;  
+//   /* 获取第一个子字符串 */
+//	strcpy(str,name0);
+//	token = strtok(str, s);
+//	temp = get_file_name(name);
+//	if(head->sonFCB != NULL)
+//		while(head->nextFCB != NULL)
+//		{
+//			if()
+//		}
+//}
 void init_directory()
 {
 	head=(FCB*)malloc(sizeof(FCB));
