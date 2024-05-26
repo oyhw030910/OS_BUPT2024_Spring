@@ -1,199 +1,42 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<graphics.h>//引用图形库头文件
-#include <conio.h>
-#include <string.h>
-#include <time.h>
-#include <easyx.h>
-#include <tchar.h>
-#include <iostream>
-#include "process.h"
-#include "file.h"
-#include "device.h"
-#include "MemoryManagement.h"
-#pragma once
-#include<bits/stdc++.h>
-using namespace std;
+#include "ui.h"
 
-#undef UNICODE
-#undef _UNICODE
-/*struct MOUSEMSG
+
+
+
+
+
+
+
+
+
+
+
+void drawMain()
 {
-    UINT uMsg;				 //当前鼠标消息
-        bool mkCtrl;			 //Ctrl 键是否按下
-        bool mkShift;			 //Shift 键是否按下
-        bool mkLButton;			 //鼠标左键是否按下
-        bool mkMButton;			 //鼠标中键是否按下
-        bool mkRButton;			 //鼠标右键是否按下
-        short x;				 //当前鼠标 x 坐标
-        short y;				 //当前鼠标 y 坐标
-        short wheel;			 //鼠标滚轮滚动值(120 的倍数)
-};
-
-//bool MouseHit();			 //检查是否存在鼠标消息
-//MOUSEMSG GetMouseMsg();		 //获取一个鼠标消息。如果没有，就等待
-//void FlushMouseMsgBuffer();	 //清空鼠标消息缓冲区
-
-struct Button
-{
-    int a;
-};
-
-
-
-
-typedef struct menu_start
-{
-    //起始界面
-    //创建按钮的位置
-    Button* file;//文件按钮 
-    Button* Process;//进程按钮 
-    Button* Device;//设备按钮
-    Button* Page;//内存按钮
-    Button* Begin;//开始按钮
-    Button* Stop;//暂停按钮
-    Button* Load;//输入确认按钮
-    char * UserInput;
-
-};
-void button(int x, int y, int w, int h, TCHAR* text)
-{
-    setbkmode(TRANSPARENT);
-    setfillcolor(GREEN);
-    fillroundrect(x, y, x + w, y + h, 10, 10);
-    // 输出字符串（MBCS 字符集）
-    TCHAR s1[] = L"黑体";
-    settextstyle(30, 0, s1);
-    TCHAR s[50] = L"hello";
-
-    int tx = x + (w - textwidth(text)) / 2;
-    int ty = y + (h - textheight(text)) / 2;
-
-    outtextxy(tx, ty, text);
-
+    initgraph(1400, 720);
+    cleardevice();			// 关闭绘图窗口
+    int z = 100, T = 480;
+    int x = 0, y = 400;
+    TCHAR q1[] = _T("文件");
+    fillrectangle(x, y, z, T);
+    outtextxy(x, y - 20, q1);
+    x += 100, z += 100;
+    TCHAR q2[] = _T("设备");
+    fillrectangle(x, y, z, T);
+    outtextxy(x, y - 20, q2);
+    x += 100, z += 100;
+    TCHAR q3[] = _T("内存");
+    fillrectangle(x, y, z, T);
+    outtextxy(x, y - 20, q3);
+    x += 100, z += 100;
+    TCHAR q4[] = _T("进程");
+    fillrectangle(x, y, z, T);
+    outtextxy(x, y - 20, q4);
+    x += 100, z = 640;
+    TCHAR q5[] = _T("退出");
+    fillrectangle(x, y, z, T);
+    outtextxy(x, y - 20, q5);
 }
-
-
-void drawMenu()
-{
-    initgraph(640, 480, EW_SHOWCONSOLE);
-    settextstyle(16, 8, _T("Courier"));	// 设置字体
-
-    // 设置颜色
-    settextcolor(GREEN);
-    setlinecolor(WHITE);
-    outtextxy(300, 200, _T("t1"));
-}
-
-void draw1()
-{
-    srand((unsigned)time(NULL));
-    drawMenu();
-    setbkcolor(BLUE);
-    cleardevice();
-    TCHAR s[50] = L"1";
-    TCHAR s1[50] = L"2";
-    TCHAR s2[50] = L"3";
-    TCHAR s3[50] = L"4";
-    button(220, 50, 170, 50, s);
-    button(220, 150, 170, 50, s1);
-    button(220, 250, 170, 50, s2);
-    button(220, 350, 170, 50, s3);
-    ExMessage msg;
-    while (true) {
-        if (peekmessage(&msg, EM_MOUSE)) {
-
-            switch (msg.message)
-            {
-            case WM_LBUTTONDOWN:
-                if (msg.x >= 220 && msg.x <= 220 + 170 && msg.y >= 50 && msg.y <= 50 + 50)
-                {
-
-                    outtextxy(200, 200, s);	//写了一个展示文字的效果，相当于是测试,实际使用时可以删除
-                    //在此处写下按钮点击时要执行的函数，实现相应的功能
-                }
-                if (msg.x >= 220 && msg.x <= 220 + 170 && msg.y >= 150 && msg.y <= 150 + 50)
-                {
-
-                    outtextxy(200, 200, s1);
-                    //在此处写下按钮点击时要执行的函数，实现相应的功能  
-                }
-                if (msg.x >= 220 && msg.x <= 220 + 170 && msg.y >= 250 && msg.y <= 250 + 50)
-                {
-
-                    outtextxy(200, 200, s2);
-                    //在此处写下按钮点击时要执行的函数，实现相应的功能
-                }
-                if (msg.x >= 220 && msg.x <= 220 + 170 && msg.y >= 350 && msg.y <= 350 + 50)
-                {
-
-                    outtextxy(200, 200, s3);
-                    //在此处写下按钮点击时要执行的函数，实现相应的功能
-                }
-                break;
-            default:
-                break;
-            }
-        }
-
-    }
-}
-
-void mouseFollow()
-{
-    MOUSEMSG m;		// 定义鼠标消息
-    _getch();
-    while (true) {
-        ExMessage m;//定义一个消息变量
-        m = getmessage(EM_MOUSE);//获取鼠标消息
-        switch (m.message)
-        {
-        case WM_MOUSEMOVE:
-            // 鼠标移动的时候画红色的小点
-            putpixel(m.x, m.y, RED);
-            break;
-
-        case WM_LBUTTONDOWN:
-            // 画一个小方块
-            rectangle(m.x - 5, m.y - 5, m.x + 5, m.y + 5);
-            break;
-
-        case WM_RBUTTONUP:
-            return ;	// 按鼠标右键退出程序
-        }
-    }
-
-    circle(200, 200, 100);    //画圆，圆心(200,200),半径100
-    arc(100, 300, 500, 100, 60.0, 80.0);
-    outtextxy(170, 200, _T("t"));
-    _getch();      //按任意键继续,防止闪退
-    closegraph();   //关闭绘图窗口
-}
-
-
-
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -246,7 +89,82 @@ void changepcb(PCB process[])
     
 }
 
+void drawCreatePCB()
+{
+    int button_x = 100, button_y = 600;
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
+    outtextxy(button_x + 30, button_y + 20, "创建文件");
+    button_x += 120;
 
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
+    outtextxy(button_x + 30, button_y + 20, "删除文件");
+    button_x += 120;
+
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
+    outtextxy(button_x + 30, button_y + 20, "读文件");
+    button_x += 120;
+
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
+    outtextxy(button_x + 30, button_y + 20, "写文件");
+    button_x += 120;
+
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
+    outtextxy(button_x + 30, button_y + 20, "申请设备");
+    button_x += 120;
+
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
+    outtextxy(button_x + 30, button_y + 20, "释放设备");
+    button_x += 120;
+
+    while (true)
+    {
+
+        ExMessage me;//定义一个消息变量
+        me = getmessage(EM_MOUSE);//获取鼠标消息
+        if (me.message == WM_LBUTTONUP)
+        {
+
+            button_x = 100, button_y = 600;
+            if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.x <= button_y + 60)
+            {
+                //创建文件
+                return;
+
+            }
+            else if (me.x >= button_x + 120 && me.y >= button_y && me.x <= button_x + 100 + 120 && me.x <= button_y + 60)
+            {
+                //删除文件
+                return;
+            }
+            else if (me.x >= button_x + 240 && me.y >= button_y && me.x <= button_x + 100 + 240 && me.x <= button_y + 60)
+            {
+                //读文件
+                //return;
+            }
+            else if (me.x >= button_x + 360 && me.y >= button_y && me.x <= button_x + 100 + 360 && me.x <= button_y + 60)
+            {
+                //写文件
+                //return;
+            }
+            else if (me.x >= button_x + 480 && me.y >= button_y && me.x <= button_x + 100 + 480 && me.x <= button_y + 60)
+            {
+                //申请设备
+                //return;
+            }
+            else if (me.x >= button_x + 600 && me.y >= button_y && me.x <= button_x + 100 + 600 && me.x <= button_y + 60)
+            {
+                //释放设备
+                //return;
+            }
+
+
+
+        }
+
+
+    }
+
+}
 
 void pcbDrawPro(PCB process[])
 {
@@ -264,12 +182,12 @@ void pcbDrawPro(PCB process[])
 
 
     initgraph(1400, 720);
-    settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
+    settextcolor(WHITE);// 创建绘图窗口
 
 
     
 
-    char s[2000] = "Hello World";
+    char s[2000] = "";
     string w = (string)s;
 
     //InputBox(s, 10, "请输入半径");
@@ -297,16 +215,13 @@ void pcbDrawPro(PCB process[])
 
     strcpy(s, "还需运行时间");
     outtextxy(20, 460, s);
-    
-    strcpy(s, "进程所需内存");
-    outtextxy(20, 520, s);
 
     strcpy(s, "进程队列");
-    outtextxy(20, 600, s);
+    outtextxy(20, 520, s);
 
     for (int i = 0; i < Ready_Process.size(); i++)
     {
-        outtextxy(20, 650+i*40, Ready_Process.front());
+        outtextxy(20+ i * 40, 570, Ready_Process.front());
     }
 
     
@@ -381,11 +296,14 @@ void pcbDrawPro(PCB process[])
     int button_x = 50, button_y = 20;
     ellipse(button_x, button_y, button_x+100, button_y+50);
     outtextxy(button_x+20, button_y+20, "创建进程");
-    button_x += 1000;
+
+    button_x = 1050;
     ellipse(button_x, button_y, button_x + 100, button_y + 50);
-    outtextxy(button_x + 20, button_y + 20, "时间增加");
+    outtextxy(button_x + 20, button_y + 20, "时间前进");
 
-
+    button_x -= 200;
+    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    outtextxy(button_x + 20, button_y + 20, "主界面");
 
     while (true)
     {
@@ -394,61 +312,32 @@ void pcbDrawPro(PCB process[])
         me = getmessage(EM_MOUSE);//获取鼠标消息
         if (me.message == WM_LBUTTONUP)
         {
-            if (me.x <= 230 && me.x > 130)
+            button_x = 50, button_y = 20;
+
+            if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 60)
             {
-                clearcircle;
-                setfillcolor(YELLOW);
-                fillcircle(100, 300, 50);
-            }
-            else if (me.x <= 330 && me.x > 230)
-            {
-                clearcircle;
-                setfillcolor(GREEN);
-                fillcircle(100, 300, 50);
-            }
-            else if (me.x <= 430 && me.x > 330)
-            {
-                clearcircle;
-                setfillcolor(RED);
-                fillcircle(100, 300, 50);
-            }
-            else
-                break;
-            if (me.x >= 100 && me.y >= 600 && me.x <= 200 && me.x <= 660)
-            {
-                
+                drawCreatePCB();
+                pcbDrawPro(process);
                 return;
+
+            }
+            else if(me.x >= button_x+ 1000 && me.y >= button_y && me.x <= button_x + 1000 + 100 && me.y <= button_y + 60)
+            {
+                //时间前进
+                pcbDrawPro(process);
+                return;
+
+            }
+            else if (me.x >= button_x + 800 && me.y >= button_y && me.x <= button_x + 800 + 100 && me.y <= button_y + 60)
+            {
+                //退出
+                break;
 
             }
         }
     }
 
-    TCHAR v[] = _T("按任意键退出");
-    outtextxy(400, 400, v);
-
-    _getch();				// 按任意键继续
-    cleardevice();			// 关闭绘图窗口
-
-    x = 0, y = 400, z = 100, T = 480;
-    TCHAR q1[] = _T("文件");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q1);
-    x += 100, z += 100;
-    TCHAR q2[] = _T("设备");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q2);
-    x += 100, z += 100;
-    TCHAR q3[] = _T("内存");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q3);
-    x += 100, z += 100;
-    TCHAR q4[] = _T("进程");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q4);
-    x += 100, z = 640;
-    TCHAR q5[] = _T("退出");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q5);
+    drawMain();
 
     return;
 
@@ -562,7 +451,7 @@ void memoryDraw()
 
     InitializeMemory();
 
-    char s[2000] = "Hello World";
+    char s[2000] = "";
     string w = (string)s;
     outtextxy(10, 20, s);
     int button_x = 100, button_y = 600;
@@ -586,6 +475,14 @@ void memoryDraw()
     outtextxy(button_x + 30, button_y + 20, "删除");
     button_x += 120;
 
+    button_x = 1050;
+    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    outtextxy(button_x + 20, button_y + 20, "时间前进");
+
+    button_x -= 200;
+    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    outtextxy(button_x + 20, button_y + 20, "主界面");
+
     int x = 700, y = 300;
     COLORREF colorThis;
     int processptr = 0;
@@ -601,30 +498,36 @@ void memoryDraw()
         {
             
             button_x = 100, button_y = 600;
-            if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.x <= button_y + 60)
+            if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 60)
             {
                 drawVirMemory();
                 return;
 
             }
-            else if (me.x >= button_x + 120 && me.y >= button_y && me.x <= button_x + 100 + 120 && me.x <= button_y + 60)
+            else if (me.x >= button_x + 120 && me.y >= button_y && me.x <= button_x + 100 + 120 && me.y <= button_y + 60)
             {
                 drawPhyMemory();
                 return;
                 //return;
             }
-            else if (me.x >= button_x + 240 && me.y >= button_y && me.x <= button_x + 100 + 240 && me.x <= button_y + 60)
+            else if (me.x >= button_x + 240 && me.y >= button_y && me.x <= button_x + 100 + 240 && me.y <= button_y + 60)
             {
                 
                 //return;
             }
-            else if (me.x >= button_x + 360 && me.y >= button_y && me.x <= button_x + 100 + 360 && me.x <= button_y + 60)
+            else if (me.x >= button_x + 1000 && me.y >= button_y && me.x <= button_x + 1000 + 100 && me.y <= button_y + 60)
             {
-                //outtextxy(button_x + 30, button_y + 20, "写文件");
-                //fileDraw();
-                //return;
-            }
+                //时间前进
+                memoryDraw();
+                return;
 
+            }
+            else if (me.x >= button_x + 800 && me.y >= button_y && me.x <= button_x + 800 + 100 && me.y <= button_y + 60)
+            {
+                //退出
+                break;
+
+            }
 
 
 
@@ -633,32 +536,7 @@ void memoryDraw()
 
     }
 
-    TCHAR v[] = _T("按任意键退出");
-    outtextxy(400, 400, v);
-
-    _getch();				// 按任意键继续
-    cleardevice();			// 关闭绘图窗口
-    int z = 100, T = 480;
-    x = 0, y = 400;
-    TCHAR q1[] = _T("文件");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q1);
-    x += 100, z += 100;
-    TCHAR q2[] = _T("设备");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q2);
-    x += 100, z += 100;
-    TCHAR q3[] = _T("内存");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q3);
-    x += 100, z += 100;
-    TCHAR q4[] = _T("进程");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q4);
-    x += 100, z = 640;
-    TCHAR q5[] = _T("退出");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q5);
+    drawMain();
 
     return;
 
@@ -802,24 +680,19 @@ void fileDraw()
     char s[2000] = "Hello World";
     string w = (string)s;
     outtextxy(10, 20, s);
-    int button_x = 100, button_y = 600;
+    int button_x = 20, button_y = 50;
     ellipse(button_x, button_y, button_x+100, button_y+60);
     outtextxy(button_x+30, button_y+20 , "根目录");
     button_x += 120;
 
+
+    button_x = 1050;
     ellipse(button_x, button_y, button_x + 100, button_y + 60);
-    outtextxy(button_x + 30, button_y + 20, "创建文件");
-    button_x += 120;
+    outtextxy(button_x + 30, button_y + 20, "时间前进");
 
-    ellipse(button_x, button_y, button_x + 100, button_y + 60);
-    outtextxy(button_x + 30, button_y + 20, "查询文件");
-    button_x += 120;
-
-    ellipse(button_x, button_y, button_x + 100, button_y + 60);
-    outtextxy(button_x + 30, button_y + 20, "写文件");
-    button_x += 120;
-
-
+    button_x -= 200;
+    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    outtextxy(button_x + 20, button_y + 20, "主界面");
 
     int x=700, y=300 ;
     COLORREF colorThis;
@@ -830,7 +703,6 @@ void fileDraw()
     drawFileMenu(head);
 
     outtextxy(100, 180, "点击对应子文件切换目录");
-    
     FCB* temp = head;
     while (true)
     {
@@ -841,8 +713,8 @@ void fileDraw()
         {
             for (int i = 0; i < size1(temp); i++)
             {
-                if(me.x>=100+ 1200 / size1(temp) * i && me.x< 100 + 1200 / size1(temp) * i+60 
-                    && me.y<=320 &&me.y>=200)
+                if (me.x >= 100 + 1200 / size1(temp) * i && me.x < 100 + 1200 / size1(temp) * i + 60
+                    && me.y <= 320 && me.y >= 200)
                 {
                     clearrectangle(0, 180, 1200, 320);
                     temp = temp->sonFCB;
@@ -853,30 +725,25 @@ void fileDraw()
                     drawFileMenu(temp);
                 }
             }
-            button_x = 100, button_y = 600;
-            if(me.x>= button_x &&me.y>= button_y &&me.x<= button_x +100&&me.x<= button_y+60)
+            button_x = 20, button_y = 50;
+            if(me.x>= button_x &&me.y>= button_y &&me.x<= button_x +100&&me.y<= button_y+60)
             {
                 fileDraw();
                 return;
 
             }
-            else if (me.x >= button_x+120 && me.y >= button_y && me.x <= button_x + 100 + 120 && me.x <= button_y + 60)
+            else if (me.x >= button_x+1030 && me.y >= button_y && me.x <= button_x + 1030 + 100 && me.y <= button_y + 60)
             {
-                //outtextxy(button_x + 30, button_y + 20, "创建文件");
+                //时间前进
                 fileDraw();
                 return;
+
             }
-            else if (me.x >= button_x + 240 && me.y >= button_y && me.x <= button_x + 100 + 240 && me.x <= button_y + 60)
+            else if (me.x >= button_x + 800 && me.y >= button_y && me.x <= button_x + 800 + 100 && me.y <= button_y + 60)
             {
-                //outtextxy(button_x + 30, button_y + 20, "查询文件");
-                fileDraw();
-                return;
-            }
-            else if (me.x >= button_x + 360 && me.y >= button_y && me.x <= button_x + 100 + 360 && me.x <= button_y + 60)
-            {
-                //outtextxy(button_x + 30, button_y + 20, "写文件");
-                fileDraw();
-                return;
+                //退出
+                break;
+
             }
                 
             
@@ -887,32 +754,8 @@ void fileDraw()
 
     }
 
-    TCHAR v[] = _T("按任意键退出");
-    outtextxy(400, 400, v);
-
-    _getch();				// 按任意键继续
-    cleardevice();			// 关闭绘图窗口
-    int z = 100, T = 480;
-    x = 0, y = 400;
-    TCHAR q1[] = _T("文件");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q1);
-    x += 100, z += 100;
-    TCHAR q2[] = _T("设备");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q2);
-    x += 100, z += 100;
-    TCHAR q3[] = _T("内存");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q3);
-    x += 100, z += 100;
-    TCHAR q4[] = _T("进程");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q4);
-    x += 100, z = 640;
-    TCHAR q5[] = _T("退出");
-    fillrectangle(x, y, z, T);
-    outtextxy(x, y - 20, q5);
+    
+    drawMain();
 
     return;
 
@@ -981,6 +824,14 @@ void deviceDraw()
     strcpy(s, "设备等待队列");
     outtextxy(20, 280, s);
 
+    int button_x = 50, button_y = 20;
+    button_x += 1050;
+    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    outtextxy(button_x + 20, button_y + 20, "时间前进");
+
+    button_x -= 200;
+    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    outtextxy(button_x + 20, button_y + 20, "主界面");
 
     for (int i = 0; i < DeviceNum; i++)
     {
@@ -1014,75 +865,48 @@ void deviceDraw()
         processptr++;
     }
 
-    /*
-    initgraph(640, 480);
-    settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
-    setlinecolor(BLUE);
-    TCHAR s[] = _T("设备");
-    outtextxy(10, 20, s);
-    TCHAR v[] = _T("按任意键退出");
-    outtextxy(400, 400, v);
-    int x = 60, y = 100, z = 100, m = 200,o;
+    while (true)
+    {
 
-    TCHAR s1[] = _T("键盘");
-    fillrectangle(x, y, z, m);
-    outtextxy(x, y - 20, s1);
-    x += 60, z += 60;
-    TCHAR s2[] = _T("鼠标");
-    fillrectangle(x, y, z, m);
-    outtextxy(x, y - 20, s2);
-    x += 60, z += 60;
-    TCHAR s3[] = _T("屏幕");
-    fillrectangle(x, y, z, m);
-    outtextxy(x, y - 20, s3);
-    x += 60, z += 60;
-    TCHAR s4[] = _T("打印机");
-    fillrectangle(x, y, z, m);
-    outtextxy(x, y - 20, s4);
-    x += 60, z += 60;
-    TCHAR s5[] = _T("磁盘");
-    fillrectangle(x, y, z, m);
-    outtextxy(x, y - 20, s5);
+        ExMessage me;//定义一个消息变量
+        me = getmessage(EM_MOUSE);//获取鼠标消息
+        if (me.message == WM_LBUTTONUP)
+        {
+            button_x = 100, button_y = 600;
+            if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 60)
+            {
+                deviceDraw();
+                return;
 
+            }
+            else if (me.x >= button_x + 1000 && me.y >= button_y && me.x <= button_x + 1000 + 100 && me.y <= button_y + 60)
+            {
+                //时间前进
+                deviceDraw();
+                return;
 
-    TCHAR D[] = _T("等待队列");
-    outtextxy(10, 350, D);*/
- 
+            }
+            else if (me.x >= button_x + 800 && me.y >= button_y && me.x <= button_x + 800 + 100 && me.y <= button_y + 60)
+            {
+                //退出
+                break;
+
+            }
 
 
 
-    _getch();				// 按任意键继续
-    cleardevice();			// 关闭绘图窗口
- 
-    int o = 480;
-    x = 0, y = 400, z = 100;
-    setlinecolor(BLUE);
-    TCHAR q1[] = _T("文件");
-    fillrectangle(x, y, z, o);
-    outtextxy(x, y - 20, q1);
-    x += 100, z += 100;
-    TCHAR q2[] = _T("设备");
-    fillrectangle(x, y, z, o);
-    outtextxy(x, y - 20, q2);
-    x += 100, z += 100;
-    TCHAR q3[] = _T("内存");
-    fillrectangle(x, y, z, o);
-    outtextxy(x, y - 20, q3);
-    x += 100, z += 100;
-    TCHAR q4[] = _T("进程");
-    fillrectangle(x, y, z, o);
-    outtextxy(x, y - 20, q4);
-    x += 100, z = 640;
-    TCHAR q5[] = _T("退出");
-    fillrectangle(x, y, z, o);
-    outtextxy(x, y - 20, q5);
+
+        }
+    }
+    drawMain();
 
     return;
 }
+
 int main()
 {
     MOUSEMSG m;		// 定义鼠标消息
-    initgraph(1280, 800);
+    initgraph(1400, 720);
     int x = 0, y = 400, z = 100, o = 480;
     setlinecolor(BLUE);
     TCHAR q1[] = _T("文件");
