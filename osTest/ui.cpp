@@ -39,8 +39,8 @@ void drawMain()
                 memoryDraw();
             else if (m.x <= 400 && m.x > 300)
                 pcbDrawPro();
-            else
-                break;
+            else if (m.x <= 500 && m.x > 400)
+                    return;
 
         }
 
