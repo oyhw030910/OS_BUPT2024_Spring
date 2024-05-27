@@ -2,29 +2,49 @@
 
 void drawMain()
 {
+    MOUSEMSG m;		// 定义鼠标消息
     initgraph(1400, 720);
-    cleardevice();			// 关闭绘图窗口
-    int z = 100, T = 480;
-    int x = 0, y = 400;
+    int x = 0, y = 400, z = 100, o = 480;
+    setlinecolor(BLUE);
     TCHAR q1[] = _T("文件");
-    fillrectangle(x, y, z, T);
+    fillrectangle(x, y, z, o);
     outtextxy(x, y - 20, q1);
     x += 100, z += 100;
     TCHAR q2[] = _T("设备");
-    fillrectangle(x, y, z, T);
+    fillrectangle(x, y, z, o);
     outtextxy(x, y - 20, q2);
     x += 100, z += 100;
     TCHAR q3[] = _T("内存");
-    fillrectangle(x, y, z, T);
+    fillrectangle(x, y, z, o);
     outtextxy(x, y - 20, q3);
     x += 100, z += 100;
     TCHAR q4[] = _T("进程");
-    fillrectangle(x, y, z, T);
+    fillrectangle(x, y, z, o);
     outtextxy(x, y - 20, q4);
     x += 100, z = 640;
     TCHAR q5[] = _T("退出");
-    fillrectangle(x, y, z, T);
+    fillrectangle(x, y, z, o);
     outtextxy(x, y - 20, q5);
+    while (true)
+    {
+        ExMessage m;//定义一个消息变量
+        m = getmessage(EM_MOUSE);//获取鼠标消息
+        if (m.message == WM_LBUTTONUP)
+        {
+            if (m.x <= 100)
+                fileDraw();
+            else if (m.x <= 200 && m.x > 100)
+                deviceDraw();
+            else if (m.x <= 300 && m.x > 200)
+                memoryDraw();
+            else if (m.x <= 400 && m.x > 300)
+                pcbDrawPro();
+            else
+                break;
+
+        }
+
+    }
 }
 
 
@@ -120,7 +140,6 @@ void drawCreatePCB()
 
 void pcbDrawPro()
 {
-    changepcb(process);
     int truesize = 0;
     for (size_t i = 0; i < maxprocess; i++)
     {
@@ -148,7 +167,7 @@ void pcbDrawPro()
     printf("%s", s);
 
     int x, y, z, m, T = 180;
-    COLORREF colorThis;
+    COLORREF colorThis=WHITE;
     int processptr = 0;
     strcpy(s, "进程");
     outtextxy(20, 150, s);
@@ -269,14 +288,14 @@ void pcbDrawPro()
             if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 60)
             {
                 drawCreatePCB();
-                pcbDrawPro(process);
+                pcbDrawPro();
                 return;
 
             }
             else if (me.x >= button_x + 1000 && me.y >= button_y && me.x <= button_x + 1000 + 100 && me.y <= button_y + 60)
             {
                 //时间前进
-                pcbDrawPro(process);
+                pcbDrawPro();
                 return;
 
             }
@@ -426,7 +445,7 @@ void memoryDraw()
         if (me.message == WM_LBUTTONUP)
         {
 
-            button_x = 100, button_y = 600;
+            button_x = 50, button_y = 20;
             if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 60)
             {
                 drawVirMemory();
@@ -494,10 +513,7 @@ void drawFileMenu(FCB* head)
     string w = (string)s;
     int x = 700, y = 300;
     int size = size1(head->sonFCB);
-    if (head->color == 1)
-        setfillcolor(RED);
-    else
-        setfillcolor(WHITE);
+    setfillcolor(WHITE);
     fillellipse(660, 100, 760, 160);
     strcpy(s, head->name);
     outtextxy(700, 180, s);
@@ -506,10 +522,7 @@ void drawFileMenu(FCB* head)
     {
 
         x = 100 + 1200 / size * t, y = 200;
-        if (temp->color == 1)
-            setfillcolor(RED);
-        else
-            setfillcolor(WHITE);
+           setfillcolor(WHITE);
         fillellipse(x, y, x + 60, y + 120);
         outtextxy(x - 60, y + 80, temp->name);
         temp = temp->nextFCB;
@@ -695,7 +708,7 @@ void deviceDraw()
         me = getmessage(EM_MOUSE);//获取鼠标消息
         if (me.message == WM_LBUTTONUP)
         {
-            button_x = 100, button_y = 600;
+            button_x = 50, button_y = 20;
             if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 60)
             {
                 deviceDraw();
@@ -728,49 +741,7 @@ void deviceDraw()
 
 int main()
 {
-    MOUSEMSG m;		// 定义鼠标消息
-    initgraph(1400, 720);
-    int x = 0, y = 400, z = 100, o = 480;
-    setlinecolor(BLUE);
-    TCHAR q1[] = _T("文件");
-    fillrectangle(x, y, z, o);
-    outtextxy(x, y - 20, q1);
-    x += 100, z += 100;
-    TCHAR q2[] = _T("设备");
-    fillrectangle(x, y, z, o);
-    outtextxy(x, y - 20, q2);
-    x += 100, z += 100;
-    TCHAR q3[] = _T("内存");
-    fillrectangle(x, y, z, o);
-    outtextxy(x, y - 20, q3);
-    x += 100, z += 100;
-    TCHAR q4[] = _T("进程");
-    fillrectangle(x, y, z, o);
-    outtextxy(x, y - 20, q4);
-    x += 100, z = 640;
-    TCHAR q5[] = _T("退出");
-    fillrectangle(x, y, z, o);
-    outtextxy(x, y - 20, q5);
-    while (true)
-    {
-        ExMessage m;//定义一个消息变量
-        m = getmessage(EM_MOUSE);//获取鼠标消息
-        if (m.message == WM_LBUTTONUP)
-        {
-            if (m.x <= 100)
-                fileDraw();
-            else if (m.x <= 200 && m.x > 100)
-                deviceDraw();
-            else if (m.x <= 300 && m.x > 200)
-                memoryDraw();
-            else if (m.x <= 400 && m.x > 300)
-                pcbDrawPro(process);
-            else
-                break;
-
-        }
-
-    }
-
+    
+    drawMain();
     return 0;
 }
