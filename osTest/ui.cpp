@@ -5,7 +5,7 @@ void drawMain()
     MOUSEMSG m;		// 定义鼠标消息
     initgraph(1400, 720);
     int x = 0, y = 400, z = 100, o = 480;
-    setlinecolor(BLUE);
+    setfillcolor(WHITE);
     TCHAR q1[] = _T("文件");
     fillrectangle(x, y, z, o);
     outtextxy(x, y - 20, q1);
@@ -45,9 +45,9 @@ void drawMain()
         }
 
     }
+    
+    return ;
 }
-
-
 
 
 
@@ -167,7 +167,7 @@ void pcbDrawPro()
     printf("%s", s);
 
     int x, y, z, m, T = 180;
-    COLORREF colorThis=WHITE;
+    COLORREF colorThis = WHITE;
     int processptr = 0;
     strcpy(s, "进程");
     outtextxy(20, 150, s);
@@ -265,15 +265,15 @@ void pcbDrawPro()
     }
 
     int button_x = 50, button_y = 20;
-    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
     outtextxy(button_x + 20, button_y + 20, "创建进程");
 
     button_x = 1050;
-    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
     outtextxy(button_x + 20, button_y + 20, "时间前进");
 
     button_x -= 200;
-    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
     outtextxy(button_x + 20, button_y + 20, "主界面");
 
     while (true)
@@ -319,20 +319,7 @@ void drawVirMemory()
     char s[2000] = "Hello World";
     string w = (string)s;
     int x = 700, y = 300;
-    /*
-    typedef struct VirMemoty {
-        int virTable[PAGE_NUMBER][3];//虚拟内存分配情况（PID，默认-1；已用内存，默认0；已写内存，默认0）
-        string virContent[PAGE_NUMBER];//虚拟内存存储内容（默认"*"）
-    }VirMemoty;
-    typedef struct PhyMemory {
-        int phyTable[FRAME_NUMBER]; //物理内存分配情况（页号，默认-1）
-        string phyContent[FRAME_NUMBER]; //物理内存里存储内容（默认"*"）
-    }PhyMemory;
-    PageTable pageTable;//页表
-    VirMemoty virMemory;//虚拟内存使用情况
-    PhyMemory phyMemory;//物理内存使用情况
 
-    */
     clearrectangle(100, 100, 900, 500);
     rectangle(100, 90, 200, 190);
     outtextxy(100 + 20, 100 + 20, "页号");
@@ -357,20 +344,7 @@ void drawPhyMemory()
     char s[2000] = "Hello World";
     string w = (string)s;
     int x = 700, y = 300;
-    /*
-    typedef struct VirMemoty {
-        int virTable[PAGE_NUMBER][3];//虚拟内存分配情况（PID，默认-1；已用内存，默认0；已写内存，默认0）
-        string virContent[PAGE_NUMBER];//虚拟内存存储内容（默认"*"）
-    }VirMemoty;
-    typedef struct PhyMemory {
-        int phyTable[FRAME_NUMBER]; //物理内存分配情况（页号，默认-1）
-        string phyContent[FRAME_NUMBER]; //物理内存里存储内容（默认"*"）
-    }PhyMemory;
-    PageTable pageTable;//页表
-    VirMemoty virMemory;//虚拟内存使用情况
-    PhyMemory phyMemory;//物理内存使用情况
 
-    */
     clearrectangle(100, 100, 900, 500);
     rectangle(100, 90, 200, 190);
     outtextxy(100 + 20, 100 + 20, "帧号");
@@ -402,33 +376,21 @@ void memoryDraw()
     char s[2000] = "";
     string w = (string)s;
     outtextxy(10, 20, s);
-    int button_x = 100, button_y = 600;
+    int button_x = 50, button_y = 20;
     ellipse(button_x, button_y, button_x + 100, button_y + 60);
-    outtextxy(button_x + 30, button_y + 20, "虚拟内存");
+    outtextxy(button_x + 20, button_y + 20, "虚拟内存");
     button_x += 120;
 
     ellipse(button_x, button_y, button_x + 100, button_y + 60);
-    outtextxy(button_x + 30, button_y + 20, "物理内存");
-    button_x += 120;
-
-    ellipse(button_x, button_y, button_x + 100, button_y + 60);
-    outtextxy(button_x + 30, button_y + 20, "查找");
-    button_x += 120;
-
-    ellipse(button_x, button_y, button_x + 100, button_y + 60);
-    outtextxy(button_x + 30, button_y + 20, "插入");
-    button_x += 120;
-
-    ellipse(button_x, button_y, button_x + 100, button_y + 60);
-    outtextxy(button_x + 30, button_y + 20, "删除");
+    outtextxy(button_x + 20, button_y + 20, "物理内存");
     button_x += 120;
 
     button_x = 1050;
-    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
     outtextxy(button_x + 20, button_y + 20, "时间前进");
 
     button_x -= 200;
-    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
     outtextxy(button_x + 20, button_y + 20, "主界面");
 
     int x = 700, y = 300;
@@ -501,9 +463,6 @@ int size1(FCB* a)
         b = b->nextFCB;
         num++;
     }
-
-    printf("num:%d", num);
-    cout << num << endl;
     return num;
 }
 
@@ -522,7 +481,7 @@ void drawFileMenu(FCB* head)
     {
 
         x = 100 + 1200 / size * t, y = 200;
-           setfillcolor(WHITE);
+        setfillcolor(WHITE);
         fillellipse(x, y, x + 60, y + 120);
         outtextxy(x - 60, y + 80, temp->name);
         temp = temp->nextFCB;
@@ -549,14 +508,15 @@ void fileDraw()
     outtextxy(button_x + 30, button_y + 20, "根目录");
     button_x += 120;
 
-
+    int button_x = 50, button_y = 20;
     button_x = 1050;
-    ellipse(button_x, button_y, button_x + 100, button_y + 60);
-    outtextxy(button_x + 30, button_y + 20, "时间前进");
+    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    outtextxy(button_x + 20, button_y + 20, "时间前进");
 
     button_x -= 200;
     ellipse(button_x, button_y, button_x + 100, button_y + 50);
     outtextxy(button_x + 20, button_y + 20, "主界面");
+    
 
     int x = 700, y = 300;
     COLORREF colorThis;
@@ -661,12 +621,12 @@ void deviceDraw()
     outtextxy(20, 280, s);
 
     int button_x = 50, button_y = 20;
-    button_x += 1050;
-    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    button_x = 1050;
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
     outtextxy(button_x + 20, button_y + 20, "时间前进");
 
     button_x -= 200;
-    ellipse(button_x, button_y, button_x + 100, button_y + 50);
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
     outtextxy(button_x + 20, button_y + 20, "主界面");
 
     for (int i = 0; i < DeviceNum; i++)
@@ -741,7 +701,7 @@ void deviceDraw()
 
 int main()
 {
-    
+
     drawMain();
     return 0;
 }
