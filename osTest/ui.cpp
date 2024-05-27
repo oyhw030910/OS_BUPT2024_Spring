@@ -118,7 +118,7 @@ void drawCreatePCB()
 
 }
 
-void pcbDrawPro(PCB process[])
+void pcbDrawPro()
 {
     changepcb(process);
     int truesize = 0;
