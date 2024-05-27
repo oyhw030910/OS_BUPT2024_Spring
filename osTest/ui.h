@@ -28,7 +28,7 @@ string getInput(string line);//ui界面提示用户输入，返回值为string
 
 void drawCreatePCB();//用户新增进程的交互
 
-void pcbDrawPro(PCB process[]);//绘制进程界面
+void pcbDrawPro();//绘制进程界面
 
 void drawVirMemory();//绘制虚拟内存
 void drawPhyMemory();//绘制物理内存
