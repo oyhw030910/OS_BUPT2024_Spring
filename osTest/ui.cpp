@@ -2,6 +2,7 @@
 
 void drawMain()
 {
+    MOUSEMSG m;		// 定义鼠标消息
     initgraph(1400, 720);
     int x = 0, y = 400, z = 100, o = 480;
     setfillcolor(WHITE);
@@ -28,9 +29,11 @@ void drawMain()
     {
         ExMessage m;//定义一个消息变量
         m = getmessage(EM_MOUSE);//获取鼠标消息
+        //m.message = WM_LBUTTONUP;
         if (m.message == WM_LBUTTONUP)
         {
-            if (m.x <= 100 && m.x > 0)
+            //m.x = 450;
+            if (m.x <= 100)
                 fileDraw();
             else if (m.x <= 200 && m.x > 100)
                 deviceDraw();
@@ -39,13 +42,13 @@ void drawMain()
             else if (m.x <= 400 && m.x > 300)
                 pcbDrawPro();
             else if (m.x <= 500 && m.x > 400)
-                break;
+                return;
 
         }
 
     }
-    
-    //return;
+
+    return;
 }
 
 
@@ -58,9 +61,6 @@ string getInput(string line)
     InputBox(s, 10, lpctstr);
     string lineback = s;
     return lineback;
-
-
-
 }
 
 void drawCreatePCB()
@@ -140,46 +140,20 @@ void drawCreatePCB()
 
 }
 
-/*void init_process()
-{
-    for (int i = 0; i < 3; i++)
-    {
-        process[i].pid = i;
-        process[i].state = 1;
-    }
-}
-
-void init_process2()
-{
-
-    
-    
-    for (int i = 1; i < 8; i++)
-    {
-        process[i].pid = i;
-        process[i].state = 2;
-    }
-
-    process[0].state = 0;
-    process[4].state = 0;
-    process[6].state = 0;
-    return;
-}
-*/
 void pcbDrawPro()
 {
     int truesize = 0;
     for (int i = 0; i < maxprocess; i++)
     {
         if (process[i].pid >= 0)
-            if (process[i].state == 1|| process[i].state == 2 || process[i].state == 3)
+            if (process[i].state == 1 || process[i].state == 2 || process[i].state == 3)
                 truesize += 1;
         if (truesize >= 10)
             break;
 
     }
 
-    
+
     initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口
 
@@ -227,11 +201,11 @@ void pcbDrawPro()
     int finishtime; // 进程运行结束的时间
 
     int order = 0;
-    int t=0;
+    int t = 0;
     for (int num = 0; num < truesize; num++)
     {
-        
-        while(true)
+
+        while (true)
         {
             if (process[order].state == 1 || process[order].state == 2 || process[order].state == 3)
             {
@@ -287,12 +261,12 @@ void pcbDrawPro()
 
 
         fillellipse(x + 120, y, z + 120, m);	// 画圆，圆心(200, 200)，半径 100
-        
-            
 
-        
 
-        
+
+
+
+
     }
 
     int button_x = 50, button_y = 20;
@@ -329,7 +303,7 @@ void pcbDrawPro()
             }
             else if (me.x >= button_x + 1000 && me.y >= button_y && me.x <= button_x + 1000 + 100 && me.y <= button_y + 60)
             {
-                //时间前进
+                letsgo();
                 //init_process2();
                 pcbDrawPro();
                 return;
@@ -345,6 +319,7 @@ void pcbDrawPro()
             {
                 //暂停当前进程
                 user_suspend();
+                pcbDrawPro();
                 break;
 
             }
@@ -360,7 +335,7 @@ void pcbDrawPro()
 void drawVirMemory()
 {
     char s[2000] = "Hello World";
-
+    string w = (string)s;
     int x = 700, y = 300;
 
     clearrectangle(100, 90, 1200, 800);
@@ -385,7 +360,7 @@ void drawVirMemory()
 void drawPhyMemory()
 {
     char s[2000] = "Hello World";
-
+    string w = (string)s;
     int x = 700, y = 300;
 
     clearrectangle(100, 90, 1200, 800);
@@ -412,7 +387,7 @@ void memoryDraw()
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
 
     char s[2000] = "";
-
+    string w = (string)s;
     outtextxy(10, 20, s);
     int button_x = 50, button_y = 20;
     ellipse(button_x, button_y, button_x + 100, button_y + 60);
@@ -457,7 +432,7 @@ void memoryDraw()
             }
             else if (me.x >= button_x + 1000 && me.y >= button_y && me.x <= button_x + 1000 + 100 && me.y <= button_y + 60)
             {
-                //时间前进
+                letsgo();
                 memoryDraw();
                 return;
             }
@@ -496,7 +471,7 @@ int size1(FCB* a)
 void drawFileMenu(FCB* top)
 {
     char s[2000] = "Hello World";
-
+    string w = (string)s;
     int x = 700, y = 300;
     int size = size1(top->sonFCB);
     setfillcolor(WHITE);
@@ -523,7 +498,7 @@ void fileDraw()
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
 
     char s[2000] = "Hello World";
-
+    string w = (string)s;
     outtextxy(10, 20, s);
     int button_x = 20, button_y = 50;
     ellipse(button_x, button_y, button_x + 100, button_y + 60);
@@ -541,7 +516,7 @@ void fileDraw()
 
 
     int x = 700, y = 300;
-
+    COLORREF colorThis;
     int processptr = 0;
     strcpy(s, "文件");
     outtextxy(20, 40, s);
@@ -559,7 +534,7 @@ void fileDraw()
         {
             for (int i = 0; i < size1(temp->sonFCB); i++)
             {
-                
+
                 if (me.x >= 100 + 1200 / size1(temp->sonFCB) * i && me.x < 100 + 1200 / size1(temp->sonFCB) * i + 60
                     && me.y <= 320 && me.y >= 200)
                 {
@@ -581,7 +556,7 @@ void fileDraw()
             }
             else if (me.x >= button_x + 1030 && me.y >= button_y && me.x <= button_x + 1030 + 100 && me.y <= button_y + 60)
             {
-                //时间前进
+                letsgo();
                 fileDraw();
                 return;
 
@@ -615,7 +590,7 @@ void deviceDraw()
     initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
     char s[2000] = "Hello World";
-
+    string w = (string)s;
 
     outtextxy(10, 20, s);
     int x, y, z, m, T = 180;
@@ -649,8 +624,8 @@ void deviceDraw()
             colorThis = RED;
 
         x = 0 + i * 1200 / DeviceNum, y = 120, z = x + 100, m = y + 60;
-        settextcolor(WHITE); 
-        //strcpy(s, Device_Table[i].name);
+        settextcolor(WHITE);
+
         strcpy(s, Device_Table[i].name.c_str());
         //outtextxy(x + 120, y - 20, s);
 
@@ -687,7 +662,7 @@ void deviceDraw()
             }
             else if (me.x >= button_x + 1000 && me.y >= button_y && me.x <= button_x + 1000 + 100 && me.y <= button_y + 60)
             {
-                //时间前进
+                letsgo();
                 deviceDraw();
                 return;
 
@@ -709,13 +684,12 @@ void deviceDraw()
     return;
 }
 
-void main()
+int main()
 {
     init_device();
     init_directory();
     init_process();
     InitializeMemory();
     drawMain();
-    closegraph();
-    return ;
+    return 0;
 }
