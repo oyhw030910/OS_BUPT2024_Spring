@@ -1,7 +1,8 @@
-#include<bits/stdc++.h>
+#pragma once
 using namespace std;
 #include"process.h"
-
+#include"memory.h"
+#include"device.h"
 int createP(int processsize,int processtime,int ct,int cid,int did,int dt,string fn,string inf)
 {
     if(ct >= processtime || totalP >=maxprocess)
@@ -16,8 +17,8 @@ int createP(int processsize,int processtime,int ct,int cid,int did,int dt,string
 int finishP(int PID)
 {
     process[PID].state=OVER;
-    //FreeMemory(PID);
-    //releasedevice(PID,-1);
+    FreeMemory(PID);
+    release_device(PID,-1);
     Done_Process.push_back(PID);
     return 1;
 }
@@ -56,8 +57,8 @@ int runP(int PID)//使进程从就绪态变为运行态
     {
         return 0;
     }
-    //if(!AllocMemory(PID,process[PID].size))
-    //    return 0;
+    if(AllocVirMemory(PID,process[PID].size)==-1)
+        return 0;
     process[PID].state=RUNNING;
     return 1;
 }
@@ -81,20 +82,18 @@ int runcmd(int PID, CMD cmd)
             break;
         case APPLYDEVICE:
             cout << "applydevice\n";
-            // int res = applydevice(PID,cmd.deviceid);
-            // if(!res)
-            // return 0;
+            s=acquire_device(PID,cmd.deviceid);
             break;
         case RELEASEDEVICE:
             cout << "releasedevice\n";
-            //int s = releasedevice(PID,cmd.object);
+            s = release_device(PID,cmd.deviceid);
             break;
 
     }
-    return 1;
+    return s;
 }
 
-int findnextprocess()
+int find_next_process()
 {
     int res=FCFS();
     return res;
@@ -119,10 +118,10 @@ int blockP(int PID) //进程因为中断等问题阻塞，由运行态变为阻�
 }
 void outPinfo(PCB p)
 {
-    printf("ID: %d state:%d\n\
-        needtime: %d pasttime:%d size:%d\n\
-        commandid: %d\n",p.pid,p.state,p.needtime,p.pasttime,p.size,
-        p.command.commandid);
+        printf("ID: %d state:%d\n\
+needtime: %d pasttime:%d size:%d\n\
+commandid: %d\n"
+,p.pid,p.state,p.needtime,p.pasttime,p.size,p.command.commandid);
     if(p.command.commandid == 5)
     {
         cout << p.command.deviceid << endl << endl;
@@ -133,7 +132,7 @@ void outPinfo(PCB p)
     }
     return;
 }
-void initialize_process()
+void init_process()
 {
     int ps;
     ifstream filein;
@@ -145,20 +144,22 @@ void initialize_process()
     }
     filein >> ps;
     int psz,pt,ct,cid=0;
-    int did,dt;
-    string fname,fin;
+    int did=0,dt=0;
+    string fname="", fin="";
     while(ps--)
     {
         filein >> psz >> pt >> ct >> cid;
+        did = dt = 0;
+        fname = fin = "";
         if (cid >=1 && cid <=3)
         {
             filein >> fname;
         }
-        if(cid ==4)
+        if(cid ==WRITEFILE)
         {
             filein >> fname >> fin;
         }
-        else if(cid ==5)
+        else if(cid ==APPLYDEVICE)
         {
             
             filein >> did >> dt;
@@ -168,67 +169,50 @@ void initialize_process()
     filein.close();
 }
 
-
-
-
-void CPU()
+void letsgo()
 {
-    int runningpid=-1;
-    char ch='q';
-    while(1)
+    if (runningpid == -1)
     {
-        cout << "beginning" << endl;
-        cin >> ch;
-        if(ch=='q')
+        runningpid = find_next_process();
+        if (runningpid == -1)
         {
-            break;
+            printf("NO PROCESS TO RUN\n");
+            timer++;
+            return;
         }
-        else if(ch=='b')
-        {
-            suspendP(runningpid);
-            runningpid=-1;
-        }
-        else if(ch=='c')
-        {
-            cout << "continue" << endl;
-        } 
-        if(runningpid == -1)
-        {
-            runningpid=findnextprocess();
-            if(runningpid == -1)
-            {
-                cout << "没有需要运行的进程" << endl;
-                timer++;
-                continue;
-            }
-            runP(runningpid);
-        }
-        cout << "Time: "  << timer << " PID: " <<runningpid << endl << endl;
-        if(process[runningpid].command.commandtime == process[runningpid].pasttime)
-        {
-            cout << "command of PID " << runningpid<< endl;
-            if(!runcmd(runningpid,process[runningpid].command))
-            {
-                blockP(runningpid);
-                timer++;
-                continue;
-            }
-            if(process[runningpid].command.commandid==APPLYDEVICE)
-            {
-                process[runningpid].command.commandid=RELEASEDEVICE;
-                process[runningpid].command.commandtime+=+process[runningpid].command.devicetime;
-            }
-        }
-        
-            
-        process[runningpid].pasttime++;
-        process[runningpid].remaintime--;
-        if(process[runningpid].pasttime==process[runningpid].needtime)
-        {
-            finishP(runningpid);
-            process[runningpid].finishtime=timer;
-            runningpid=-1;
-        }
-        timer++;
+        runP(runningpid);
     }
+    cout << "Time: " << timer << " PID: " << runningpid << endl << endl;
+    if (process[runningpid].command.commandtime == process[runningpid].pasttime)
+    {
+        if (!runcmd(runningpid, process[runningpid].command))
+        {
+            blockP(runningpid);
+            timer++;
+            return;
+        }
+        if (process[runningpid].command.commandid == APPLYDEVICE)
+        {
+            process[runningpid].command.commandid = RELEASEDEVICE;
+            process[runningpid].command.commandtime += +process[runningpid].command.devicetime;
+        }
+    }
+
+
+    process[runningpid].pasttime++;
+    process[runningpid].remaintime--;
+    if (process[runningpid].pasttime == process[runningpid].needtime)
+    {
+        finishP(runningpid);
+        process[runningpid].finishtime = timer;
+        runningpid = -1;
+    }
+    timer++;
+    return;
+}
+
+void user_suspend()
+{
+    suspendP(runningpid);
+    runningpid = -1;
 }
