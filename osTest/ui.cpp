@@ -411,32 +411,21 @@ void memoryDraw()
             if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 60)
             {
                 drawVirMemory();
-                return;
 
             }
             else if (me.x >= button_x + 120 && me.y >= button_y && me.x <= button_x + 100 + 120 && me.y <= button_y + 60)
             {
                 drawPhyMemory();
-                return;
-                //return;
-            }
-            else if (me.x >= button_x + 240 && me.y >= button_y && me.x <= button_x + 100 + 240 && me.y <= button_y + 60)
-            {
-
-                //return;
             }
             else if (me.x >= button_x + 1000 && me.y >= button_y && me.x <= button_x + 1000 + 100 && me.y <= button_y + 60)
             {
                 //时间前进
                 memoryDraw();
                 return;
-
             }
             else if (me.x >= button_x + 800 && me.y >= button_y && me.x <= button_x + 800 + 100 && me.y <= button_y + 60)
             {
-                //退出
                 break;
-
             }
 
 
@@ -491,9 +480,6 @@ void drawFileMenu(FCB* head)
 
 void fileDraw()
 {
-    init_directory();
-
-
 
     initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
@@ -535,11 +521,12 @@ void fileDraw()
         me = getmessage(EM_MOUSE);//获取鼠标消息
         if (me.message == WM_LBUTTONUP)
         {
-            for (int i = 0; i < size1(temp); i++)
+            for (int i = 0; i < size1(temp->sonFCB); i++)
             {
-                if (me.x >= 100 + 1200 / size1(temp) * i && me.x < 100 + 1200 / size1(temp) * i + 60
+                if (me.x >= 100 + 1200 / size1(temp->sonFCB) * i && me.x < 100 + 1200 / size1(temp->sonFCB) * i + 60
                     && me.y <= 320 && me.y >= 200)
                 {
+                    
                     clearrectangle(0, 180, 1200, 320);
                     temp = temp->sonFCB;
                     for (int j = 1; j < i; j++)
