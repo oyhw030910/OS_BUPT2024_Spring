@@ -89,6 +89,10 @@ bool release_device(int pid, int device) {//device：释放设备号 -1代表释
                     }
                     Device_Table[index].size--;
                     Device_Table[index].data = (int*)realloc(Device_Table[index].data, Device_Table[device].size * sizeof(int));
+                    if (Device_Table[index].size != 0) { // 调用进程管理接口，激活等待队列中的第一个进程
+                      printf("在此处调用进程接口");
+                    //wakeupP(Device_Table[index].data[0]);
+                   }
                 }
             }
         }
@@ -103,7 +107,7 @@ bool release_device(int pid, int device) {//device：释放设备号 -1代表释
                 Device_Table[device].data = (int*)realloc(Device_Table[device].data, Device_Table[device].size * sizeof(int));
                 if (Device_Table[device].size != 0) { // 调用进程管理接口，激活等待队列中的第一个进程
                     printf("在此处调用进程接口");
-                    // wakeup(Device_Table[device].data[0]);
+                    //wakeupP(Device_Table[device].data[0]);
                 }
                 return true;
             }
