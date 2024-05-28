@@ -3,8 +3,32 @@
 #include<vector>
 using namespace std;
 
+
+struct C {
+	void timerFun() {
+		cout << "时间片中断处理" << endl;
+	}
+	void IOFun() {
+		cout << "IO中断处理" << endl;
+	}
+	void pagingFun() {
+		cout << "缺页中断处理" << endl;
+	}
+	void UIFun() {
+		cout << "UI中断处理" << endl;
+	}
+};
+
+
+typedef void (C::* pFunc)();
 const int tableSize = 4;
 bool isOff = false;//是否关中断
+pFunc InterruptVectorTable[tableSize];
+int DefaultPriority[tableSize];
+
+//vector<void(*)()> InterruptVectorTable;
+
+
 
 enum InterruptType {
 	timer,
@@ -14,21 +38,19 @@ enum InterruptType {
 };
 
 class InterruptVector {
-private:
+public:
 	InterruptType type;
 	int priority;//优先级
 public:
-	struct comparator {
-		bool compare(InterruptVector a,InterruptVector b) {
-			return a.getPriority() < b.getPriority();
-		}//比较优先级
-	};
+	
 	InterruptVector(InterruptType type,int priority) {
 		this->type = type;
 		this->priority = priority;
 	}
 	void handler() {
-		InterruptVectorTable[type]();
+		C c;
+		(c.*InterruptVectorTable[type])();
+		//cout << "正在处理中断" << endl;
 	};//相应处理程序
 	int getPriority() {
 		return priority;
@@ -37,13 +59,24 @@ public:
 		return type;
 	}
 };
+struct comparator {
+	bool operator()(const InterruptVector& a, const InterruptVector& b) {
+		return a.priority < b.priority;
+	}//比较优先级
+};
+priority_queue<InterruptVector, vector<InterruptVector>, comparator> InterruptQueue;//待处理中断队列
 
-int DefaultPriority[tableSize];
-vector<void(*)()> InterruptVectorTable;
-priority_queue<InterruptVector, vector<InterruptVector>,InterruptVector::comparator> InterruptQueue;//待处理中断队列
+
+
 
 void initTable() {
 	//TODO 初始化中断处理函数地址
+	InterruptVectorTable[0] = &C::timerFun;
+	InterruptVectorTable[1] = &C::IOFun;
+	InterruptVectorTable[2] = &C::pagingFun;
+	InterruptVectorTable[3] = &C::UIFun;
+
+
 
 	DefaultPriority[0] = 1;
 	DefaultPriority[1] = 2;
@@ -60,11 +93,8 @@ void handler() {
 
 }//具体处理函数，接收中断，执行相应的处理
 
-//接收中断，压入中断队列中
-void raiseInterrupt(InterruptType type) {
-	raiseInterrupt(type, DefaultPriority[type]);
-}
 
+//接收中断，压入中断队列中
 void raiseInterrupt(InterruptType type, int priority) {
 	InterruptVector  v = InterruptVector(type, priority);
 	InterruptQueue.push(v);
@@ -72,3 +102,8 @@ void raiseInterrupt(InterruptType type, int priority) {
 	handler();
 	isOff = true;
 }
+void raiseInterrupt(InterruptType type) {
+	raiseInterrupt(type, DefaultPriority[type]);
+}
+
+
