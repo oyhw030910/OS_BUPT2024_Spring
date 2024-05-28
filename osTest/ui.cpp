@@ -139,6 +139,7 @@ void drawCreatePCB()
     }
 
 }
+
 /*void init_process()
 {
     for (int i = 0; i < 3; i++)
@@ -146,7 +147,25 @@ void drawCreatePCB()
         process[i].pid = i;
         process[i].state = 1;
     }
-}*/
+}
+
+void init_process2()
+{
+
+    
+    
+    for (int i = 1; i < 8; i++)
+    {
+        process[i].pid = i;
+        process[i].state = 2;
+    }
+
+    process[0].state = 0;
+    process[4].state = 0;
+    process[6].state = 0;
+    return;
+}
+*/
 void pcbDrawPro()
 {
     int truesize = 0;
@@ -160,12 +179,9 @@ void pcbDrawPro()
 
     }
 
-
+    
     initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口
-
-
-
 
     char s[2000] = "";
 
@@ -177,7 +193,7 @@ void pcbDrawPro()
 
     int x, y, z, m, T = 180;
     COLORREF colorThis = WHITE;
-    int processptr = 0;
+
     strcpy(s, "进程");
     outtextxy(20, 150, s);
 
@@ -199,10 +215,10 @@ void pcbDrawPro()
     strcpy(s, "进程队列");
     outtextxy(20, 520, s);
 
-    for (int i = 0; i < Ready_Process.size(); i++)
+    /*for (int i = 0; i < Ready_Process.size(); i++)
     {
         outtextxy(20 + i * 40, 570, Ready_Process.front());
-    }
+    }*/
 
 
     int arrivetime; // 进程到达时间
@@ -210,21 +226,24 @@ void pcbDrawPro()
     int remaintime; // 进程还需运行的时间
     int finishtime; // 进程运行结束的时间
 
-
-
-    for (int i = 0; i < truesize; i++)
+    int order = 0;
+    int t=0;
+    for (int num = 0; num < truesize; num++)
     {
-        while (true)
+        
+        while(true)
         {
-            if (process[i].state == 1 || process[i].state == 2 || process[i].state == 3)
+            if (process[order].state == 1 || process[order].state == 2 || process[order].state == 3)
             {
-
+                t = order;
+                order++;
                 break;
-
             }
+            else
+                order++;
         }
 
-        switch (process[processptr].state)
+        switch (process[t].state)
         {
         case 1:colorThis = YELLOW; break;
         case 2:colorThis = GREEN; break;
@@ -234,12 +253,12 @@ void pcbDrawPro()
 
 
 
-        x = 0 + i * 1200 / truesize, y = 120, z = x + 100, m = y + 60;
+        x = 0 + num * 1200 / truesize, y = 120, z = x + 100, m = y + 60;
         settextcolor(WHITE);
-        _itoa(process[processptr].pid, s, 10);
+        _itoa(process[t].pid, s, 10);
         outtextxy(x + 120, y - 20, s);
 
-        switch (process[processptr].state)
+        switch (process[t].state)
         {
         case 1:strcpy(s, "就绪"); break;
         case 2:strcpy(s, "运行"); break;
@@ -248,29 +267,32 @@ void pcbDrawPro()
         }
         outtextxy(x + 120, m + 40, s);
 
-        _itoa(process[processptr].size, s, 10);
+        _itoa(process[t].size, s, 10);
         outtextxy(x + 120, m + 40 + 60, s);
 
         setfillcolor(colorThis);
 
         // 进程到达时间
-        _itoa(process[processptr].arrivetime, s, 10);
+        _itoa(process[t].arrivetime, s, 10);
         outtextxy(x + 120, m + 40 + 120, s);
         // 进程总共需要运行的时间
-        _itoa(process[processptr].needtime, s, 10);
+        _itoa(process[t].needtime, s, 10);
         outtextxy(x + 120, m + 40 + 180, s);
         // 进程还需运行的时间
-        _itoa(process[processptr].remaintime, s, 10);
+        _itoa(process[t].remaintime, s, 10);
         outtextxy(x + 120, m + 40 + 240, s);
         // 进程运行结束的时间
-        _itoa(process[processptr].finishtime, s, 10);
+        _itoa(process[t].finishtime, s, 10);
         outtextxy(x + 120, m + 40 + 300, s);
 
 
         fillellipse(x + 120, y, z + 120, m);	// 画圆，圆心(200, 200)，半径 100
+        
+            
 
+        
 
-        processptr++;
+        
     }
 
     int button_x = 50, button_y = 20;
@@ -304,6 +326,7 @@ void pcbDrawPro()
             else if (me.x >= button_x + 1000 && me.y >= button_y && me.x <= button_x + 1000 + 100 && me.y <= button_y + 60)
             {
                 //时间前进
+                //init_process2();
                 pcbDrawPro();
                 return;
 
