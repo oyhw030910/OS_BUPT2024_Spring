@@ -307,6 +307,10 @@ void pcbDrawPro()
     ellipse(button_x, button_y, button_x + 100, button_y + 60);
     outtextxy(button_x + 20, button_y + 20, "主界面");
 
+    button_x -= 200;
+    ellipse(button_x, button_y, button_x + 100, button_y + 60);
+    outtextxy(button_x + 20, button_y + 20, "暂停当前进程");
+
     while (true)
     {
 
@@ -334,6 +338,13 @@ void pcbDrawPro()
             else if (me.x >= button_x + 800 && me.y >= button_y && me.x <= button_x + 800 + 100 && me.y <= button_y + 60)
             {
                 //退出
+                break;
+
+            }
+            else if (me.x >= button_x + 600 && me.y >= button_y && me.x <= button_x + 600 + 100 && me.y <= button_y + 60)
+            {
+                //暂停当前进程
+                user_suspend();
                 break;
 
             }
