@@ -38,7 +38,7 @@ void show_Device() {
           if(length <= num){
             printf("设备状态：正在使用    剩余数量：%d\n", num-length);
             printf("正在使用它的进程为：");
-            for(int j =0;j<length;j++){
+            for(int j =0;j<num;j++){
                 printf("%d  ", Device_Table[i].data[j]);
             }
             printf("\n");
