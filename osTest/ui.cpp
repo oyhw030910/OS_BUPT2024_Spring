@@ -320,7 +320,7 @@ void drawVirMemory()
     string w = (string)s;
     int x = 700, y = 300;
 
-    clearrectangle(100, 100, 900, 500);
+    clearrectangle(100, 90, 1200, 800);
     rectangle(100, 90, 200, 190);
     outtextxy(100 + 20, 100 + 20, "页号");
     for (int i = 0; i < PAGE_NUMBER; i++)
@@ -345,7 +345,7 @@ void drawPhyMemory()
     string w = (string)s;
     int x = 700, y = 300;
 
-    clearrectangle(100, 100, 900, 500);
+    clearrectangle(100, 90, 1200, 800);
     rectangle(100, 90, 200, 190);
     outtextxy(100 + 20, 100 + 20, "帧号");
     for (int i = 0; i < FRAME_NUMBER; i++)
@@ -367,8 +367,6 @@ void memoryDraw()
 
     initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
-
-    InitializeMemory();
 
     char s[2000] = "";
     string w = (string)s;
@@ -452,17 +450,17 @@ int size1(FCB* a)
     return num;
 }
 
-void drawFileMenu(FCB* head)
+void drawFileMenu(FCB* top)
 {
     char s[2000] = "Hello World";
     string w = (string)s;
     int x = 700, y = 300;
-    int size = size1(head->sonFCB);
+    int size = size1(top->sonFCB);
     setfillcolor(WHITE);
     fillellipse(660, 100, 760, 160);
-    strcpy(s, head->name);
+    strcpy(s, top->name);
     outtextxy(700, 180, s);
-    FCB* temp = head->sonFCB;
+    FCB* temp = top->sonFCB;
     for (int t = 0; t < size; t++)
     {
 
@@ -518,13 +516,13 @@ void fileDraw()
         {
             for (int i = 0; i < size1(temp->sonFCB); i++)
             {
+                
                 if (me.x >= 100 + 1200 / size1(temp->sonFCB) * i && me.x < 100 + 1200 / size1(temp->sonFCB) * i + 60
                     && me.y <= 320 && me.y >= 200)
                 {
-
                     clearrectangle(0, 180, 1200, 320);
                     temp = temp->sonFCB;
-                    for (int j = 1; j < i; j++)
+                    for (int j = 0; j < i; j++)
                     {
                         temp = temp->nextFCB;
                     }
