@@ -40,13 +40,13 @@ void drawMain()
             else if (m.x <= 400 && m.x > 300)
                 pcbDrawPro();
             else if (m.x <= 500 && m.x > 400)
-                    return;
+                return;
 
         }
 
     }
-    
-    return ;
+
+    return;
 }
 
 
@@ -364,9 +364,6 @@ void drawPhyMemory()
 
 void memoryDraw()
 {
-    init_directory();
-
-
 
     initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
@@ -484,8 +481,6 @@ void fileDraw()
     initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
 
-
-
     char s[2000] = "Hello World";
     string w = (string)s;
     outtextxy(10, 20, s);
@@ -494,7 +489,7 @@ void fileDraw()
     outtextxy(button_x + 30, button_y + 20, "根目录");
     button_x += 120;
 
-    int button_x = 50, button_y = 20;
+    button_x = 50, button_y = 20;
     button_x = 1050;
     ellipse(button_x, button_y, button_x + 100, button_y + 50);
     outtextxy(button_x + 20, button_y + 20, "时间前进");
@@ -502,7 +497,7 @@ void fileDraw()
     button_x -= 200;
     ellipse(button_x, button_y, button_x + 100, button_y + 50);
     outtextxy(button_x + 20, button_y + 20, "主界面");
-    
+
 
     int x = 700, y = 300;
     COLORREF colorThis;
@@ -526,7 +521,7 @@ void fileDraw()
                 if (me.x >= 100 + 1200 / size1(temp->sonFCB) * i && me.x < 100 + 1200 / size1(temp->sonFCB) * i + 60
                     && me.y <= 320 && me.y >= 200)
                 {
-                    
+
                     clearrectangle(0, 180, 1200, 320);
                     temp = temp->sonFCB;
                     for (int j = 1; j < i; j++)
@@ -572,25 +567,12 @@ void fileDraw()
 
 }
 
-void changedevice(PCB process[])
-{
-
-    init_device();
-
-
-}
 
 void deviceDraw()
 {
-    init_device();
-
 
     initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
-
-
-
-
     char s[2000] = "Hello World";
     string w = (string)s;
 
@@ -688,7 +670,10 @@ void deviceDraw()
 
 int main()
 {
-
+    init_device();
+    init_directory();
+    init_process();
+    InitializeMemory();
     drawMain();
     return 0;
 }
