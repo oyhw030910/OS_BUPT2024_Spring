@@ -150,7 +150,7 @@ void drawCreatePCB()
 void pcbDrawPro()
 {
     int truesize = 0;
-    for (size_t i = 0; i < maxprocess; i++)
+    for (int i = 0; i < maxprocess; i++)
     {
         if (process[i].pid >= 0)
             if (process[i].state == 1|| process[i].state == 2 || process[i].state == 3)
@@ -216,7 +216,7 @@ void pcbDrawPro()
     {
         while (true)
         {
-            if (process[processptr].state != 4)
+            if (process[i].state == 1 || process[i].state == 2 || process[i].state == 3)
             {
 
                 break;
