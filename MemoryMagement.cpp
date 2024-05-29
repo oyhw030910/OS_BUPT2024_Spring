@@ -1,5 +1,7 @@
 #include "MemoryManagement.h"
 
+#include "MemoryManagement.h"
+
 int FindPhyID(int _virID)
 {
 	for (int i = 0; i < FRAME_NUMBER; i++)
@@ -50,7 +52,7 @@ Table ModifyPage(int _virID, int _phyID, Table _table, int _flag)
 		_table[_virID] = _phyID; //将页帧对应表中的页号与帧号关联
 	}
 	//-1为调出
-	else if(_flag == 0)
+	else if (_flag == 0)
 	{
 		_table[_virID] = -1; //将页帧对应表中页表对应帧号置为-1，即没有关联
 	}
@@ -60,24 +62,25 @@ void InitializeMemory()
 {
 	int i, j;//循环变量
 	//初始化虚拟内存
-	for (i = 0; i < PAGE_NUMBER; i++) 
+	for (i = 0; i < PAGE_NUMBER; i++)
 	{
-		for (j = 0; j < 3; j++) 
+		for (j = 0; j < 3; j++)
 		{
 			if (j == 0) virMemory.virTable[i][j] = -1;
 			if (j == 1) virMemory.virTable[i][j] = 0;
 			if (j == 2) virMemory.virTable[i][j] = 0;
 		}
-		virMemory.virContent[i] = "*"; 
+		virMemory.virContent[i] = "*";
+		for (int k = 0; k < 1023; k++) 
+		{
+			virMemory.virContent[i] += "*";
+		}
 	}
 	//初始化物理内存
-	for (i = 0; i <FRAME_NUMBER; i++)
+	for (i = 0; i < FRAME_NUMBER; i++)
 	{
 		phyMemory.phyTable[i] = -1;
-		for (int j = 0; j < 1024; j++)
-		{
-			phyMemory.phyContent[i] += "*";
-		}
+		phyMemory.phyContent[i] = "*";
 	}
 }
 int FreeMemory(int _pid)
@@ -99,10 +102,7 @@ int FreeMemory(int _pid)
 					scheQueue.remove(i);// 删除调度队列中的该页号
 					//初始化物理内存
 					phyMemory.phyTable[j] = -1;
-					for (int j = 0; j < 1024; j++)
-					{
-						phyMemory.phyContent[i] += "*";
-					}
+					phyMemory.phyContent[j] = "*";
 				}
 			}
 			allocVirMemory -= virMemory.virTable[i][1];//已分配虚拟内存减去释放内存
@@ -111,6 +111,10 @@ int FreeMemory(int _pid)
 			virMemory.virTable[i][1] = 0;
 			virMemory.virTable[i][2] = 0;
 			virMemory.virContent[i] = "*";
+			for (int k = 0; k < 1023; k++)
+			{
+				virMemory.virContent[i] += "*";
+			}
 		}
 	}
 	//若遍历虚拟内存后，发现虚拟内存未被进程占用
@@ -135,7 +139,7 @@ int AllocVirMemory(int _pid, int _size)
 		{
 			virMemory.virTable[i][0] = _pid;//改为_pid，即分配给该进程
 			//若该进程已经在虚拟内存中有页表了，直接使用该页表
-			if (pageTable.count(_pid) > 0) 
+			if (pageTable.count(_pid) > 0)
 			{
 				tmpTable = pageTable[_pid]; //令临时页帧对应表为_pid的页帧对应表
 			}
@@ -198,7 +202,7 @@ FileLocation  WriteVirMemory(int _pid, string _context)
 		i++;
 	}
 	//若队列为空，写入失败，结束
-	if (tmpQueue.empty()) 
+	if (tmpQueue.empty())
 	{
 		printf("pid [%d] 写入内存失败\n", _pid);
 		tmpFileLocation.start = -1;//将文件地址的起始地址置为-1，表示不存在
@@ -220,7 +224,7 @@ FileLocation  WriteVirMemory(int _pid, string _context)
 		if (spareLen > 0)
 		{
 			//若调度队列不为空，查找调度队列中的所需页，初始化对应帧
-			if (!scheQueue.empty()) 
+			if (!scheQueue.empty())
 			{
 				list<int>::iterator it = find(scheQueue.begin(), scheQueue.end(), virID); // 查找调度队列中是否有要写入的页
 				// 若调度队列中有要写入的页，将该页调用
@@ -235,9 +239,14 @@ FileLocation  WriteVirMemory(int _pid, string _context)
 				}
 			}
 			//若虚拟内存内容为空，删除默认内容
-			if (virMemory.virContent[virID] == "*")
+			string s = "*";
+			for (int k = 0; k < 1023; k++)
 			{
-				virMemory.virContent[virID].erase(0, 1);//删除默认内容，即"*"
+				s += "*";
+			}
+			if (virMemory.virContent[virID] == s)
+			{
+				virMemory.virContent[virID].erase(0, 1024);//删除默认内容，即"*"
 			}
 			//若flag为0，即首在写入之后就不再改变
 			if (flag == 0)
@@ -305,10 +314,10 @@ string AccessPhyMemory(int _pid, int _start, int _end)
 	//若起始页和结束页为同一页
 	if (startVirID == endVirID)
 	{
-		str = phyMemory.phyContent[startPhyID].substr(startInPage,  endInPage - startInPage);//物理内存的内容
+		str = phyMemory.phyContent[startPhyID].substr(startInPage, endInPage - startInPage);//物理内存的内容
 	}
 	//若起始页和结束页不为同一页
-	else 
+	else
 	{
 		string strStart = phyMemory.phyContent[startPhyID].substr(startInPage, PAGE_SIZE - startInPage);//物理内存中起始帧的内容
 		//for(tmpPhyD = startPhyID;)
@@ -357,10 +366,10 @@ Table LRU(int _virID, Table _table)
 }
 void PrintMemory()
 {
-	cout << "虚拟内存"<< endl;
+	cout << "虚拟内存" << endl;
 	for (int i = 0; i < PAGE_NUMBER; i++)
 	{
-		cout << "页号" << i <<" " << "pid：" << virMemory.virTable[i][0]<<" " << "已用内存：" << virMemory.virTable[i][1] << endl;
+		cout << "页号" << i << " " << "pid：" << virMemory.virTable[i][0] << " " << "已用内存：" << virMemory.virTable[i][1] << endl;
 	}
 	cout << "物理内存" << endl;
 	for (int i = 0; i < FRAME_NUMBER; i++)
@@ -374,7 +383,7 @@ void PrintTable()
 	map < int, Table > ::iterator it;
 	for (it = pageTable.begin(); it != pageTable.end(); ++it)
 	{
-		cout <<"pid :" << it->first << endl;
+		cout << "pid :" << it->first << endl;
 		Table tmpTable = it->second;
 		map < int, int > ::iterator itt;
 		for (itt = tmpTable.begin(); itt != tmpTable.end(); ++itt)
