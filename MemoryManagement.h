@@ -21,21 +21,21 @@ int allocVirMemory = 0; //已分配虚拟内存
 int usedPhyMemory = 0; //已使用物理内存
 int pageFault = 0; //缺页次数
 
-typedef map<int, int>Table;//<virID,phyID>页帧对应表
-typedef map<int, Table>PageTable;//<PID,TABLE>一个进程对应一个页帧对应表
+typedef map<int, int> Table;//<virID,phyID>页帧对应表
+typedef map<int, Table> PageTable;//<PID,TABLE>一个进程对应一个页帧对应表
 typedef struct VirMemoty {
 	int virTable[PAGE_NUMBER][3];//虚拟内存分配情况（PID，默认-1；已用内存，默认0；已写内存，默认0）
 	string virContent[PAGE_NUMBER];//虚拟内存存储内容（默认"*"）
-}VirMemoty;
+} VirMemoty;
 typedef struct PhyMemory {
 	int phyTable[FRAME_NUMBER]; //物理内存分配情况（页号，默认-1）
 	string phyContent[FRAME_NUMBER]; //物理内存里存储内容（默认"*"）
-}PhyMemory;
+} PhyMemory;
 typedef struct FileLocation {
 	string fileName;//文件名
 	int start;//起始地址
 	int end;//结束地址
-}FileLocation;
+} FileLocation;
 
 int FindPhyID(int _virID);//根据页号，查找对应的帧号，返回帧号或-1
 Table InsertPage(int _virID,Table _table);//根据页号，给页帧对应表插入新的关联
