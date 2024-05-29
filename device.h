@@ -16,16 +16,18 @@ using namespace std;
 
 struct Device{
     string name;//设备名称
-    int *data;//等待队列
-    int size;//等待队列大小，为0说明设备空闲
-    int num;//设备可用数量
-    bool isonly;//设备是否独占，独占为0，非独占为1
+    int *data_using;//运行队列 （包含正在使用的进程） 
+    int size_using;//运行队列大小 
+    int *data_waiting;//等待队列（包含不能使用被阻塞掉的进程） 
+    int size_waiting;//等待队列大小
+    int num;//设备最大可用数量
+    bool isonly;//设备是否独占，独占为1，非独占为0
 } ;
 
 Device Device_Table[DeviceNum];//设备表
 string deviceName[] = { "mouse", "screen",  "keyboard" ,"printer","test1","test2"};
 int deviceNum[] ={1,2,1,2,3,4};
-bool ison[] ={1,0,1,0,0,0} ;
+bool ison[] ={0,1,0,1,1,1} ;
 
 void init_device();
 
