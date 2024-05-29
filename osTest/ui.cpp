@@ -584,13 +584,14 @@ void fileDraw()
 }
 
 
+
 void deviceDraw()
 {
 
     initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
     char s[2000] = "Hello World";
-    string w = (string)s;
+
 
     outtextxy(10, 20, s);
     int x, y, z, m, T = 180;
@@ -602,8 +603,11 @@ void deviceDraw()
     strcpy(s, "设备名称");
     outtextxy(20, 220, s);
 
-    strcpy(s, "设备等待队列");
+    strcpy(s, "设备运行队列");
     outtextxy(20, 280, s);
+
+    strcpy(s, "设备等待队列");
+    outtextxy(20, 560, s);
 
     int button_x = 50, button_y = 20;
     button_x = 1050;
@@ -616,16 +620,16 @@ void deviceDraw()
 
     for (int i = 0; i < DeviceNum; i++)
     {
-        if (Device_Table[i].size == 0)
+        if (Device_Table[i].size_using < Device_Table[i].num)
             colorThis = GREEN;
-        else if (Device_Table[i].size > 0 && Device_Table[i].size <= Device_Table[i].num)
+        else if (Device_Table[i].size_using == Device_Table[i].num && Device_Table[i].size_waiting == 0)
             colorThis = YELLOW;
         else
             colorThis = RED;
 
         x = 0 + i * 1200 / DeviceNum, y = 120, z = x + 100, m = y + 60;
-        settextcolor(WHITE);
-
+        settextcolor(WHITE); 
+        //strcpy(s, Device_Table[i].name);
         strcpy(s, Device_Table[i].name.c_str());
         //outtextxy(x + 120, y - 20, s);
 
@@ -636,15 +640,24 @@ void deviceDraw()
 
 
 
-        for (int j = 0; j < Device_Table[i].size; j++)
+        for (int j = 0; j < Device_Table[i].size_using; j++)
         {
-            _itoa(Device_Table[i].data[j], s, 10);
+            _itoa(Device_Table[i].data_using[j], s, 10);
+            outtextxy(x + 120, m + 40 + 60, s);
+            m += 40;
+            if (j == 5)
+                break;
+        }
+        m = 460;
+        for (int j = 0; j < Device_Table[i].size_waiting; j++)
+        {
+            _itoa(Device_Table[i].data_waiting[j], s, 10);
             outtextxy(x + 120, m + 40 + 60, s);
             m += 40;
         }
-
         processptr++;
     }
+
 
     while (true)
     {
