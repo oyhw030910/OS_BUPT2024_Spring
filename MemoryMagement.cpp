@@ -74,7 +74,10 @@ void InitializeMemory()
 	for (i = 0; i <FRAME_NUMBER; i++)
 	{
 		phyMemory.phyTable[i] = -1;
-		phyMemory.phyContent[i] = "*";
+		for (int j = 0; j < 1024; j++)
+		{
+			phyMemory.phyContent[i] += "*";
+		}
 	}
 }
 int FreeMemory(int _pid)
@@ -96,7 +99,10 @@ int FreeMemory(int _pid)
 					scheQueue.remove(i);// 删除调度队列中的该页号
 					//初始化物理内存
 					phyMemory.phyTable[j] = -1;
-					phyMemory.phyContent[j] = "*";
+					for (int j = 0; j < 1024; j++)
+					{
+						phyMemory.phyContent[i] += "*";
+					}
 				}
 			}
 			allocVirMemory -= virMemory.virTable[i][1];//已分配虚拟内存减去释放内存
