@@ -1,4 +1,24 @@
 #include"file.h"
+int ReadFile(string name)
+{
+	int flag;
+	flag = _FindFile(name);
+	if(flag ==0)
+	{
+		return flag;
+	}
+	else
+	{
+		if((target->nextFCB)->type == 1)//目录
+			return 0;
+		else
+		{
+			//(target->nextFCB)->word 就是要找的文件内容 
+			return 1;
+		 } 
+	}
+}
+
 int WriteFile(string name)
 {
 	int flag = 0;
