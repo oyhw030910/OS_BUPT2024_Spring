@@ -32,6 +32,7 @@ char* get_type(string name);
 int creaFindFile(FCB father,char * name,char * dir,FCB * new_f);
 //以下三个是给外部用的，create中0是普通文件，1是目录文件 
 //其中在create路径前输入dir为目录文件，其他为创建普通文件 
+int ReadFile(string name); 
 int DeleteFile(string name);
 int CreateFile(string name); 
 int _FindFile(string name);
