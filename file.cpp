@@ -93,6 +93,7 @@ char* get_file_name(string name)
 		strcpy(temp,token);
     	token = strtok(NULL, s);  
 	}
+	free(token);
   	return temp;
 }
 
@@ -130,7 +131,8 @@ char* get_second_name(string name)
     	token = strtok(NULL, s);
    }
    //strcpy(lastname,temp);
-
+	free(temp1);
+	free(token);
    	
   	return temp2;
 }
@@ -140,6 +142,7 @@ int _FindFile(string name)
 	char *s=(char*)malloc(sizeof(char));
 	s = get_file_name(name);
 	strcpy(lastname,s);
+	free(s);
 	flag = FindFile(*head->sonFCB,lastname);
 	return flag;
 }
@@ -151,6 +154,7 @@ int _Find2File(string name)
 	char *s=(char*)malloc(sizeof(char));
 	s = get_second_name(name);
 	strcpy(lastname,s);
+	free(s);
 	flag = FindFile(*head->sonFCB,lastname);	
 	return flag;
 }
@@ -215,7 +219,7 @@ int creaFindFile(FCB father,char * name,char * dir,FCB * new_f)
 			strcpy(new_f->name,name);
 			new_f->nextFCB =NULL;
 			new_f->sonFCB =NULL;
-
+			free(temp);
 			return 1;
 		 } 
 		 else
@@ -225,6 +229,7 @@ int creaFindFile(FCB father,char * name,char * dir,FCB * new_f)
 		 	strcpy(new_f->name,name);
 			new_f->nextFCB =NULL;
 			new_f->sonFCB =NULL;
+			free(temp);
 			return 1;
 		 }
 		 
@@ -258,7 +263,7 @@ int creaFindFile(FCB father,char * name,char * dir,FCB * new_f)
 
 }
 
-int CreateFile(string name)
+int CreateTheFile(string name)
 {
 	int flag = 0;
 	int type ;
@@ -274,6 +279,7 @@ int CreateFile(string name)
 	strcpy(temp,s);
 	s = get_second_name(name);
 	strcpy(dir,s);
+	free(s);
 	if(strcmp(temp,s)==0)
 		new_f->type = 1;
 	else
@@ -290,8 +296,6 @@ int CreateFile(string name)
 	{
 		
 		flag = creaFindFile(*head->sonFCB,fname,dir,new_f);
-
-		
 		return 1;
 	} 
 	
@@ -408,7 +412,7 @@ int dele2FindFile(FCB &father,char * name,char *dir)
 	
 }
 
-int DeleteFile(string name)
+int DeleteTheFile(string name)
 {
 	int flag = 0;
 	
@@ -424,7 +428,7 @@ int DeleteFile(string name)
 	strcpy(dir,s);
 
 	flag = _FindFile(name);
-	
+	free(s);
 	if(flag == 0)//没有这个文件 	
 	{
 		//printf("file");
@@ -462,7 +466,6 @@ void init_directory()
 {
 	head=(FCB*)malloc(sizeof(FCB));
 	target=(FCB*)malloc(sizeof(FCB));
-
     FCB *father1 = (FCB*)malloc(sizeof(FCB));
     FCB *father2 = (FCB*)malloc(sizeof(FCB));
 	FCB *father3 = (FCB*)malloc(sizeof(FCB));
