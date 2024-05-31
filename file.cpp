@@ -19,29 +19,31 @@ int ReadFile(string name)
 	}
 }
 
-int WriteFile(string name)
+int WriteFile(string name,string word)
 {
 	int flag = 0;
-	char *s=(char*)malloc(sizeof(char));
-
+	const char *s=(char*)malloc(sizeof(char));
+	s = word.data();
+	
+	
 	flag=_FindFile(name);
 	if(flag == 0)
 		return 0;
 	else
 	{
-		flag = wiFindFile(*head->sonFCB,lastname);
+		flag = wiFindFile(*head->sonFCB,lastname,s);
 		return 1;
 	}
 	
 }
 
-int wiFindFile(FCB &father,char * name)
+int wiFindFile(FCB &father,char * name,const char * s)
 {
 	int flag = 0;
 	if(strcmp(name,father.name)==0)//当前文件为所找文件
 	{
 		flag = 1;
-		cin >> father.word;
+		strcpy(father.word,s);
 		//cout << father.word << endl;
 		target->nextFCB = &father;
 		return 1;
@@ -50,7 +52,7 @@ int wiFindFile(FCB &father,char * name)
 	{
 		if(father.sonFCB!=NULL)//有子 
 		{
-			flag = wiFindFile(*father.sonFCB,name);
+			flag = wiFindFile(*father.sonFCB,name,s);
 			if(flag == 1)	
 			{
 				
@@ -60,7 +62,7 @@ int wiFindFile(FCB &father,char * name)
 		if(father.nextFCB!=NULL)
 		{
 			
-			flag = wiFindFile(*father.nextFCB,name);
+			flag = wiFindFile(*father.nextFCB,name,s);
 			if(flag == 1)
 			{
 				
