@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(distable:4996) 
 #pragma once
 #include<stdio.h>
 #include<string.h>
@@ -19,11 +21,12 @@ typedef struct FCB
 FCB *head ;
 FCB *target ;
 char lastname[80];
-char* get_type(string name);//
+
+char* get_type(string name);//获取文件类型
 void init_directory();//初始化存储结构 
 int FindFile(FCB father,char * name);//找到对应文件 
-int deleFindFile(FCB &father,char * name);
-int dele2FindFile(FCB &father,char * name);
+int deleFindFile(FCB &father,char * name);//用于dele定位到对应位置
+int dele2FindFile(FCB &father,char * name);//dele定位到目录位置
 char* get_file_name(string name);
 char* get_second_name(string name);
 int _Find2File(string name);
@@ -33,7 +36,8 @@ int creaFindFile(FCB father,char * name,char * dir,FCB * new_f);
 //以下三个是给外部用的，create中0是普通文件，1是目录文件 
 //其中在create路径前输入dir为目录文件，其他为创建普通文件 
 int ReadFile(string name); 
-int DeleteFile(string name);
-int CreateFile(string name); 
+int DeleteTheFile(string name);
+int CreateTheFile(string name); 
 int _FindFile(string name);
 int WriteFile(string name,string word);
+
