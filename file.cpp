@@ -1,24 +1,34 @@
 #include"file.h"
 #include"ui.h"
+
 int ReadFile(string name)
 {
-	int flag;
+	
+	int flag = 0;
 	flag = _FindFile(name);
+	
+	//clearrectangle(00, 690, 1300, 754);
+	/*if (flag == 1)
+		outtextxy(50, 700, "1");
+	else
+		outtextxy(50, 700, "0");*/
+	outtextxy(100, 700, "文件名");
+	outtextxy(200, 700, (target->nextFCB)->name);
+	outtextxy(300, 700, "文件内容");
+	outtextxy(400, 700, (target->nextFCB)->word);
+
 	if (flag == 0)
 	{
 		return flag;
 	}
 	else
 	{
+		
 		if ((target->nextFCB)->type == 1)//目录
 			return 0;
 		else
 		{
-			clearrectangle(00, 690, 1300, 754);
-			//outtextxy(100, 700, "文件名");
-			//outtextxy(200, 700, (target->nextFCB)->name);
-			//outtextxy(300, 700, "文件内容");
-			//outtextxy(400, 700, (target->nextFCB)->word);
+			
 			return 1;
 		}
 	}
@@ -149,11 +159,11 @@ int _FindFile(string name)
 	char* s = (char*)malloc(sizeof(char));
 	s = get_file_name(name);
 	strcpy(lastname, s);
-	
 	//free(s);
+
 	flag = FindFile(*head->sonFCB, lastname);
-
-
+	
+	
 	return flag;
 }
 
@@ -166,6 +176,7 @@ int _Find2File(string name)
 	strcpy(lastname, s);
 	//free(s);
 	flag = FindFile(*head->sonFCB, lastname);
+
 	return flag;
 }
 
@@ -173,12 +184,14 @@ int _Find2File(string name)
 int FindFile(FCB father, char* name)
 {
 	int flag = 0;
-
+	
 	if (strcmp(name, father.name) == 0)//当前文件为所找文件
 	{
+
 		flag = 1;
 
 		target->nextFCB = &father;
+
 		return 1;
 	}
 	else//不是的话，深度优先 
@@ -186,15 +199,11 @@ int FindFile(FCB father, char* name)
 		
 		if (father.sonFCB != NULL)//有子 
 		{
-			//printf("%s\n",father.name);
-			flag = FindFile(*father.sonFCB, name);
-			outtextxy(100, 700, name);
-			outtextxy(400, 700, father.sonFCB->name);
-			if (strcmp(father.sonFCB->name, name) == 0)
-				outtextxy(900, 700, father.sonFCB->name);
-			if (strcmp("sd", "sd") == 0)
-				outtextxy(1000, 700, "ceshi");
 
+
+			flag = FindFile(*father.sonFCB, name);
+
+			
 			if (flag == 1)
 			{
 
@@ -203,9 +212,10 @@ int FindFile(FCB father, char* name)
 		}
 		if (father.nextFCB != NULL)
 		{
-
+			
 			flag = FindFile(*father.nextFCB, name);
 
+			
 			if (flag == 1)
 			{
 
@@ -509,13 +519,16 @@ int DeleteTheFile(string name)
 	}
 	else
 	{
-		if ((target->nextFCB)->sonFCB != NULL)
+		if ((target->nextFCB)->sonFCB != NULL && (target->nextFCB)->type == 1)
 			return 0;
 		else
 		{
 
 			flag = _Find2File(name);//找到要删除文件的上一级目录 例如：father2/father3 target=father2 
 			target = target->nextFCB;// 例如：father2/father3 target=father2 
+
+			printf("%s", (target->sonFCB)->name);
+
 			if (strcmp((target->sonFCB)->name, fname) == 0)//第一个子是要删掉的 
 			{
 				flag = deleFindFile(*head->sonFCB, dir);
@@ -531,7 +544,6 @@ int DeleteTheFile(string name)
 		}
 	}
 }
-
 void init_directory()
 {
 	head = (FCB*)malloc(sizeof(FCB));
@@ -562,7 +574,7 @@ void init_directory()
 	strcpy(father3->name, "father3");
 	father3->type = 1;
 
-	strcpy(f1->name, "g1");
+	strcpy(f1->name, "f1");
 	f1->type = 0;
 
 
@@ -583,8 +595,11 @@ void init_directory()
 
 
 	father1->nextFCB = father2;
+
 	father1->sonFCB = f1;
+
 	f1->nextFCB = f2;
+
 	f2->nextFCB = f3;
 	father2->sonFCB = f4;
 	f4->nextFCB = father3;
