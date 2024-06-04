@@ -21,8 +21,10 @@ typedef struct FCB
 
 FCB* head;
 FCB* target;
+FCB* last_father;//上一级目录
 char lastname[80];
 
+FCB* ReturnFather(string name);//返回父目录
 char* get_type(string name);//获取文件类型
 void init_directory();//初始化存储结构 
 int FindFile(FCB father, char* name);//找到对应文件 
