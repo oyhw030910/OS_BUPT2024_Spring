@@ -167,6 +167,12 @@ int _FindFile(string name)
 	return flag;
 }
 
+FCB* ReturnFather(string name)
+{
+	_Find2File(name);
+	last_father = target;
+	return last_father;
+}
 
 int _Find2File(string name)
 {
@@ -176,7 +182,7 @@ int _Find2File(string name)
 	strcpy(lastname, s);
 	//free(s);
 	flag = FindFile(*head->sonFCB, lastname);
-
+	
 	return flag;
 }
 
@@ -548,6 +554,7 @@ void init_directory()
 {
 	head = (FCB*)malloc(sizeof(FCB));
 	target = (FCB*)malloc(sizeof(FCB));
+	last_father = (FCB*)malloc(sizeof(FCB));
 	FCB* father1 = (FCB*)malloc(sizeof(FCB));
 	FCB* father2 = (FCB*)malloc(sizeof(FCB));
 	FCB* father3 = (FCB*)malloc(sizeof(FCB));
@@ -557,6 +564,11 @@ void init_directory()
 	FCB* f4 = (FCB*)malloc(sizeof(FCB));
 	FCB* f5 = (FCB*)malloc(sizeof(FCB));
 	//初始化目录文件 
+
+	target->nextFCB = NULL;
+	target->sonFCB = NULL;
+	last_father->nextFCB = NULL;
+	last_father->sonFCB = NULL;
 
 	head->sonFCB = father1;
 	head->type = 1;
