@@ -51,6 +51,8 @@ void drawMain()
     clearrectangle(0, 0, 1289, 599);//显示区
     //clearrectangle(0, 641, 1289, 641);//输出区
     clearrectangle(1291, 0, 1400, 720);//输出区
+
+    changeOutput();
     line(1290, 0, 1290, 720);
     outtextxy(1298 , 600, "按钮区");
     line(0, 640, 1290, 640);
@@ -265,7 +267,7 @@ clearrectangle(100, 600, 1400, 720);
 
 void changeOutput()
 {
-    clearrectangle(1291, 0, 1400, 720);//输出区、
+    clearrectangle(0, 641, 1289, 720);//输出区、
     outtextxy(0, 700, output);
 }
 
@@ -454,7 +456,7 @@ void pcbDrawPro()
     strcpy(s, "还需运行时间");
     outtextxy(20, 460, s);
 
-    strcpy(s, "进程队列");
+    strcpy(s, "功能");
     outtextxy(20, 520, s);
 
     /*for (int i = 0; i < Ready_Process.size(); i++)
@@ -496,7 +498,7 @@ void pcbDrawPro()
 
         while (true)
         {
-            if (process[order].state == 1 || process[order].state == 2 || process[order].state == 3)
+            if (process[order].state == READY || process[order].state == RUNNING || process[order].state == BLOCKED)
             {
                 t = order;
                 order++;
@@ -508,9 +510,9 @@ void pcbDrawPro()
 
         switch (process[t].state)
         {
-        case 1:colorThis = YELLOW; break;
-        case 2:colorThis = GREEN; break;
-        case 3:colorThis = RED; break;
+        case READY:colorThis = YELLOW; break;
+        case RUNNING:colorThis = GREEN; break;
+        case BLOCKED:colorThis = RED; break;
         default:break;
         }
 
@@ -523,9 +525,9 @@ void pcbDrawPro()
 
         switch (process[t].state)
         {
-        case 1:strcpy(s, "就绪"); break;
-        case 2:strcpy(s, "运行"); break;
-        case 3:strcpy(s, "阻塞"); break;
+        case READY:strcpy(s, "就绪"); break;
+        case RUNNING:strcpy(s, "运行"); break;
+        case BLOCKED:strcpy(s, "阻塞"); break;
         default:break;
         }
         outtextxy(x + 120, m + 40, s);
@@ -545,7 +547,17 @@ void pcbDrawPro()
         _itoa(process[t].remaintime, s, 10);
         outtextxy(x + 120, m + 40 + 240, s);
         // 进程运行结束的时间
-        _itoa(process[t].finishtime, s, 10);
+        switch (process[t].command.commandid)
+        {
+        case 1:strcpy(s, "创建文件"); break;
+        case 2:strcpy(s, "删除文件"); break;
+        case 3:strcpy(s, "读取文件"); break;
+        case 4:strcpy(s, "修改文件"); break;
+        case 5:strcpy(s, "申请设备"); break;
+        case 6:strcpy(s, "释放设备"); break;
+        default :strcpy(s, "无命令"); break;
+        }
+            
         outtextxy(x + 120, m + 40 + 300, s);
 
 
@@ -766,8 +778,17 @@ void drawFileMenu(FCB* top)
     {
 
         x = 100 + 1200 / size * t, y = 200;
-        setfillcolor(WHITE);
-        fillellipse(x, y, x + 60, y + 120);
+        if(temp->type==1)
+        {
+            setfillcolor(WHITE);
+            fillellipse(x, y, x + 60, y + 120);
+        }
+        else
+        {
+            setfillcolor(GREEN);
+            fillellipse(x, y, x + 60, y + 120);
+        }
+        
         outtextxy(x - 60, y + 80, temp->name);
         temp = temp->nextFCB;
 
@@ -885,7 +906,7 @@ void fileDraw()
 
 void deviceDraw()
 {
-
+    changeOutput();
     //initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
     char s[2000] = "";
@@ -1007,6 +1028,7 @@ int main()
     init_directory();
     init_process();
     InitializeMemory();
+    
     for (int i = 0; i < totalP; i++)
     {
         outPinfo(process[i]);
