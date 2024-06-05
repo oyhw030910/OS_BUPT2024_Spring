@@ -14,6 +14,7 @@ int ReadFile(string name)
 		outtextxy(50, 700, "0");*/
 	outtextxy(100, 700, "文件名");
 	outtextxy(200, 700, (target->nextFCB)->name);
+	strcpy(output,(target->nextFCB)->word);
 	outtextxy(300, 700, "文件内容");
 	outtextxy(400, 700, (target->nextFCB)->word);
 
