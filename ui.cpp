@@ -4,7 +4,7 @@ void drawMain()
 {
     initgraph(1400, 720);
     /*MOUSEMSG m;		// 定义鼠标消息
-    
+
     int x = 0, y = 400, z = 100, o = 480;
     setfillcolor(WHITE);
     TCHAR q1[] = _T("文件");
@@ -54,7 +54,7 @@ void drawMain()
 
     changeOutput();
     line(1290, 0, 1290, 720);
-    outtextxy(1298 , 600, "按钮区");
+    outtextxy(1298, 600, "按钮区");
     line(0, 640, 1290, 640);
     outtextxy(100, 680, "输出区");
     outtextxy(100, 100, "界面显示区");
@@ -90,28 +90,28 @@ void drawMain()
         {
 
             button_x = 1298, button_y = 0;
-            if (me.x >= button_x && me.y >= button_y  && me.x <= button_x + 100 && me.y <= button_y + 80)
+            if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 80)
             {
                 fileDraw();
                 return;
 
             }
-            else if (me.x >= button_x  && me.y >= button_y + 80 && me.x <= button_x + 100 && me.y <= button_y + 80 + 80)
+            else if (me.x >= button_x && me.y >= button_y + 80 && me.x <= button_x + 100 && me.y <= button_y + 80 + 80)
             {
                 deviceDraw();
                 return;
             }
-            else if (me.x >= button_x  && me.y >= button_y + 160 && me.x <= button_x + 100 && me.y <= button_y + 80 + 160)
+            else if (me.x >= button_x && me.y >= button_y + 160 && me.x <= button_x + 100 && me.y <= button_y + 80 + 160)
             {
                 memoryDraw();
                 return;
             }
-            else if (me.x >= button_x  && me.y >= button_y + 240 && me.x <= button_x + 100 && me.y<= button_y + 80 + 240)
+            else if (me.x >= button_x && me.y >= button_y + 240 && me.x <= button_x + 100 && me.y <= button_y + 80 + 240)
             {
                 pcbDrawPro();
                 return;
             }
-            else if (me.x >= button_x  && me.y >= button_y + 320 && me.x <= button_x + 100 && me.y <= button_y + 80 + 320)
+            else if (me.x >= button_x && me.y >= button_y + 320 && me.x <= button_x + 100 && me.y <= button_y + 80 + 320)
             {
                 return;
             }
@@ -273,7 +273,7 @@ void changeOutput()
 
 void drawCreatePCB()
 {
-    
+
     clearrectangle(0, 0, 1289, 599);//显示区
     //clearrectangle(0, 641, 1289, 641);//输出区
     clearrectangle(1291, 0, 1400, 720);//输出区
@@ -305,6 +305,7 @@ void drawCreatePCB()
     outtextxy(button_x + 30, button_y + 30, "释放设备");
     button_y += 80;
 
+    int randsize = 0;
     while (true)
     {
 
@@ -317,44 +318,23 @@ void drawCreatePCB()
             if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 80)
             {
                 string s = getInput("创建文件");
-                int flag = CreateTheFile(s);//创建文件
-                if (flag == 1)
-                {
-                    outtextxy(0, 700, "创建成功");
-                }
-                else
-                {
-                    outtextxy(0, 700, "创建失败");
-                }
+                randsize = getrand(1, 4000);
+                createP(randsize, 2, 0, CREATEFILE, 0, 0, s, "");
                 return;
 
             }
             else if (me.x >= button_x && me.y >= button_y + 80 && me.x <= button_x + 100 && me.y <= button_y + 80 + 80)
             {
                 string s = getInput("删除文件");
-                int flag = DeleteTheFile(s);//删除文件
-                if (flag == 1)
-                {
-                    outtextxy(0, 700, "删除成功");
-                }
-                else
-                {
-                    outtextxy(0, 700, "删除失败");
-                }
+                randsize = getrand(1, 4000);
+                createP(randsize, 2, 0, DELETEFILE, 0, 0, s, "");
                 return;
             }
             else if (me.x >= button_x && me.y >= button_y + 160 && me.x <= button_x + 100 && me.y <= button_y + 80 + 160)
             {
                 string s = getInput("读取文件");
-                int flag = ReadFile(s);
-                if (flag == 1)
-                {
-                    outtextxy(0, 700, "读取文件成功");
-                }
-                else
-                {
-                    outtextxy(0, 700, "读取文件失败");
-                }
+                randsize = getrand(1, 4000);
+                createP(randsize, 2, 0, READFILE, 0, 0, s, "");
                 //读文件
                 return;
             }
@@ -362,45 +342,21 @@ void drawCreatePCB()
             {
                 string s = getInput("修改文件");
                 string word = getInput("内容");
-                int flag = WriteFile(s, word);//写文件
-                if (flag == 1)
-                {
-                    outtextxy(0, 700, "修改文件成功");
-                }
-                else
-                {
-                    outtextxy(0, 700, "写文件失败");
-                }
+                createP(randsize, 2, 0, WRITEFILE, 0, 0, s, word);
                 return;
             }
             else if (me.x >= button_x && me.y >= button_y + 320 && me.x <= button_x + 100 && me.y <= button_y + 80 + 320)
             {
-                string s = getInput("调用设备");
+                string s = getInput("使用设备号");
                 int jh = atoi(s.c_str());
-                bool flag = acquire_device(totalP, jh);
-                if (flag == 1)
-                {
-                    outtextxy(0, 700, "申请设备成功");
-                }
-                else
-                {
-                    outtextxy(0, 700, "申请设备失败");
-                }
+                createP(randsize, 2, 0, APPLYDEVICE, 0, 2, "", "");
                 return;
             }
             else if (me.x >= button_x && me.y >= button_y + 400 && me.x <= button_x + 100 && me.y <= button_y + 80 + 400)
             {
                 string s = getInput("释放设备");
                 int jh = atoi(s.c_str());
-                bool flag = release_device(totalP, jh);
-                if (flag == 1)
-                {
-                    outtextxy(0, 700, "释放设备成功");
-                }
-                else
-                {
-                    outtextxy(0, 700, "释放设备失败");
-                }
+                createP(randsize, 2, 0, RELEASEDEVICE, 0, 2, "", "");
                 return;
             }
 
@@ -463,7 +419,7 @@ void pcbDrawPro()
     {
         outtextxy(20 + i * 40, 570, Ready_Process.front());
     }*/
-    
+
     line(1290, 0, 1290, 720);
     line(0, 640, 1290, 640);
     //outtextxy(300, 200, "创建进程中");
@@ -555,9 +511,9 @@ void pcbDrawPro()
         case 4:strcpy(s, "修改文件"); break;
         case 5:strcpy(s, "申请设备"); break;
         case 6:strcpy(s, "释放设备"); break;
-        default :strcpy(s, "无命令"); break;
+        default:strcpy(s, "无命令"); break;
         }
-            
+
         outtextxy(x + 120, m + 40 + 300, s);
 
 
@@ -679,7 +635,7 @@ void memoryDraw()
     ellipse(button_x, button_y, button_x + 100, button_y + 80);
     outtextxy(button_x + 30, button_y + 30, "虚拟内存");
     button_y += 80;
-    
+
 
     ellipse(button_x, button_y, button_x + 100, button_y + 80);
     outtextxy(button_x + 30, button_y + 30, "物理内存");
@@ -713,7 +669,7 @@ void memoryDraw()
             if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 80)
             {
                 drawVirMemory();
-                
+
 
             }
             else if (me.x >= button_x && me.y >= button_y + 80 && me.x <= button_x + 100 && me.y <= button_y + 80 + 80)
@@ -738,7 +694,7 @@ void memoryDraw()
 
 
 
-        
+
 
 
     }
@@ -778,7 +734,7 @@ void drawFileMenu(FCB* top)
     {
 
         x = 100 + 1200 / size * t, y = 200;
-        if(temp->type==1)
+        if (temp->type == 1)
         {
             setfillcolor(WHITE);
             fillellipse(x, y, x + 60, y + 120);
@@ -788,7 +744,7 @@ void drawFileMenu(FCB* top)
             setfillcolor(GREEN);
             fillellipse(x, y, x + 60, y + 120);
         }
-        
+
         outtextxy(x - 60, y + 80, temp->name);
         temp = temp->nextFCB;
 
@@ -800,7 +756,7 @@ void drawFileMenu(FCB* top)
         else
             outtextxy(130, 280, top->word);
 
-    
+
     }
 
 }
@@ -856,7 +812,7 @@ void fileDraw()
         {
             for (int i = 0; i < size1(temp->sonFCB); i++)
             {
-                
+
                 if (me.x >= 100 + 1200 / size1(temp->sonFCB) * i && me.x < 100 + 1200 / size1(temp->sonFCB) * i + 60
                     && me.y <= 320 && me.y >= 200)
                 {
@@ -869,7 +825,7 @@ void fileDraw()
                     drawFileMenu(temp);
                 }
             }
-            
+
             button_x = 1298, button_y = 0;
             if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 80)
             {
@@ -994,7 +950,7 @@ void deviceDraw()
         me = getmessage(EM_MOUSE);//获取鼠标消息
         if (me.message == WM_LBUTTONUP)
         {
-            
+
             button_x = 1298, button_y = 0;
             if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 80)
             {
@@ -1014,7 +970,7 @@ void deviceDraw()
         }
 
 
-        
+
     }
     drawMain();
 
@@ -1028,11 +984,7 @@ int main()
     init_directory();
     init_process();
     InitializeMemory();
-    
-    for (int i = 0; i < totalP; i++)
-    {
-        outPinfo(process[i]);
-    }
+
     drawMain();
     return 0;
 }
