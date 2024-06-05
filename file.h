@@ -4,6 +4,7 @@
 #include<stdlib.h>
 #include<assert.h>
 #include<stdbool.h>
+
 #include<string>
 #include<iostream>
 #pragma warning(distable:4996) 
@@ -15,6 +16,7 @@ typedef struct FCB
 	char name[str_lenth];//文件名
 	int type;//0普通文件，1目录文件 
 	char word[str_lenth];
+
 	struct FCB* nextFCB;
 	struct FCB* sonFCB;
 }FCB;

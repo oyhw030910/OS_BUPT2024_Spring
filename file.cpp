@@ -1,4 +1,5 @@
 #include"file.h"
+
 #include"ui.h"
 
 int ReadFile(string name)
@@ -10,11 +11,13 @@ int ReadFile(string name)
 	
 
 	if (flag == 0)
+
 	{
 		return flag;
 	}
 	else
 	{
+
 		
 		if ((target->nextFCB)->type == 1)//目录
 			return 0;
@@ -56,12 +59,14 @@ int wiFindFile(FCB& father, char* name, const char* s)
 	{
 		flag = 1;
 		strcpy(father.word, s);
+
 		//cout << father.word << endl;
 		target->nextFCB = &father;
 		return 1;
 	}
 	else//不是的话，深度优先 
 	{
+
 		if (father.sonFCB != NULL)//有子 
 		{
 			flag = wiFindFile(*father.sonFCB, name, s);
@@ -82,12 +87,14 @@ int wiFindFile(FCB& father, char* name, const char* s)
 			}
 		}
 
+
 	}
 	return flag;
 }
 
 char* get_file_name(string name)
 {
+
 	const char* name0 = (char*)malloc(sizeof(char));
 	name0 = name.data();
 	char str[80];
@@ -107,6 +114,7 @@ char* get_file_name(string name)
 	}
 	//free(token);
 	return temp;
+
 }
 
 char* get_type(string name)
@@ -125,6 +133,7 @@ char* get_type(string name)
 
 char* get_second_name(string name)
 {
+
 	const char* name0 = name.data();
 	char str[80];
 	const char s[2] = "/";
@@ -179,8 +188,10 @@ int _Find2File(string name)
 	//free(s);
 	flag = FindFile(*head->sonFCB, lastname);
 	
+
 	return flag;
 }
+
 
 
 int FindFile(FCB father, char* name)
@@ -265,6 +276,7 @@ int creaFindFile(FCB father, char* name, char* dir, FCB* new_f)
 			//free(temp);
 			return 1;
 		}
+
 
 		return 1;
 	}
@@ -384,6 +396,7 @@ int dele2FindFile(FCB& father, char* name, char* dir)
 		FCB* temp = (FCB*)malloc(sizeof(FCB));
 		temp = father.sonFCB;
 		while (strcmp((temp->nextFCB)->name, name) != 0) //直到temp指向要删除的文件 
+
 		{
 			temp = temp->nextFCB;
 		}
@@ -400,6 +413,7 @@ int dele2FindFile(FCB& father, char* name, char* dir)
 			}
 			else//不为空，不能删 
 				return 0;
+
 		}
 		else//删普通文件 
 		{
@@ -612,7 +626,6 @@ void init_directory()
 	father2->sonFCB = f4;
 	f4->nextFCB = father3;
 	father3->sonFCB = f5;
-
 	head->nextFCB = NULL;
 	f1->sonFCB = NULL;
 	f2->sonFCB = NULL;
