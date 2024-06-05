@@ -49,7 +49,7 @@ void drawMain()
 
     }*/
     clearrectangle(0, 0, 1289, 599);//显示区
-    clearrectangle(0, 641, 1289, 641);//输出区
+    //clearrectangle(0, 641, 1289, 641);//输出区
     clearrectangle(1291, 0, 1400, 720);//输出区
     line(1290, 0, 1290, 720);
     outtextxy(1298 , 600, "按钮区");
@@ -273,7 +273,7 @@ void drawCreatePCB()
 {
     
     clearrectangle(0, 0, 1289, 599);//显示区
-    clearrectangle(0, 641, 1289, 641);//输出区
+    //clearrectangle(0, 641, 1289, 641);//输出区
     clearrectangle(1291, 0, 1400, 720);//输出区
     line(1290, 0, 1290, 720);
     line(0, 640, 1290, 640);
@@ -431,7 +431,7 @@ void pcbDrawPro()
     char s[2000] = "";
 
     clearrectangle(0, 0, 1289, 639);//显示区
-    clearrectangle(0, 641, 1289, 720);//输出区
+    //clearrectangle(0, 641, 1289, 720);//输出区
     clearrectangle(1291, 0, 1400, 720);//按钮区
     int x, y, z, m, T = 180;
     COLORREF colorThis = WHITE;
@@ -658,7 +658,7 @@ void memoryDraw()
 
     char s[2000] = "";
     clearrectangle(0, 0, 1289, 639);//显示区
-    clearrectangle(0, 641, 1289, 720);//输出区
+    //clearrectangle(0, 641, 1289, 720);//输出区
     clearrectangle(1291, 0, 1400, 720);//按钮区
     line(1290, 0, 1290, 720);
     line(0, 640, 1290, 640);
@@ -772,6 +772,16 @@ void drawFileMenu(FCB* top)
         temp = temp->nextFCB;
 
     }
+    if (top->type == 0)
+    {
+        if (strcmp(top->word, "") == 0)
+            outtextxy(130, 280, "空");
+        else
+            outtextxy(130, 280, top->word);
+
+    
+    }
+
 }
 
 void fileDraw()
@@ -783,7 +793,7 @@ void fileDraw()
     char s[2000] = "";
 
     clearrectangle(0, 0, 1289, 639);//显示区
-    clearrectangle(0, 641, 1289, 720);//输出区
+    //clearrectangle(0, 641, 1289, 720);//输出区
     clearrectangle(1291, 0, 1400, 720);//按钮区
     line(1290, 0, 1290, 720);
     line(0, 640, 1290, 640);
@@ -825,7 +835,7 @@ void fileDraw()
         {
             for (int i = 0; i < size1(temp->sonFCB); i++)
             {
-
+                
                 if (me.x >= 100 + 1200 / size1(temp->sonFCB) * i && me.x < 100 + 1200 / size1(temp->sonFCB) * i + 60
                     && me.y <= 320 && me.y >= 200)
                 {
@@ -838,6 +848,7 @@ void fileDraw()
                     drawFileMenu(temp);
                 }
             }
+            
             button_x = 1298, button_y = 0;
             if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 80)
             {
@@ -896,7 +907,7 @@ void deviceDraw()
 
 
     clearrectangle(0, 0, 1289, 639);//显示区
-    clearrectangle(0, 641, 1289, 720);//输出区
+    //clearrectangle(0, 641, 1289, 720);//输出区
     clearrectangle(1291, 0, 1400, 720);//按钮区
     line(1290, 0, 1290, 720);
     line(0, 640, 1290, 640);
