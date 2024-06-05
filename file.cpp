@@ -573,17 +573,17 @@ void init_directory()
 	head->sonFCB = father1;
 	head->type = 1;
 
-	strcpy(head->name, "head");
+	strcpy(head->name, "root");
 
-	strcpy(father1->name, "father1");
+	strcpy(father1->name, "dir1");
 	father1->type = 1;
 
 
-	strcpy(father2->name, "father2");
+	strcpy(father2->name, "dir2");
 	father2->type = 1;
 
 
-	strcpy(father3->name, "father3");
+	strcpy(father3->name, "dir3");
 	father3->type = 1;
 
 	strcpy(f1->name, "f1");
