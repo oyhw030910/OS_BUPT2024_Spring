@@ -262,6 +262,13 @@ clearrectangle(100, 600, 1400, 720);
 
     }
 */
+
+void changeOutput()
+{
+    clearrectangle(1291, 0, 1400, 720);//输出区、
+    outtextxy(0, 700, output);
+}
+
 void drawCreatePCB()
 {
     
@@ -366,10 +373,32 @@ void drawCreatePCB()
             }
             else if (me.x >= button_x && me.y >= button_y + 320 && me.x <= button_x + 100 && me.y <= button_y + 80 + 320)
             {
+                string s = getInput("调用设备");
+                int jh = atoi(s.c_str());
+                bool flag = acquire_device(totalP, jh);
+                if (flag == 1)
+                {
+                    outtextxy(0, 700, "申请设备成功");
+                }
+                else
+                {
+                    outtextxy(0, 700, "申请设备失败");
+                }
                 return;
             }
             else if (me.x >= button_x && me.y >= button_y + 400 && me.x <= button_x + 100 && me.y <= button_y + 80 + 400)
             {
+                string s = getInput("释放设备");
+                int jh = atoi(s.c_str());
+                bool flag = release_device(totalP, jh);
+                if (flag == 1)
+                {
+                    outtextxy(0, 700, "释放设备成功");
+                }
+                else
+                {
+                    outtextxy(0, 700, "释放设备失败");
+                }
                 return;
             }
 
@@ -401,7 +430,9 @@ void pcbDrawPro()
 
     char s[2000] = "";
 
-
+    clearrectangle(0, 0, 1289, 639);//显示区
+    clearrectangle(0, 641, 1289, 720);//输出区
+    clearrectangle(1291, 0, 1400, 720);//按钮区
     int x, y, z, m, T = 180;
     COLORREF colorThis = WHITE;
 
@@ -430,9 +461,7 @@ void pcbDrawPro()
     {
         outtextxy(20 + i * 40, 570, Ready_Process.front());
     }*/
-    clearrectangle(0, 0, 1289, 639);//显示区
-    clearrectangle(0, 641, 1289, 720);//输出区
-    clearrectangle(1291, 0, 1400, 720);//按钮区
+    
     line(1290, 0, 1290, 720);
     line(0, 640, 1290, 640);
     //outtextxy(300, 200, "创建进程中");
