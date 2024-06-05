@@ -7,16 +7,7 @@ int ReadFile(string name)
 	int flag = 0;
 	flag = _FindFile(name);
 	
-	//clearrectangle(00, 690, 1300, 754);
-	/*if (flag == 1)
-		outtextxy(50, 700, "1");
-	else
-		outtextxy(50, 700, "0");*/
-	outtextxy(100, 700, "文件名");
-	outtextxy(200, 700, (target->nextFCB)->name);
-	strcpy(output,(target->nextFCB)->word);
-	outtextxy(300, 700, "文件内容");
-	outtextxy(400, 700, (target->nextFCB)->word);
+	
 
 	if (flag == 0)
 	{
@@ -29,7 +20,11 @@ int ReadFile(string name)
 			return 0;
 		else
 		{
-			
+			outtextxy(100, 700, "文件名");
+			outtextxy(200, 700, (target->nextFCB)->name);
+			strcpy(output,(target->nextFCB)->word);
+			outtextxy(300, 700, "文件内容");
+			outtextxy(400, 700, (target->nextFCB)->word);
 			return 1;
 		}
 	}
