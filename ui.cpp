@@ -579,12 +579,18 @@ void drawVirMemory()
     clearrectangle(50, 50, 1289, 639);//显示区
     rectangle(100, 90, 200, 190);
     outtextxy(100 + 20, 100 + 20, "页号");
+
+    rectangle(100 , 200, 200 , 300);
+    outtextxy(100 + 20, 200 + 20, "PID");
+    rectangle(100, 300, 200, 400);
+    outtextxy(100 + 20, 300 + 20, "已用内存 ");
     for (int i = 0; i < PAGE_NUMBER; i++)
     {
+        
         rectangle(200 + i * 100, 90, 300 + i * 100, 190);
         _itoa(i, s, 10);
         outtextxy(200 + i * 100 + 20, 100 + 20, s);
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < 2; j++)
         {
             int table_x = 200 + i * 100, table_y = 200 + j * 100;
             rectangle(table_x, table_y, table_x + 100, table_y + 100);
@@ -604,6 +610,9 @@ void drawPhyMemory()
 
     rectangle(100, 90, 200, 190);
     outtextxy(100 + 20, 100 + 20, "帧号");
+
+    rectangle(100, 200, 200, 300);
+    outtextxy(100 + 20, 200 + 20, "页号");
     for (int i = 0; i < FRAME_NUMBER; i++)
     {
         rectangle(200 + i * 100, 90, 300 + i * 100, 190);
