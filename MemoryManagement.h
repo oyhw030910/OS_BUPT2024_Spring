@@ -14,15 +14,6 @@ using nlohmann::fifo_map;
 # define FRAME_NUMBER 3 //帧数为3
 # define PAGE_SIZE 1024 //页大小为1024
 
-PageTable pageTable;//页表
-VirMemoty virMemory;//虚拟内存使用情况
-PhyMemory phyMemory;//物理内存使用情况
-AllTable allTable;//汇总表
-list<int> scheQueue; //调度队列
-int allocVirMemory = 0; //已分配虚拟内存
-int usedPhyMemory = 0; //已使用物理内存
-int pageFault = 0; //缺页次数
-
 using namespace std;
 
 typedef fifo_map<int, int> Table;//<virID,phyID>页帧对应表
@@ -44,6 +35,15 @@ typedef struct LogicalTable {
 	int table[8][2];//页号，帧号，大小
 }LogicalTable;
 typedef fifo_map<int, LogicalTable> AllTable;//<PID,LogicalTable>
+
+PageTable pageTable;//页表
+VirMemoty virMemory;//虚拟内存使用情况
+PhyMemory phyMemory;//物理内存使用情况
+AllTable allTable;//汇总表
+list<int> scheQueue; //调度队列
+int allocVirMemory = 0; //已分配虚拟内存
+int usedPhyMemory = 0; //已使用物理内存
+int pageFault = 0; //缺页次数
 
 int FindPhyID(int _virID);//根据页号，查找对应的帧号，返回帧号或-1
 Table InsertPage(int _virID,Table _table);//根据页号，给页帧对应表插入新的关联
