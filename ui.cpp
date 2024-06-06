@@ -589,7 +589,7 @@ void drawVirMemory()
     rectangle(100, 300, 200, 400);
     outtextxy(100 + 20, 300 + 20, "已用内存 ");
     
-   
+    CreatAllTbale(runningpid);//
     for (int i = 0; i < 8; i++)
     {
         rectangle(200 + i * 100, 90, 300 + i * 100, 190);
@@ -600,7 +600,7 @@ void drawVirMemory()
             int table_x = 200 + i * 100, table_y = 200 + j * 100;
             rectangle(table_x, table_y, table_x + 100, table_y + 100);
             
-            _itoa(allTable[runningpid].table[i][j], s, 10);
+            _itoa(allTable.table[i][j], s, 10);//
             outtextxy(table_x + 20, table_y + 20, s);
         }
     }
