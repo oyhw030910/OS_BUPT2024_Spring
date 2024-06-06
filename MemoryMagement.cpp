@@ -357,28 +357,23 @@ void LRU(int _virID, int _pid)
 		phyMemory.phyContent[rePhyID] = virMemory.virContent[_virID];//将虚拟内存里的内容复制到物理内存
 	}
 }
-void CreatAllTbale()
+void CreatAllTbale(int _pid)
 {
-	AllTable newTable;
-	allTable = newTable;
-	fifo_map < int, Table > ::iterator it;
-	for (it = pageTable.begin(); it != pageTable.end(); ++it)
+	allTable.pid = -1;
+	for (int j = 0; j < 8; j++)
 	{
-		LogicalTable tmpLog;
-		for (int j = 0; j < 8; j++)
-		{
-			tmpLog.table[j][0] = -1;
-			tmpLog.table[j][1] = 0;
-		}
-		fifo_map < int, int > ::iterator itt;
-		int i = 0;
-		for (itt = it->second.begin(); itt != it->second.end(); ++itt)
-		{
-			tmpLog.table[i][0] = itt->second;
-			tmpLog.table[i][1] = virMemory.virTable[itt->first][1];
-			i++;
-		}
-		allTable[it->first] = tmpLog;
+		allTable.table[j][0] = -1;
+		allTable.table[j][1] = 0;
+	}
+	allTable.pid = _pid;
+	fifo_map < int, int > ::iterator it;
+	int i = 0;
+	Table tmpTable = pageTable[_pid];
+	for (it = tmpTable.begin(); it != tmpTable.end(); ++it)
+	{
+		allTable.table[i][0] = it->second;
+		allTable.table[i][1] = virMemory.virTable[it->first][1];
+		i++;
 	}
 }
 void PrintMemory()
@@ -394,19 +389,15 @@ void PrintMemory()
 		cout << "帧号：" << i << " " << "页号：" << phyMemory.phyTable[i] << endl;
 	}
 }
-void PrintAllTable()
+void PrintAllTable(int _pid)
 {
-	cout << "页表" << endl;
-	fifo_map < int, LogicalTable> ::iterator it;
-	for (it = allTable.begin(); it != allTable.end(); ++it)
+	cout << "页表：" <<endl;
+	cout << "pid：" << allTable.pid << endl;
+	for (int i = 0; i < 8; i++)
 	{
-		cout << "pid :" << it->first << endl;
-		LogicalTable tmpTable = it->second;
-		for (int i = 0; i < 8; i++)
-		{
-			cout << "页号：" << i;
-			cout << "帧号：" << tmpTable.table[i][0];
-			cout << "占用大小：" << tmpTable.table[i][1] << endl;
-		}
+		cout << "页号：" << i ;
+		cout << "帧号"<< allTable.table[i][0];
+		cout << "已用大小"<< allTable.table[i][1]<<endl;
+
 	}
 }
