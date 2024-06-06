@@ -126,7 +126,7 @@ int FreeMemory(int _pid)
 }
 int AllocVirMemory(int _pid, int _size)
 {
-	if (_size > PAGE_NUMBER * PAGE_SIZE)
+	if (_size > 8 * PAGE_SIZE)
 	{
 		return -1;
 	}
@@ -303,16 +303,20 @@ string AccessPhyMemory(int _pid, int _start, int _end)
 	else
 	{
 		auto itstart = next(tmpTable1.begin(), startLogID);
-		auto itend = next(tmpTable1.begin(), endLogID+1);
-		fifo_map < int, int > ::iterator it;
-		for (it = itstart; it != itend; ++it)
+		if (endLogID + 1 <= tmpTable1.size())
 		{
-			LRU(it->first, _pid);
+			auto itend = next(tmpTable1.begin(), endLogID + 1);
+			fifo_map < int, int > ::iterator it;
+			for (it = itstart; it != itend; ++it)
+			{
+				LRU(it->first, _pid);
+			}
+		}
+		else
+		{
+			return "-1";
 		}
 	}
-	int startPhyID = FindPhyID(startVirID);//起始页对应的帧号
-	int endPhyID = FindPhyID(endVirID);//结束页对应的帧号
-	int tmpPhyD;//临时帧号，循环变量
 	string str;//用于存储物理内存的内容
 	return "*";//返回物理内存里的内容
 }
@@ -361,6 +365,11 @@ void CreatAllTbale()
 	for (it = pageTable.begin(); it != pageTable.end(); ++it)
 	{
 		LogicalTable tmpLog;
+		for (int j = 0; j < 8; j++)
+		{
+			tmpLog.table[j][0] = -1;
+			tmpLog.table[j][1] = 0;
+		}
 		fifo_map < int, int > ::iterator itt;
 		int i = 0;
 		for (itt = it->second.begin(); itt != it->second.end(); ++itt)
