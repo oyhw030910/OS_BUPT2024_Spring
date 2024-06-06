@@ -1,14 +1,5 @@
 #include "MemoryManagement.h"
 
-PageTable pageTable;//页表
-VirMemoty virMemory;//虚拟内存使用情况
-PhyMemory phyMemory;//物理内存使用情况
-AllTable allTable;//汇总表
-list<int> scheQueue; //调度队列
-int allocVirMemory = 0; //已分配虚拟内存
-int usedPhyMemory = 0; //已使用物理内存
-int pageFault = 0; //缺页次数
-
 int FindPhyID(int _virID)
 {
 	for (int i = 0; i < FRAME_NUMBER; i++)
