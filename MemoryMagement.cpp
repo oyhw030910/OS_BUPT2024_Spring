@@ -1,5 +1,14 @@
 #include "MemoryManagement.h"
 
+PageTable pageTable;//页表
+VirMemoty virMemory;//虚拟内存使用情况
+PhyMemory phyMemory;//物理内存使用情况
+AllTable allTable;//汇总表
+list<int> scheQueue; //调度队列
+int allocVirMemory = 0; //已分配虚拟内存
+int usedPhyMemory = 0; //已使用物理内存
+int pageFault = 0; //缺页次数
+
 int FindPhyID(int _virID)
 {
 	for (int i = 0; i < FRAME_NUMBER; i++)
@@ -126,6 +135,10 @@ int FreeMemory(int _pid)
 }
 int AllocVirMemory(int _pid, int _size)
 {
+	if (_size > PAGE_NUMBER * PAGE_SIZE)
+	{
+		return -1;
+	}
 	int i;//循环变量
 	int tmpSize = _size;//进程还需分配的内存大小
 	Table tmpTable;//临时页帧对应表
@@ -312,7 +325,6 @@ string AccessPhyMemory(int _pid, int _start, int _end)
 	string str;//用于存储物理内存的内容
 	return "*";//返回物理内存里的内容
 }
-
 void LRU(int _virID, int _pid)
 {
 	int phyID = FindPhyID(-1); //找到一个空闲帧
@@ -350,6 +362,25 @@ void LRU(int _virID, int _pid)
 		phyMemory.phyContent[rePhyID] = virMemory.virContent[_virID];//将虚拟内存里的内容复制到物理内存
 	}
 }
+void CreatAllTbale()
+{
+	AllTable newTable;
+	allTable = newTable;
+	fifo_map < int, Table > ::iterator it;
+	for (it = pageTable.begin(); it != pageTable.end(); ++it)
+	{
+		LogicalTable tmpLog;
+		fifo_map < int, int > ::iterator itt;
+		int i = 0;
+		for (itt = it->second.begin(); itt != it->second.end(); ++itt)
+		{
+			tmpLog.table[i][0] = itt->second;
+			tmpLog.table[i][1] = virMemory.virTable[itt->first][1];
+			i++;
+		}
+		allTable[it->first] = tmpLog;
+	}
+}
 void PrintMemory()
 {
 	cout << "虚拟内存" << endl;
@@ -363,18 +394,19 @@ void PrintMemory()
 		cout << "帧号：" << i << " " << "页号：" << phyMemory.phyTable[i] << endl;
 	}
 }
-void PrintTable()
+void PrintAllTable()
 {
 	cout << "页表" << endl;
-	fifo_map < int, Table > ::iterator it;
-	for (it = pageTable.begin(); it != pageTable.end(); ++it)
+	fifo_map < int, LogicalTable> ::iterator it;
+	for (it = allTable.begin(); it != allTable.end(); ++it)
 	{
 		cout << "pid :" << it->first << endl;
-		Table tmpTable = it->second;
-		fifo_map < int, int > ::iterator itt;
-		for (itt = tmpTable.begin(); itt != tmpTable.end(); ++itt)
+		LogicalTable tmpTable = it->second;
+		for (int i = 0; i < 8; i++)
 		{
-			cout << "页号 :" << itt->first << " " << "帧号 :" << itt->second << endl;
+			cout << "页号：" << i;
+			cout << "帧号：" << tmpTable.table[i][0];
+			cout << "占用大小：" << tmpTable.table[i][1] << endl;
 		}
 	}
 }
