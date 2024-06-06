@@ -31,10 +31,10 @@ typedef struct FileLocation {
 	int start;//起始地址
 	int end;//结束地址
 } FileLocation;
-typedef struct LogicalTable {
+typedef struct AllTable {
+	int pid;
 	int table[8][2];//页号，帧号，大小
-}LogicalTable;
-typedef fifo_map<int, LogicalTable> AllTable;//<PID,LogicalTable>
+}AllTable;
 
 PageTable pageTable;//页表
 VirMemoty virMemory;//虚拟内存使用情况
@@ -57,6 +57,6 @@ int CheckFault(int _pid, int _start, int _end);//根据起始和结束地址，�
 FileLocation WriteVirMemory(int _pid, string _context);//根据进程和写入文本，写入虚拟内存，返回文件地址
 string AccessPhyMemory(int _pid, int _start, int _end);//根据起始和结束地址，访问物理内存，返回内容或"-1"
 void LRU(int _virID, int _pid);//根据页号，执行LRU算法，返回修改后的页帧对应表
-void CreatAllTbale();
+void CreatAllTbale(int _pid);
 void PrintMemory();//打印虚拟内存和物理内存
-void PrintAllTable();
+void PrintAllTable(int _pid);
