@@ -577,16 +577,21 @@ void drawVirMemory()
     int x = 700, y = 300;
 
     clearrectangle(50, 50, 1289, 639);//显示区
+    rectangle(100, 2, 260, 60);
+    outtextxy(100 + 20, 0 + 20, "pid：");
+    _itoa(runningpid, s, 10);
+    outtextxy(100 + 20+30, 0 + 20, s);
+
     rectangle(100, 90, 200, 190);
     outtextxy(100 + 20, 100 + 20, "页号");
-
-    rectangle(100 , 200, 200 , 300);
-    outtextxy(100 + 20, 200 + 20, "PID");
+    rectangle(100, 200, 200, 300);
+    outtextxy(100 + 20, 200 + 20, "帧号");
     rectangle(100, 300, 200, 400);
     outtextxy(100 + 20, 300 + 20, "已用内存 ");
-    for (int i = 0; i < PAGE_NUMBER; i++)
+    
+   
+    for (int i = 0; i < 8; i++)
     {
-        
         rectangle(200 + i * 100, 90, 300 + i * 100, 190);
         _itoa(i, s, 10);
         outtextxy(200 + i * 100 + 20, 100 + 20, s);
@@ -594,15 +599,16 @@ void drawVirMemory()
         {
             int table_x = 200 + i * 100, table_y = 200 + j * 100;
             rectangle(table_x, table_y, table_x + 100, table_y + 100);
-            _itoa(virMemory.virTable[i][j], s, 10);
+            
+            _itoa(allTable[runningpid].table[i][j], s, 10);
             outtextxy(table_x + 20, table_y + 20, s);
         }
-
     }
 }
 
 void drawPhyMemory()
 {
+    clearrectangle(99, 0, 261, 64);
     char s[2000] = "Hello World";
     string w = (string)s;
     int x = 700, y = 300;
