@@ -306,6 +306,7 @@ void drawCreatePCB()
     button_y += 80;
 
     int randsize = 0;
+    randsize = getrand(1, 4000);
     while (true)
     {
 
@@ -318,7 +319,7 @@ void drawCreatePCB()
             if (me.x >= button_x && me.y >= button_y && me.x <= button_x + 100 && me.y <= button_y + 80)
             {
                 string s = getInput("创建文件");
-                randsize = getrand(1, 4000);
+                
                 createP(randsize, 2, 0, CREATEFILE, 0, 0, s, "");
                 return;
 
@@ -326,14 +327,14 @@ void drawCreatePCB()
             else if (me.x >= button_x && me.y >= button_y + 80 && me.x <= button_x + 100 && me.y <= button_y + 80 + 80)
             {
                 string s = getInput("删除文件");
-                randsize = getrand(1, 4000);
+               
                 createP(randsize, 2, 0, DELETEFILE, 0, 0, s, "");
                 return;
             }
             else if (me.x >= button_x && me.y >= button_y + 160 && me.x <= button_x + 100 && me.y <= button_y + 80 + 160)
             {
                 string s = getInput("读取文件");
-                randsize = getrand(1, 4000);
+                
                 createP(randsize, 2, 0, READFILE, 0, 0, s, "");
                 //读文件
                 return;
@@ -349,14 +350,14 @@ void drawCreatePCB()
             {
                 string s = getInput("使用设备号");
                 int jh = atoi(s.c_str());
-                createP(randsize, 2, 0, APPLYDEVICE, 0, 2, "", "");
+                createP(randsize, 4, 0, APPLYDEVICE,jh, 4, "", "");
                 return;
             }
             else if (me.x >= button_x && me.y >= button_y + 400 && me.x <= button_x + 100 && me.y <= button_y + 80 + 400)
             {
                 string s = getInput("释放设备");
                 int jh = atoi(s.c_str());
-                createP(randsize, 2, 0, RELEASEDEVICE, 0, 2, "", "");
+                createP(randsize, 4, 0, RELEASEDEVICE, jh, 4, "", "");
                 return;
             }
 
@@ -575,12 +576,17 @@ void drawVirMemory()
     char s[2000] = "Hello World";
     string w = (string)s;
     int x = 700, y = 300;
-
+    if (runningpid == -1)
+    {
+        strcpy(s, "没有进程正在运行");
+        outtextxy(100, 200, s);
+        return;
+    }
     clearrectangle(50, 50, 1289, 639);//显示区
     rectangle(100, 2, 260, 60);
     outtextxy(100 + 20, 0 + 20, "pid：");
     _itoa(runningpid, s, 10);
-    outtextxy(100 + 20+30, 0 + 20, s);
+    outtextxy(100 + 20 + 30, 0 + 20, s);
 
     rectangle(100, 90, 200, 190);
     outtextxy(100 + 20, 100 + 20, "页号");
@@ -588,7 +594,7 @@ void drawVirMemory()
     outtextxy(100 + 20, 200 + 20, "帧号");
     rectangle(100, 300, 200, 400);
     outtextxy(100 + 20, 300 + 20, "已用内存 ");
-    
+
     CreatAllTbale(runningpid);//
     for (int i = 0; i < 8; i++)
     {
@@ -599,7 +605,7 @@ void drawVirMemory()
         {
             int table_x = 200 + i * 100, table_y = 200 + j * 100;
             rectangle(table_x, table_y, table_x + 100, table_y + 100);
-            
+
             _itoa(allTable.table[i][j], s, 10);//
             outtextxy(table_x + 20, table_y + 20, s);
         }
@@ -881,7 +887,9 @@ void deviceDraw()
     //initgraph(1400, 720);
     settextcolor(WHITE);// 创建绘图窗口，大小为 640x480 像素
     char s[2000] = "";
-
+    clearrectangle(0, 0, 1289, 639);//显示区
+    //clearrectangle(0, 641, 1289, 720);//输出区
+    clearrectangle(1291, 0, 1400, 720);//按钮区
     int x, y, z, m, T = 180;
     COLORREF colorThis;
     int processptr = 0;
@@ -898,9 +906,7 @@ void deviceDraw()
     outtextxy(20, 560, s);
 
 
-    clearrectangle(0, 0, 1289, 639);//显示区
-    //clearrectangle(0, 641, 1289, 720);//输出区
-    clearrectangle(1291, 0, 1400, 720);//按钮区
+    
     line(1290, 0, 1290, 720);
     line(0, 640, 1290, 640);
     //outtextxy(300, 200, "创建进程中");
@@ -999,6 +1005,7 @@ int main()
     init_directory();
     init_process();
     InitializeMemory();
+    initTable();
 
     drawMain();
     return 0;
